@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import path from "path";
 import { fileURLToPath } from "url";
 import sendMail from "../Utils/EmailSent.js";
+import bcrypt from "bcryptjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,7 +34,7 @@ export async function MyRegister(name, email, password) {
     path.join(__dirname, "../Utils/Activation-Mail.ejs"),
     data
   );
-console.log(html)
+
   try {
     const mailInfo = await sendMail({
       email: user.email,
@@ -67,3 +68,24 @@ export const createActivation = (user) => {
   );
   return { activationCode, token };
 };
+
+export async function ActiveMyUser(activation_code,activation_token){
+const newUser=await jwt.verify(activation_token,process.env.Activation_Secret)
+
+if(String(newUser.activationCode)!==String(activation_code)){
+  throw new Error("Activation code is wrong!")
+}
+const {name,email,password}=newUser.user
+const normalizedEmail=email.toLowerCase()
+const isExisting=await User.findOne({email:normalizedEmail})
+if(isExisting){
+  throw new Error('User not exists!')
+}
+const passHash=await bcrypt.hash(password,10)
+const newUserCreate=await User.create({
+  name,
+  email,
+  password:passHash
+})
+return {success:true}
+}

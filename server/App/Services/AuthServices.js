@@ -33,7 +33,7 @@ export async function MyRegister(name, email, password) {
   // Render HTML template using EJS
   const html = await ejs.renderFile(
     path.join(__dirname, "../Utils/Activation-Mail.ejs"),
-    data
+    data,
   );
 
   try {
@@ -65,46 +65,60 @@ export const createActivation = (user) => {
     process.env.Activation_Secret,
     {
       expiresIn: "5m",
-    }
+    },
   );
   return { activationCode, token };
 };
 
-export async function ActiveMyUser(activation_code,activation_token){
-const newUser=await jwt.verify(activation_token,process.env.Activation_Secret)
+export async function ActiveMyUser(activation_code, activation_token) {
+  const newUser = await jwt.verify(
+    activation_token,
+    process.env.Activation_Secret,
+  );
 
-if(String(newUser.activationCode)!==String(activation_code)){
-  throw new Error("Activation code is wrong!")
-}
-const {name,email,password}=newUser.user
-const normalizedEmail=email.toLowerCase()
-const isExisting=await User.findOne({email:normalizedEmail})
-if(isExisting){
-  throw new Error('User not exists!')
-}
-const passHash=await bcrypt.hash(password,10)
-const newUserCreate=await User.create({
-  name,
-  email,
-  password:passHash
-})
-return {success:true}
+  if (String(newUser.activationCode) !== String(activation_code)) {
+    throw new Error("Activation code is wrong!");
+  }
+  const { name, email, password } = newUser.user;
+  const normalizedEmail = email.toLowerCase();
+  const isExisting = await User.findOne({ email: normalizedEmail });
+  if (isExisting) {
+    throw new Error("User not exists!");
+  }
+  const passHash = await bcrypt.hash(password, 10);
+  const newUserCreate = await User.create({
+    name,
+    email,
+    password: passHash,
+  });
+  return { success: true };
 }
 
-export async function MyLogin(email,password,res){
-const normalizedEmail=email.toLowerCase()
-const isExistingUser=await User.findOne({email:normalizedEmail}).select("+password")
-if(!isExistingUser){
-throw new Error('User not found!')
-}
-const isMatch=await bcrypt.compare(password,isExistingUser.password)
-if(!isMatch){
-  throw new Error('user and pass not match!')
-}
-const userObject = isExistingUser.toObject();
-delete userObject.password;
+export async function MyLogin(email, password, res) {
+  const normalizedEmail = email.toLowerCase();
+  const isExistingUser = await User.findOne({ email: normalizedEmail }).select(
+    "+password",
+  );
+  if (!isExistingUser) {
+    throw new Error("User not found!");
+  }
+  const isMatch = await bcrypt.compare(password, isExistingUser.password);
+  if (!isMatch) {
+    throw new Error("user and pass not match!");
+  }
+  const userObject = isExistingUser.toObject();
+  delete userObject.password;
 
-
-const result=SendToken(userObject,200,res)
-return {success:true,user:userObject,AccessToken:result.AccessToken}
+  const result = SendToken(userObject, 200, res);
+  return { success: true, user: userObject, AccessToken: result.AccessToken };
+}
+export async function socialMyAuth(email,name,avatar,res){
+ const user = await User.findOne({ email: email });
+  if(!user){
+    await User.create({email,name,avatar})
+    SendToken(user,200,res)
+  }else{
+     SendToken(user,200,res)
+  }
+  return {success:true}
 }

@@ -3,7 +3,7 @@ import mongoose, { version } from "mongoose";
 const userSchema=mongoose.Schema({
     name:{type:String,required:[true,"Please enter a name"]},
     email:{type:String,unique:true,required:[true,"Please enter a email"]},
-    password:{type:String,required:[true,"Please enter a Password"],minlength:[6,"please enter password long 6 digit"]},
+    password:{type:String,minlength:[6,"please enter password long 6 digit"]},
     avatar:{
         public_id:String,
         url:String

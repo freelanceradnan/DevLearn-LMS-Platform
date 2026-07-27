@@ -2,7 +2,7 @@
 import dotenv from 'dotenv'
 import path from 'path'
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
-import { ActiveMyUser, MyLogin, MyRegister } from "../Services/AuthServices.js";
+import { ActiveMyUser, MyLogin, MyRegister, socialMyAuth } from "../Services/AuthServices.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 import { accesstokenOptions, refreshtokenOptions, SendToken } from "../Utils/Jwt_auth.js";
 import  jwt from 'jsonwebtoken';
@@ -118,3 +118,14 @@ export const updateToken = CatchAsyncError(async (req, res, next) => {
     accessToken: AccessToken,
   });
 });
+export const socialAuth=CatchAsyncError(async(req,res,next)=>{
+  const {name,email,avatar}=req.body
+  if(!name || !email ||!avatar){
+  return next(new ErrorHandler("email ,password or avatar is missing"))
+  }
+  const result=await socialMyAuth(name,email,avatar,res)
+  if(!result.success){
+    return next(new ErrorHandler("cannot register user with social auth system!"))
+  }
+  res.status(200).json({success:true,message:"social auth verification success!"})
+})

@@ -11,4 +11,5 @@ router.post('/register',authController.Registration)
 router.post('/activation',authController.ActiveUser)
 router.post('/login',authController.UserLogin)
 router.post('/logout',isAuthenticated,authController.LogoutUser)
+router.get('/updateToken',authController.updateToken)
 export default router

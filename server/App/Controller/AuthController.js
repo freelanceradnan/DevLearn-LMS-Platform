@@ -1,6 +1,7 @@
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
-import { ActiveMyUser, MyRegister } from "../Services/AuthServices.js";
+import { ActiveMyUser, MyLogin, MyRegister } from "../Services/AuthServices.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
+import { SendToken } from "../Utils/Jwt_auth.js";
 
 export const Registration = CatchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -36,5 +37,22 @@ export const ActiveUser=CatchAsyncError(async(req,res,next)=>{
   res.status(201).json({
     success:true,
     message:"User Activated success"
+  })
+})
+export const UserLogin=CatchAsyncError(async(req,res,next)=>{
+  const {email,password}=req.body
+  if(!email || !password){
+    return next(new  ErrorHandler("enter email password to login",400))
+  }
+  const result=await MyLogin(email,password,res)
+  if(!result.success){
+    return next(new ErrorHandler("failed to login",400))
+  }
+
+  res.status(200).json({
+    success:true,
+    message:"User login success!",
+    data:result.user,
+    AccessToken:result.AccessToken
   })
 })

@@ -7,5 +7,6 @@ router.get('/',function(req,res){
 })
 router.post('/register',authController.Registration)
 router.post('/activation',authController.ActiveUser)
+router.post('/login',authController.UserLogin)
 
 export default router

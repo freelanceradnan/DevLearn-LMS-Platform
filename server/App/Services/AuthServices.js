@@ -8,6 +8,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import sendMail from "../Utils/EmailSent.js";
 import bcrypt from "bcryptjs";
+import { SendToken } from "../Utils/Jwt_auth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -88,4 +89,18 @@ const newUserCreate=await User.create({
   password:passHash
 })
 return {success:true}
+}
+
+export async function MyLogin(email,password,res){
+const normalizedEmail=email.toLowerCase()
+const isExistingUser=await User.findOne({email:normalizedEmail}).select("+password")
+if(!isExistingUser){
+throw new Error('User not found!')
+}
+const isMatch=await bcrypt.compare(password,isExistingUser.password)
+if(!isMatch){
+  throw new Error('user and pass not match!')
+}
+const result=SendToken(isExistingUser,200,res)
+return {success:true,user:result.user,AccessToken:result.AccessToken}
 }

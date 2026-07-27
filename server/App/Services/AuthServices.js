@@ -101,6 +101,10 @@ const isMatch=await bcrypt.compare(password,isExistingUser.password)
 if(!isMatch){
   throw new Error('user and pass not match!')
 }
-const result=SendToken(isExistingUser,200,res)
-return {success:true,user:result.user,AccessToken:result.AccessToken}
+const userObject = isExistingUser.toObject();
+delete userObject.password;
+
+
+const result=SendToken(userObject,200,res)
+return {success:true,user:userObject,AccessToken:result.AccessToken}
 }

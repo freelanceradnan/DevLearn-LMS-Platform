@@ -56,3 +56,11 @@ export const UserLogin=CatchAsyncError(async(req,res,next)=>{
     AccessToken:result.AccessToken
   })
 })
+export const LogoutUser=CatchAsyncError(async(req,res,next)=>{
+  res.clearCookie("access_token","",{maxAge:1})
+  res.clearCookie("refresh_token","",{maxAge:1})
+  res.status(200).json({
+    success:true,
+    message:"logout success!"
+  })
+})

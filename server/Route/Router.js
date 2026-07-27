@@ -1,5 +1,7 @@
 import express from "express";
 import *as authController from '../App/Controller/AuthController.js'
+import isAuthenticated from "../App/Middleware/AuthenticateMiddleware.js";
+
 const router=express()
 
 router.get('/',function(req,res){
@@ -8,5 +10,5 @@ router.get('/',function(req,res){
 router.post('/register',authController.Registration)
 router.post('/activation',authController.ActiveUser)
 router.post('/login',authController.UserLogin)
-
+router.post('/logout',isAuthenticated,authController.LogoutUser)
 export default router

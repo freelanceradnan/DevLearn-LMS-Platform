@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import path from 'path'
 import { redis } from "../Config/Redis.js";
-dotenv.config({path:path.resolve(process.cwd()+'.env')})
+dotenv.config({path:path.resolve(process.cwd(),'.env')})
 
 const isAuthenticated = CatchAsyncError(async (req, res, next) => {
   const access_token = req?.cookies?.access_token;

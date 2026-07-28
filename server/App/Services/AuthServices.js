@@ -83,7 +83,7 @@ export async function ActiveMyUser(activation_code, activation_token) {
   const normalizedEmail = email.toLowerCase();
   const isExisting = await User.findOne({ email: normalizedEmail });
   if (isExisting) {
-    throw new Error("User not exists!");
+    throw new Error("User already exists!");
   }
   const passHash = await bcrypt.hash(password, 10);
   const newUserCreate = await User.create({

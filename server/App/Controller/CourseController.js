@@ -1,0 +1,43 @@
+import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
+import customCloudinary from "../Config/Cloudinary.js";
+import { v2 as cloudinary } from "cloudinary";
+import { CourseService, UpdateMyCourse } from "../Services/CourseServices.js";
+import course from "../Models/Course.js";
+import ErrorHandler from "../Utils/ErrorHandler.js";
+
+export const CreateCourse=CatchAsyncError(async(req,res,next)=>{
+    const {data}=req.body
+   if(data.thumbnail){
+     const myCloud = await cloudinary.uploader.upload(avatar, {
+          folder: 'avatars-lms',
+          width: 150,
+          crop: 'scale',
+        });
+    const data={
+        public_id:myCloud.public_id,
+        url:myCloud.secure_url
+    }
+   }
+   const result=await CourseService(data,res)
+   
+})
+export const UpdateCourse = CatchAsyncError(async (req, res, next) => {
+  let { data } = req.body;
+  const courseId = req.params.id;
+
+  if (Array.isArray(data)) {
+    data = data[0];
+  }
+
+  const result = await UpdateMyCourse(courseId, data);
+
+  if (!result.success) {
+    return next(new ErrorHandler(result.message || "Course update failed", 400));
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Course updated successfully",
+    course: result.courseInfo,
+  });
+});

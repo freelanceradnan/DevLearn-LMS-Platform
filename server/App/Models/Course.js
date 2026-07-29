@@ -1,24 +1,29 @@
 import mongoose from "mongoose";
-const reviewSchema = mongoose.Schema({
+const reviewSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "Users", required: true },
 
   rating: { type: Number, default: "0", min: 0, max: 5 },
   comment: { type: String },
 });
-const linkSchema = mongoose.Schema({
+const linkSchema = new mongoose.Schema({
   title: { type: String },
   url: { type: String },
 });
-const commentSchema = new mongoose.Schema();
-commentSchema.add({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+const commentSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
+    },
+    comment: { type: String, required: true },
   },
-  comment: { type: String, required: true },
-  commentReplies: [commentSchema], 
-},{timeStamps:true});
-const CourseDataSchema = mongoose.Schema({
+  { timestamps: true }
+);
+
+commentSchema.add({
+  commentReplies: [commentSchema],
+});
+const CourseDataSchema =new mongoose.Schema({
   videoUrl: { type: String },
 //   videoThumbnail: {
 //     public_id: { type: String },
@@ -33,7 +38,7 @@ const CourseDataSchema = mongoose.Schema({
   suggestion: {type:String},
   questions: [commentSchema],
 });
-const courseSchema = mongoose.Schema({
+const courseSchema =new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
@@ -45,12 +50,12 @@ const courseSchema = mongoose.Schema({
   tags: { type: String, required: true },
   level: { type: String, required: true },
   demourl: { type: String, required: true },
-  enefits: [{ title: { type: String } }],
+  benefits: [{ title: { type: String } }],
  prerequisites: [{ title: { type: String } }],
   reviews: [reviewSchema],
   courseData: [CourseDataSchema],
   ratings: { type: Number, default: 0 },
   purchased: { type: Number, default: 0 },
-},{timeStamps:true});
+},{timestamps:true});
 const course = mongoose.model("course", courseSchema);
 export default course

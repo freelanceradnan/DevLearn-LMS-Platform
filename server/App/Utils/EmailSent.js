@@ -7,7 +7,8 @@ const __dirname = path.dirname(__filename);
 
 const sendMail = async (options) => {
   try {
-    
+   
+  
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -17,14 +18,14 @@ const sendMail = async (options) => {
     });
 
     const { email, subject, html } = options;
-
+   
     const mailOptions = {
-      from: process.env.SMTP_MAIL,
+      from: `"LMS Support" <${process.env.SMTP_MAIL}>`,
       to: email,
       subject,
       html,
     };
-
+   
     const info = await transporter.sendMail(mailOptions);
    
     return info;

@@ -2,6 +2,13 @@ import mongoose from "mongoose"
 import { redis } from "../Config/Redis.js"
 import course from "../Models/Course.js"
 import {v2 as cloudinary} from 'cloudinary'
+import path from 'path'
+import { fileURLToPath } from "url"
+import ejs from 'ejs'
+import sendMail from "../Utils/EmailSent.js"
+import { User } from "../Models/Users.js"
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 export const  CourseService=async(data,res)=>{
 const createcourse=await course.create(data)
 res.status(201).json({
@@ -124,4 +131,67 @@ throw new Error("You have not permission to access this course content!");
   await fullcourse.save();
 
   return { success: true };
+}
+export async function AddMyReply(contentId,reply,courseId,questionId,user){
+const fullcourse = await course.findById(courseId);
+  if (!fullcourse) {
+    throw new Error("Invalid course id");
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(contentId)) {
+    throw new Error("Invalid content id");
+  }
+  
+const courseContent = fullcourse?.courseData?.find(
+    (item) => item._id.toString() === contentId
+  );
+  if (!courseContent) {
+    throw new Error("courseContent not found");
+  }
+  const question = courseContent?.questions?.find((item) =>
+    item._id.equals(questionId)
+  );
+  if (!question) {
+    throw new Error("Question not found!");
+  }
+ const newAnswer = {
+    user: user,
+    question: reply, 
+  };
+
+  if (!question.commentReplies) {
+    question.commentReplies = [];
+  }
+  question.commentReplies.push(newAnswer);
+
+  await fullcourse.save();
+  const questionUserId = question?.user?.toString();
+const currentUserId = user?._id?.toString();
+
+if (questionUserId === currentUserId) {
+    //own notify
+  
+  } else {
+     const questionOwner = await User.findById(question.user);
+    const data = {
+      name: questionOwner.name,
+      title: courseContent.title,
+    };
+     const html = await ejs.renderFile(
+       path.join(__dirname, "../Utils/Reply-Mail.ejs"),
+       data,
+     );
+    try {
+      await sendMail({
+        email: questionOwner.email,
+        subject: "Question Reply",
+        template: "Reply-Mail.ejs",
+        html,
+      });
+     return {success:true,fullcourse}
+    } catch (error) {
+      console.error("Email send error:", error.message);
+    }
+  }
+
 }

@@ -1,7 +1,7 @@
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
 import customCloudinary from "../Config/Cloudinary.js";
 import { v2 as cloudinary } from "cloudinary";
-import {  AddMyQuestion, CourseService, GetMyAllCourse, GetMySingleCourse, GetMyUserCourse, UpdateMyCourse } from "../Services/CourseServices.js";
+import {  AddMyQuestion, AddMyReply, CourseService, GetMyAllCourse, GetMySingleCourse, GetMyUserCourse, UpdateMyCourse } from "../Services/CourseServices.js";
 import course from "../Models/Course.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 
@@ -84,11 +84,23 @@ export const AddQuestions=CatchAsyncError(async(req,res,next)=>{
   const {contentId,question,courseId}=req.body
   const user=req?.user
   if(!contentId ||!question || !courseId){
-    return next (new ErrorHandler("ContentId,question and courseId is Required!"))
+    return next (new ErrorHandler("ContentId,question and courseId are Required!"))
   }
   const result=await AddMyQuestion(contentId,question,courseId,user)
   if(!result.success){
    return next (new ErrorHandler("Add question failed!"))
   }
   res.status(200).json({success:true,message:"Add question done!"})
+})
+export const AddReplies=CatchAsyncError(async(req,res,next)=>{
+  const { contentId, reply, courseId, questionId } = req.body;
+const user = req?.user;
+if (!contentId || !reply || !courseId || !questionId) {
+  return next(new ErrorHandler("contentId, reply, courseId, and questionId are required!", 400));
+}
+  const result=await AddMyReply(contentId,reply,courseId,questionId,user)
+  if(!result.success){
+   return next (new ErrorHandler("Add question failed!"))
+  }
+  res.status(200).json({success:true,message:"Add replies done!",data:result.fullcourse})
 })

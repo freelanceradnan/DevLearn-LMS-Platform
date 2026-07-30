@@ -1,3 +1,4 @@
+import mongoose from "mongoose"
 import { redis } from "../Config/Redis.js"
 import course from "../Models/Course.js"
 import {v2 as cloudinary} from 'cloudinary'
@@ -91,4 +92,36 @@ export const GetMyUserCourse=async(courseList,courseId)=>{
   const coursedata=fullcourse.courseData
 
   return {success:true,coursedata}
+}
+export async function AddMyQuestion(contentId, question, courseId, user) {
+  //ck user have same course or not
+  const isUserCourseValid=user?.Courses?.find((course)=>course._id===courseId)
+ 
+if(!isUserCourseValid){
+throw new Error("You have not permission to access this course content!");
+}
+  const fullcourse = await course.findById(courseId);
+  if (!course) {
+    throw new Error("Invalid course id");
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(contentId)) {
+    throw new Error("Invalid content id");
+  }
+
+  const courseContent = fullcourse.courseData.find((item) => item._id.equals(contentId));
+  if (!courseContent) {
+    throw new Error("Content not found");
+  }
+
+  const newQuestions = {
+    user,
+    question,
+    questionReplies: [],
+  };
+
+  courseContent.questions.push(newQuestions);
+  await fullcourse.save();
+
+  return { success: true };
 }

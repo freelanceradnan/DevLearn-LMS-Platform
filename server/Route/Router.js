@@ -27,4 +27,5 @@ router.post('/update-course/:id',isAuthenticated,AdminMiddlewares,CourseControll
 router.get('/course/:id',CourseController.GetSingleCourse)
 router.get('/courses',CourseController.GetAllCourse)
 router.get('/myCourse/:id',isAuthenticated,CourseController.GetUserCourse)
+router.post('/add-questions',isAuthenticated,CourseController.AddQuestions)
 export default router;

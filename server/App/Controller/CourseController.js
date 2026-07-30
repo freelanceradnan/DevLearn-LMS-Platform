@@ -1,7 +1,7 @@
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
 import customCloudinary from "../Config/Cloudinary.js";
 import { v2 as cloudinary } from "cloudinary";
-import { CourseService, GetMyAllCourse, GetMySingleCourse, GetMyUserCourse, UpdateMyCourse } from "../Services/CourseServices.js";
+import {  AddMyQuestion, CourseService, GetMyAllCourse, GetMySingleCourse, GetMyUserCourse, UpdateMyCourse } from "../Services/CourseServices.js";
 import course from "../Models/Course.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 
@@ -79,4 +79,16 @@ export const GetUserCourse=CatchAsyncError(async(req,res,next)=>{
     return next(new ErrorHandler("You are not eligible to access this course!"))
   }
   res.status(200).json({success:true,message:'course access success',data:result.coursedata})
+})
+export const AddQuestions=CatchAsyncError(async(req,res,next)=>{
+  const {contentId,question,courseId}=req.body
+  const user=req?.user
+  if(!contentId ||!question || !courseId){
+    return next (new ErrorHandler("ContentId,question and courseId is Required!"))
+  }
+  const result=await AddMyQuestion(contentId,question,courseId,user)
+  if(!result.success){
+   return next (new ErrorHandler("Add question failed!"))
+  }
+  res.status(200).json({success:true,message:"Add question done!"})
 })

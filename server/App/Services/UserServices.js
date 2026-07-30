@@ -79,4 +79,3 @@ export async function updateMyAvatar(userId, avatar) {
 
   return { success: true, user };
 }
-console.log(updateMyAvatar())

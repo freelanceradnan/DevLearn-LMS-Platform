@@ -1,5 +1,5 @@
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
-import { getMyInfo, updateMyAvatar, updateMyInfo, updateMyPassword } from "../Services/UserServices.js";
+import {  getMyInfo, updateMyAvatar, updateMyInfo, updateMyPassword } from "../Services/UserServices.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 
 export const getInfo=CatchAsyncError(async(req,res,next)=>{

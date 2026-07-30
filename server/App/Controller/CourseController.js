@@ -1,7 +1,7 @@
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
 import customCloudinary from "../Config/Cloudinary.js";
 import { v2 as cloudinary } from "cloudinary";
-import { CourseService, UpdateMyCourse } from "../Services/CourseServices.js";
+import { CourseService, GetMyAllCourse, GetMySingleCourse, UpdateMyCourse } from "../Services/CourseServices.js";
 import course from "../Models/Course.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 
@@ -41,3 +41,30 @@ export const UpdateCourse = CatchAsyncError(async (req, res, next) => {
     course: result.courseInfo,
   });
 });
+export const GetSingleCourse=CatchAsyncError(async(req,res,next)=>{
+   const courseId = req.params.id;
+   if(!courseId){
+   return next(new ErrorHandler("Course id not found!"))
+   }
+  const result=await GetMySingleCourse(courseId)
+  if(!result.success){
+   return next (new ErrorHandler("unable to get course info"))
+  }
+ res.status(200).json({
+  success:true,
+  message:"Getting Course Success!",
+  data:result.getCourse
+ })
+})
+export const GetAllCourse=CatchAsyncError(async(req,res,next)=>{
+  
+  const result=await GetMyAllCourse()
+  if(!result.success){
+   return next (new ErrorHandler("unable to get course info"))
+  }
+ res.status(200).json({
+  success:true,
+  message:"Getting Course Success!",
+  data:result.getCourse
+ })
+})

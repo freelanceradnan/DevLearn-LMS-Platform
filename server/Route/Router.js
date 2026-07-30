@@ -24,4 +24,6 @@ router.put("/update-avatar", isAuthenticated,userController.UpdateUserAvatar);
 
 router.post('/create-course',isAuthenticated,AdminMiddlewares,CourseController.CreateCourse)
 router.post('/update-course/:id',isAuthenticated,AdminMiddlewares,CourseController.UpdateCourse)
+router.get('/course/:id',CourseController.GetSingleCourse)
+router.get('/courses',CourseController.GetAllCourse)
 export default router;

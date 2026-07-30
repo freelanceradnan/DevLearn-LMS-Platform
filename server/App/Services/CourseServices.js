@@ -44,3 +44,22 @@ export const UpdateMyCourse = async (courseId, data) => {
     };
   }
 };
+export const GetMySingleCourse=async(CourseId)=>{
+  const getCourse = await course.findById(CourseId).select(
+  "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
+);
+  return {
+    success:true,
+    getCourse
+  }
+
+}
+export const GetMyAllCourse=async()=>{
+   const getCourse = await course.find().select(
+  "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
+);
+return {
+  success:true,
+  getCourse
+}
+}

@@ -26,4 +26,5 @@ router.post('/create-course',isAuthenticated,AdminMiddlewares,CourseController.C
 router.post('/update-course/:id',isAuthenticated,AdminMiddlewares,CourseController.UpdateCourse)
 router.get('/course/:id',CourseController.GetSingleCourse)
 router.get('/courses',CourseController.GetAllCourse)
+router.get('/myCourse/:id',isAuthenticated,CourseController.GetUserCourse)
 export default router;

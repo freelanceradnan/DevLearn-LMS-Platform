@@ -29,4 +29,5 @@ router.get('/courses',CourseController.GetAllCourse)
 router.get('/myCourse/:id',isAuthenticated,CourseController.GetUserCourse)
 router.post('/add-questions',isAuthenticated,CourseController.AddQuestions)
 router.post('/add-replies',isAuthenticated,CourseController.AddReplies)
+router.post('/add-review/:id',isAuthenticated,CourseController.AddReviews)
 export default router;

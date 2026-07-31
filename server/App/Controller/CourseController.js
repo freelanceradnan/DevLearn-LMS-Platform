@@ -1,7 +1,7 @@
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
 import customCloudinary from "../Config/Cloudinary.js";
 import { v2 as cloudinary } from "cloudinary";
-import {  AddMyQuestion, AddMyReply, CourseService, GetMyAllCourse, GetMySingleCourse, GetMyUserCourse, UpdateMyCourse } from "../Services/CourseServices.js";
+import {  AddMyQuestion, AddMyReply, AddMyReview, CourseService, GetMyAllCourse, GetMySingleCourse, GetMyUserCourse, UpdateMyCourse } from "../Services/CourseServices.js";
 import course from "../Models/Course.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 
@@ -103,4 +103,20 @@ if (!contentId || !reply || !courseId || !questionId) {
    return next (new ErrorHandler("Add question failed!"))
   }
   res.status(200).json({success:true,message:"Add replies done!",data:result.fullcourse})
+})
+export const AddReviews=CatchAsyncError(async(req,res,next)=>{
+  const user = req?.user;
+  const courseId=req.params.id
+  const {review,rating}=req.body
+  if(!user){
+   return next(new ErrorHandler("please login user first")); 
+  }
+  if(!courseId){
+     return next(new ErrorHandler("Please enter the right course id")); 
+  }
+  const result=await AddMyReview(user,courseId,review,rating)
+  if(!result.success){
+   return next (new ErrorHandler("Add question failed!"))
+  }
+  res.status(200).json({success:true,message:"Add replies done!",data:result.course})
 })

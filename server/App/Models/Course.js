@@ -5,6 +5,9 @@ const reviewSchema = new mongoose.Schema({
   rating: { type: Number, default: "0", min: 0, max: 5 },
   comment: { type: String },
 });
+reviewSchema.add({
+  commentReplies: [reviewSchema],
+});
 const linkSchema = new mongoose.Schema({
   title: { type: String },
   url: { type: String },

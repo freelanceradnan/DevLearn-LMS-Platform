@@ -30,4 +30,5 @@ router.get('/myCourse/:id',isAuthenticated,CourseController.GetUserCourse)
 router.post('/add-questions',isAuthenticated,CourseController.AddQuestions)
 router.post('/add-replies',isAuthenticated,CourseController.AddReplies)
 router.post('/add-review/:id',isAuthenticated,CourseController.AddReviews)
+router.post('/add-review-reply',isAuthenticated,AdminMiddlewares,CourseController.AddReplyToReview)
 export default router;

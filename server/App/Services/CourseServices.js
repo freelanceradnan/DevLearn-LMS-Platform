@@ -224,3 +224,29 @@ if (fullcourse) {
   }
   return { success: true,fullcourse};
 }
+export async function AddReplyMyReview(comment,courseId,reviewId,user){
+const fullcourse=await course.findById(courseId)
+if(!fullcourse){
+  throw new Error("course not found!")
+}
+
+const FullReviewData=await fullcourse.reviews.find((rev)=>rev._id.toString()===reviewId)
+
+if(!FullReviewData){
+throw new Error("Review not found!")
+}
+
+const ReplyData={
+  user:user,
+  comment
+}
+if(!FullReviewData.commentReplies){
+  FullReviewData.commentReplies=[]
+}
+FullReviewData?.commentReplies?.push(ReplyData)
+await fullcourse?.save()
+return {
+  success:true,
+  fullcourse
+}
+}

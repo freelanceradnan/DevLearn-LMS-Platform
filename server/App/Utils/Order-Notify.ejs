@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Confirmation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .message-sm h1 {
+      color: #333333;
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    .message-sm p {
+      color: #666666;
+      font-size: 16px;
+      margin: 0;
+    }
+    .course-info h4 {
+      color: #333333;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+    }
+    td {
+      padding: 10px;
+      font-size: 14px;
+    }
+    .first-td {
+      font-weight: bold;
+      border-bottom: 1px solid #ddd;
+      color: #555555;
+    }
+    .second-td {
+      color: #333333;
+      border-bottom: 1px solid #eee;
+    }
+    .total-row {
+      font-weight: bold;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="message-sm">
+      <h1>Your ELearning order is confirmed!</h1>
+      <p>And we're just as excited as you are.</p>
+    </div>
+    <br>
+    <br>
+    <div class="course-info">
+      <h4>Here's what you ordered:</h4>
+      
+      <table style="border-bottom: 1px solid #0000002f;">
+        <tr>
+          <td>
+            Order #: <%= order._id %>
+          </td>
+          <td>
+            Order Date: <%= order.date %>
+          </td>
+        </tr>
+      </table>
+
+      <table style="width: 90%; margin: auto; display: block">
+        <tr>
+          <td class="first-td">Item</td>
+          <td class="first-td">Qty</td>
+          <td class="first-td">Cost</td>
+        </tr>
+      </table>
+
+      <table style="width: 90%; margin: auto; display: block">
+        <tr>
+          <td class="second-td"><%= order.name %></td>
+          <td class="second-td">1</td>
+          <td class="second-td">$<%= order.price %></td>
+        </tr>
+      </table>
+
+      <table style="width: 90%; margin: auto; display: block">
+        <tr>
+          <td class="first-td">Total:</td>
+          <td class="first-td"></td>
+          <td class="first-td">$<%= order.price %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

@@ -18,14 +18,14 @@ const sendMail = async (options) => {
     });
 
     const { email, subject, html } = options;
-   
+
     const mailOptions = {
       from: `"LMS Support" <${process.env.SMTP_MAIL}>`,
       to: email,
       subject,
       html,
     };
-   
+ 
     const info = await transporter.sendMail(mailOptions);
    
     return info;

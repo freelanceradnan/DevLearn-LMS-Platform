@@ -3,6 +3,7 @@ import * as authController from "../App/Controller/AuthController.js";
 import isAuthenticated from "../App/Middleware/AuthenticateMiddleware.js";
 import * as userController from "../App/Controller/UserController.js";
 import * as CourseController from "../App/Controller/CourseController.js";
+import * as OrderController from "../App/Controller/OrderController.js";
 import { AdminMiddlewares } from "../App/Middleware/AdminMiddleware.js";
 
 
@@ -11,6 +12,7 @@ const router = express();
 router.get("/", function (req, res) {
   res.send("this router is on!");
 });
+//auth related router
 router.post("/register", authController.Registration);
 router.post("/activation", authController.ActiveUser);
 router.post("/login", authController.UserLogin);
@@ -21,7 +23,7 @@ router.post("/social-auth", authController.socialAuth);
 router.put("/update-info", isAuthenticated,userController.updateUserInfo);
 router.patch("/change-password", isAuthenticated,userController.updatePassword);
 router.put("/update-avatar", isAuthenticated,userController.UpdateUserAvatar);
-
+//course related router
 router.post('/create-course',isAuthenticated,AdminMiddlewares,CourseController.CreateCourse)
 router.post('/update-course/:id',isAuthenticated,AdminMiddlewares,CourseController.UpdateCourse)
 router.get('/course/:id',CourseController.GetSingleCourse)
@@ -31,4 +33,5 @@ router.post('/add-questions',isAuthenticated,CourseController.AddQuestions)
 router.post('/add-replies',isAuthenticated,CourseController.AddReplies)
 router.post('/add-review/:id',isAuthenticated,CourseController.AddReviews)
 router.post('/add-review-reply',isAuthenticated,AdminMiddlewares,CourseController.AddReplyToReview)
+router.post('/create-order',isAuthenticated,OrderController.CreateOrder)
 export default router;

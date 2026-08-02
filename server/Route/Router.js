@@ -49,4 +49,5 @@ router.get('/courses-analytics',isAuthenticated,AdminMiddlewares,AnalysisControl
 router.get('/orders-analytics',isAuthenticated,AdminMiddlewares,AnalysisController.getOrdersAnalytics)
 router.post('/create-layout',isAuthenticated,AdminMiddlewares,LayoutController.CreateLayout)
 router.put('/edit-layout',isAuthenticated,AdminMiddlewares,LayoutController.editLayout)
+router.get('/layout',isAuthenticated,AdminMiddlewares,LayoutController.GetLayoutByType)
 export default router;

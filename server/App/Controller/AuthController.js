@@ -111,7 +111,8 @@ export const updateToken = CatchAsyncError(async (req, res, next) => {
   //Set cookies
   res.cookie("access_token", AccessToken, accesstokenOptions);
   res.cookie("refresh_token", RefreshToken, refreshtokenOptions);
-
+//auto expires redis cahing after 7days
+  await redis.set(user._id,JSON.stringify(user),"EX",604800)
 
   res.status(200).json({
     success: true,

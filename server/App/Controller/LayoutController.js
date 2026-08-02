@@ -110,3 +110,12 @@ export const editLayout=CatchAsyncError(async(req,res,next)=>{
     message:"Layout updated successFully!"
   })
 })
+export const GetLayoutByType=CatchAsyncError(async(req,res,next)=>{
+  const type=req.body.type
+  const layout=await Layout.findOne({type})
+  res.status(200).json({
+    success:true,
+    message:"Success to get Layout!",
+    data:layout
+  })
+})

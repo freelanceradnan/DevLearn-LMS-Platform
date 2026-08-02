@@ -63,7 +63,7 @@ export const GetMySingleCourse = async (CourseId) => {
       .select(
         "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links",
       );
-    const caching = await redis.set(CourseId, JSON.stringify(getCourse));
+    const caching = await redis.set(CourseId, JSON.stringify(getCourse),'EX',604800);//7days cashing
     return {
       success: true,
       getCourse,

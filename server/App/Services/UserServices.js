@@ -92,3 +92,20 @@ export async function getMyAllCourse(){
   const courses=await course.find().sort({createdAt:-1}).lean()
   return {success:true,courses}
 }
+export async function UpdateMyRole(id,role){
+   const updatedUser = await User.findByIdAndUpdate(
+  id,               
+  { $set: { role } },   
+  { new: true, runValidators: true } 
+).select("-password");
+   return {success:true}
+}
+export async function DeleteMyUser(id){
+const isExistsUser=await User.findById(id)
+if(!isExistsUser){
+throw new Error("User not found!")
+}
+const user=await User.findByIdAndDelete(id)
+const deleteRedis = await redis.del(id);
+return {success:true}
+}

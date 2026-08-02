@@ -1,5 +1,5 @@
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
-import {  getMyAllCourse, getMyAllUsers, getMyInfo, updateMyAvatar, updateMyInfo, updateMyPassword } from "../Services/UserServices.js";
+import {  DeleteMyUser, getMyAllCourse, getMyAllUsers, getMyInfo, updateMyAvatar, updateMyInfo, updateMyPassword, UpdateMyRole } from "../Services/UserServices.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 
 export const getInfo=CatchAsyncError(async(req,res,next)=>{
@@ -85,4 +85,33 @@ export const GetAllCourse=CatchAsyncError(async(req,res,next)=>{
     data:result.courses
   })
 })
-
+//update users role
+export const UpdateUserRole=CatchAsyncError(async(req,res,next)=>{
+  const {id,role}=req.body
+  if(!id || !role){
+    return next (new ErrorHandler("Id and role required for changing!"))
+  }
+  const result=await UpdateMyRole(id,role)
+  if(!result.success){
+     return next (new ErrorHandler("Id and role required for changing!"))
+  }
+  res.status(200).json({
+    success:true,
+    message:"User role updated success!"
+  })
+})
+//delete userid
+export const DeleteUser=CatchAsyncError(async(req,res,next)=>{
+  const id=req.params.id
+  if(!id){
+  return next (new ErrorHandler("user id not found!"))
+  }
+  const result=await DeleteMyUser(id)
+  if(!result.success){
+    return next (new ErrorHandler("Failed to delete user!"))
+  }
+  res.status(200).json({
+    success:true,
+    message:"SuccessFully Deleted User!"
+  })
+})

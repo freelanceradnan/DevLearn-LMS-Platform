@@ -39,4 +39,6 @@ router.get('/all-notifications',isAuthenticated,AdminMiddlewares,NotificationCon
 router.put('/update-notification/:id',isAuthenticated,AdminMiddlewares,NotificationController.updateNotifications)
 router.get('/getAlluser',isAuthenticated,AdminMiddlewares,userController.GetAllUsers)
 router.get('/all-course',isAuthenticated,AdminMiddlewares,CourseController.GetAllCourse)
+router.put('/update-user',isAuthenticated,AdminMiddlewares,userController.UpdateUserRole)
+router.delete('/DeleteUser/:id',isAuthenticated,AdminMiddlewares,userController.DeleteUser)
 export default router;

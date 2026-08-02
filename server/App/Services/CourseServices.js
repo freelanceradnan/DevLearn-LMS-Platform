@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import ejs from "ejs";
 import sendMail from "../Utils/EmailSent.js";
 import { User } from "../Models/Users.js";
+import Notification from "../Models/Notification.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 export const CourseService = async (data, res) => {
@@ -132,6 +133,12 @@ export async function AddMyQuestion(contentId, question, courseId, user) {
   };
 
   courseContent.questions.push(newQuestions);
+  await Notification.create({
+    title:"New Questions Received!",
+    user_id:user._id,
+    message:`New Question added in ${courseContent.title}`
+
+  })
   await fullcourse.save();
 
   return { success: true };
@@ -173,7 +180,11 @@ export async function AddMyReply(contentId, reply, courseId, questionId, user) {
   const currentUserId = user?._id?.toString();
 
   if (questionUserId === currentUserId) {
-    //own notify
+    await Notification.create({
+      user_id:user._id,
+      title:"New Question Reply Received!",
+      message:`You have a new questions reply in ${courseContent.title}`
+    })
   } else {
     const questionOwner = await User.findById(question.user);
     const data = {

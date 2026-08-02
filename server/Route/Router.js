@@ -4,6 +4,7 @@ import isAuthenticated from "../App/Middleware/AuthenticateMiddleware.js";
 import * as userController from "../App/Controller/UserController.js";
 import * as CourseController from "../App/Controller/CourseController.js";
 import * as OrderController from "../App/Controller/OrderController.js";
+import * as NotificationController from "../App/Controller/NotificationController.js";
 import { AdminMiddlewares } from "../App/Middleware/AdminMiddleware.js";
 
 
@@ -34,4 +35,8 @@ router.post('/add-replies',isAuthenticated,CourseController.AddReplies)
 router.post('/add-review/:id',isAuthenticated,CourseController.AddReviews)
 router.post('/add-review-reply',isAuthenticated,AdminMiddlewares,CourseController.AddReplyToReview)
 router.post('/create-order',isAuthenticated,OrderController.CreateOrder)
+router.get('/all-notifications',isAuthenticated,AdminMiddlewares,NotificationController.getNotifications)
+router.put('/update-notification/:id',isAuthenticated,AdminMiddlewares,NotificationController.updateNotifications)
+router.get('/getAlluser',isAuthenticated,AdminMiddlewares,userController.GetAllUsers)
+router.get('/all-course',isAuthenticated,AdminMiddlewares,CourseController.GetAllCourse)
 export default router;

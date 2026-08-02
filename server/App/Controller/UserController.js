@@ -1,5 +1,5 @@
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
-import {  getMyInfo, updateMyAvatar, updateMyInfo, updateMyPassword } from "../Services/UserServices.js";
+import {  getMyAllCourse, getMyAllUsers, getMyInfo, updateMyAvatar, updateMyInfo, updateMyPassword } from "../Services/UserServices.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 
 export const getInfo=CatchAsyncError(async(req,res,next)=>{
@@ -62,3 +62,27 @@ export const UpdateUserAvatar = CatchAsyncError(async (req, res, next) => {
     user: result.user,
   });
 });
+//getallusers
+export const GetAllUsers=CatchAsyncError(async(req,res,next)=>{
+  const result=await getMyAllUsers()
+ 
+  if(!result.success){
+  return next(new ErrorHandler("Get all User failed"))
+  }
+  res.status(200).json({
+    message:"Get all user done!",
+    data:result.users
+  })
+})
+export const GetAllCourse=CatchAsyncError(async(req,res,next)=>{
+  const result=await getMyAllCourse()
+  if(!result.success){
+  return next(new ErrorHandler("failed to get all course"))
+  }
+  res.status(200).json({
+    success:true,
+    message:"Success to get All Course",
+    data:result.courses
+  })
+})
+

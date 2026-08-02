@@ -7,6 +7,7 @@ import ErrorHandler from "../Utils/ErrorHandler.js";
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from 'cloudinary';
 import { redis } from '../Config/Redis.js';
+import course from '../Models/Course.js';
 
 export async function getMyInfo(userId) {
   const user = await redis.get(userId);
@@ -78,4 +79,16 @@ export async function updateMyAvatar(userId, avatar) {
   await redis.set(userId, JSON.stringify(user));
 
   return { success: true, user };
+}
+export async function getMyAllUsers(){
+  const users = await User.find()
+    .select("-password")
+    .sort({ createdAt: -1 })
+    .lean();
+  console.log(users)
+  return {success:true,users}
+}
+export async function getMyAllCourse(){
+  const courses=await course.find().sort({createdAt:-1}).lean()
+  return {success:true,courses}
 }

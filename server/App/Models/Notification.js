@@ -7,6 +7,7 @@ const NoficationSchema = mongoose.Schema({
     required: true,
   },
   status: { type: String, default: "unread", required: true },
+  message:{type:String,required:true}
 },{timestamps:true});
 const Notification = mongoose.model("Notification", NoficationSchema);
 export default Notification;

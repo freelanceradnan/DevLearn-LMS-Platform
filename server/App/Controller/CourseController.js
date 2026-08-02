@@ -1,7 +1,7 @@
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
 import customCloudinary from "../Config/Cloudinary.js";
 import { v2 as cloudinary } from "cloudinary";
-import {  AddMyQuestion, AddMyReply, AddMyReview, AddReplyMyReview, CourseService, GetMyAllCourse, GetMySingleCourse, GetMyUserCourse, UpdateMyCourse } from "../Services/CourseServices.js";
+import {  AddMyQuestion, AddMyReply, AddMyReview, AddReplyMyReview, CourseService, DeleteMyCourse, GetMyAllCourse, GetMySingleCourse, GetMyUserCourse, UpdateMyCourse } from "../Services/CourseServices.js";
 import course from "../Models/Course.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 
@@ -131,4 +131,18 @@ export const AddReplyToReview=CatchAsyncError(async(req,res,next)=>{
    return next (new ErrorHandler("Add question failed!"))
   }
   res.status(200).json({success:true,message:"Add replies done!",data:result.fullcourse})
+})
+export const DeleteCourse=CatchAsyncError(async(req,res,next)=>{
+  const id=req.params.id
+  if(!id){
+    return next(new ErrorHandler("Course id not found!"))
+  }
+  const result=await DeleteMyCourse(id)
+   if(!result.success){
+   return next (new ErrorHandler("Course Delete failed!"))
+  }
+  res.status(200).json({
+    success:true,
+    message:"Course delete Success!"
+  })
 })

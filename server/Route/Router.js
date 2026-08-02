@@ -5,6 +5,7 @@ import * as userController from "../App/Controller/UserController.js";
 import * as CourseController from "../App/Controller/CourseController.js";
 import * as OrderController from "../App/Controller/OrderController.js";
 import * as NotificationController from "../App/Controller/NotificationController.js";
+import * as AnalysisController from '../App/Controller/AnalysisController.js'
 import { AdminMiddlewares } from "../App/Middleware/AdminMiddleware.js";
 
 
@@ -41,4 +42,8 @@ router.get('/getAlluser',isAuthenticated,AdminMiddlewares,userController.GetAllU
 router.get('/all-course',isAuthenticated,AdminMiddlewares,CourseController.GetAllCourse)
 router.put('/update-user',isAuthenticated,AdminMiddlewares,userController.UpdateUserRole)
 router.delete('/DeleteUser/:id',isAuthenticated,AdminMiddlewares,userController.DeleteUser)
+router.delete('/DeleteCourse/:id',isAuthenticated,AdminMiddlewares,CourseController.DeleteCourse)
+router.get('/users-analytics',isAuthenticated,AdminMiddlewares,AnalysisController.getUsersAnalytics)
+router.get('/courses-analytics',isAuthenticated,AdminMiddlewares,AnalysisController.getCourseAnalytics)
+router.get('/orders-analytics',isAuthenticated,AdminMiddlewares,AnalysisController.getOrdersAnalytics)
 export default router;

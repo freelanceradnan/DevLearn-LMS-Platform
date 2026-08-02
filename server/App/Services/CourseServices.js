@@ -261,3 +261,12 @@ return {
   fullcourse
 }
 }
+export async function DeleteMyCourse(id){
+const isExistCourse=await course.findById(id)
+if(!isExistCourse){
+  throw new Error("course not found!")
+}
+const DeleteCourse=await course.findByIdAndDelete(id)
+const DeleteRedis=await redis.del(id)
+return {success:true}
+}

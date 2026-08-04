@@ -5,7 +5,7 @@ import { Search } from 'lucide-react';
 
 const Navbar = () => {
     return (
-       <nav className="sticky top-0 z-50 bg-white border-b border-[#e7e0d1] shadow-sm transition-all">
+       <nav className="sticky top-0 z-50 bg-[#FFFFFF] border-b border-[#e7e0d1] shadow-sm transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 gap-4">
         
         {/* Brand Logo */}

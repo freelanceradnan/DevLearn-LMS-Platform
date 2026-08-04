@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function CourseCard({ cart, assets }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden p-3.5 flex flex-col justify-between h-[380px] w-full max-w-[280px] shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden p-3.5 flex flex-col justify-between h-[380px] w-full md:max-w-[280px] shadow-sm hover:shadow-md transition-shadow">
       
       {/* Top Section: Image & Content */}
       <div>
@@ -11,7 +11,7 @@ export default function CourseCard({ cart, assets }) {
           <img
             src={cart?.image || assets?.slider_1}
             alt={cart?.title || 'Course Thumbnail'}
-            className="w-full h-full object-cover"
+            className="w-full md:h-full object-cover"
           />
         </div>
 

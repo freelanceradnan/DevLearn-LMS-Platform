@@ -114,20 +114,20 @@ export default function Hero() {
       </button>
 
       {/* Pagination Styling */}
-      <style jsx global>{`
-        .custom-swiper-pagination .swiper-pagination-bullet {
-          width: 8px;
-          height: 8px;
-          background-color: #94a3b8;
-          opacity: 1;
-          border-radius: 9999px;
-          transition: all 0.3s ease;
-        }
-        .custom-swiper-pagination .swiper-pagination-bullet-active {
-          width: 24px;
-          background-color: #1e3a8a;
-        }
-      `}</style>
+   <style>{`
+  .custom-swiper-pagination .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background-color: #94a3b8;
+    opacity: 1;
+    border-radius: 9999px;
+    transition: all 0.3s ease;
+  }
+  .custom-swiper-pagination .swiper-pagination-bullet-active {
+    width: 24px;
+    background-color: #1e3a8a;
+  }
+`}</style>
     </div>
   );
 }

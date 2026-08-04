@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../Components/Navbar';
 import Footer from './Footer';
 import { Outlet } from 'react-router-dom';
 import Banner from '../Components/Banner';
 
 const Rootlayout = () => {
+    const [modal,setModal]=useState(true)
     return (
         <div>
            <Banner/>

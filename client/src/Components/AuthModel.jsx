@@ -5,8 +5,14 @@ import { IoClose } from 'react-icons/io5';
 
 const AuthModal = ({ setModal, state: initialState = 'login' }) => {
   const [currentState, setCurrentState] = useState(initialState);
+  const [step,setStep]=useState(1)
   const isLogin = currentState === 'login';
-
+const [code, setCode] = useState('');
+console.log(code)
+  const handleSubmit = (e) => {
+    e.preventDefault();
+   
+  };
   return (
    
     <div
@@ -19,7 +25,10 @@ const AuthModal = ({ setModal, state: initialState = 'login' }) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header Part */}
-        <div className="flex justify-between items-start">
+       {
+        step===1 && (
+          <>
+           <div className="flex justify-between items-start">
           <div>
             <h2 className="text-2xl font-bold text-gray-800">
               {isLogin ? 'Welcome Back' : 'Create Account'}
@@ -40,20 +49,20 @@ const AuthModal = ({ setModal, state: initialState = 'login' }) => {
         </div>
 
         {/* Social Buttons */}
-        <div className="flex gap-3">
+        <div className="flex gap-4 w-ful flex-col md:flex-row md:gap-2">
           <button
             type="button"
-            className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2.5 px-4 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition shadow-sm"
+            className="flex-1 flex items-center justify-center md:gap-2 border border-gray-300 py-2.5 px-4 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition shadow-sm w-full"
           >
             <FcGoogle size={20} />
-            <span>{isLogin ? 'Login with Google' : 'Sign up with Google'}</span>
+            <span>{isLogin ? 'Login with Google' : 'Sign with Google'}</span>
           </button>
           <button
             type="button"
-            className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2.5 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition shadow-sm"
+            className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2.5 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition shadow-sm w-full"
           >
             <FaGithub size={20} />
-            <span>{isLogin ? 'Login with GitHub' : 'Sign up with GitHub'}</span>
+            <span>{isLogin ? 'Login with GitHub' : 'Sign with GitHub'}</span>
           </button>
         </div>
 
@@ -114,6 +123,57 @@ const AuthModal = ({ setModal, state: initialState = 'login' }) => {
             {isLogin ? 'Sign Up' : 'Log In'}
           </button>
         </div>
+          </>
+        )
+       }
+       {
+        step===2 && (
+          <div className="flex flex-col gap-6 animate-in fade-in duration-200">
+      {/* Header Part */}
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-gray-800">
+          Enter Activation Code
+        </h2>
+        <p className="text-sm text-gray-500 mt-1">
+          We sent a 4-digit code to <span className="font-medium text-gray-700"></span>
+        </p>
+      </div>
+
+      {/* Input & Form Part */}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div>
+          <input
+            type="text"
+            maxLength={4}
+            value={code}
+            onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))} 
+            placeholder="0000"
+            className="w-full px-4 py-3 text-center text-2xl font-mono tracking-[0.5em] rounded-xl border border-gray-300 focus:border-[#4266c7] focus:ring-2 focus:ring-[#4266c7]/20 outline-none transition shadow-sm text-gray-800 placeholder:text-gray-300 placeholder:tracking-[0.5em]"
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={code.length !== 4}
+          className="w-full bg-[#4266c7] hover:bg-[#3553a7] disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-2.5 rounded-lg text-sm font-semibold transition shadow-md"
+        >
+          Activate Account
+        </button>
+      </form>
+
+      {/* Resend Code Footer */}
+      <div className="text-center text-sm text-gray-600">
+        Didn't receive code?{' '}
+        <button
+          type="button"
+          className="text-[#4266c7] font-semibold hover:underline"
+        >
+          Resend
+        </button>
+      </div>
+    </div>
+        )
+       }
       </div>
     </div>
   );

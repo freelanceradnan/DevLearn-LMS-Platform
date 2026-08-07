@@ -1,31 +1,40 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { assets } from "../assets/assets";
 import {
   ArrowLeft,
-  ChevronRight,
-  Menu,
-  Search,
-  User,
-  X,
   Bell,
-  MessageSquare,
-  Heart,
-  Settings,
-  CreditCard,
-  LogOut,
   BookOpen,
+  ChevronRight,
+  CreditCard,
+  Heart,
   HelpCircle,
-  UserPlus
+  LogOut,
+  Menu,
+  MessageSquare,
+  Search,
+  Settings,
+  ShoppingBag,
+  User,
+  UserPlus,
+  X,
 } from "lucide-react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { assets } from "../assets/assets";
 import AuthModel from "./AuthModel";
+
+// Updated menu items with distinct icons and IDs
+const displayMenuItems = [
+  { id: "courses", name: "My Courses", link: "/courses", icon: BookOpen },
+  { id: "cart", name: "My Cart", link: "/cart", icon: ShoppingBag },
+  { id: "wishlist", name: "My Wishlist", link: "/wishlist", icon: Heart },
+];
 
 const Navbar = () => {
   const navigate = useNavigate();
   const user = {
-    name:"Adnan"
-  }
-
+    name: "Adnan",
+    email: "reactorbro7222@gmail.com",
+  };
+  const [profileOn, setProfileOn] = useState(false);
   const [modal, setModal] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [openMenu, setOpenMenu] = useState(false);
@@ -50,13 +59,16 @@ const Navbar = () => {
     { id: "invite", name: "Invite Friends", link: "/invite", icon: UserPlus },
     { id: "help", name: "Help & Support", link: "/help", icon: HelpCircle },
   ];
-
+  const displayMenuItems = [
+    { id: "1", name: "My Courses", link: "/", icons: "" },
+    { id: "1", name: "My Cart", link: "/", icons: "" },
+    { id: "1", name: "My WishList", link: "/", icons: "" },
+  ];
   return (
     <>
       {/* Primary Navigation Bar */}
       <nav className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 gap-4">
-          
           {/* Left: Mobile Hamburger & Logo */}
           <div className="flex items-center gap-3">
             <button
@@ -97,7 +109,10 @@ const Navbar = () => {
             <Link to="/" className="hover:text-purple-700 transition-colors">
               Home
             </Link>
-            <Link to="/courses" className="hover:text-purple-700 transition-colors">
+            <Link
+              to="/courses"
+              className="hover:text-purple-700 transition-colors"
+            >
               Courses
             </Link>
             <Link to="/faq" className="hover:text-purple-700 transition-colors">
@@ -105,15 +120,19 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3 relative">
             {user ? (
               <button
-                onClick={() => navigate("/profile")}
+                onClick={() => setProfileOn(!profileOn)}
                 className="flex items-center gap-2 p-1.5 rounded-full border border-gray-200 hover:bg-gray-100 transition-colors"
                 title="Account Settings"
               >
                 <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-semibold flex items-center justify-center text-sm">
-                  {user.name ? user.name.charAt(0).toUpperCase() : <User size={18} />}
+                  {user.name ? (
+                    user.name.charAt(0).toUpperCase()
+                  ) : (
+                    <User size={18} />
+                  )}
                 </div>
               </button>
             ) : (
@@ -131,6 +150,56 @@ const Navbar = () => {
                   Join for Free
                 </button>
               </>
+            )}
+            {profileOn && (
+              <div className="absolute right-0 top-16 z-50 w-64 overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm shadow-slate-200/50 transition-all">
+                {/* Header Section */}
+                <div className="flex items-center gap-3 border-b border-slate-100 p-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-purple-200 bg-purple-100 font-semibold text-purple-700 shadow-xs">
+                    {user?.name ? (
+                      <span className="text-lg font-bold">
+                        {user.name.charAt(0).toUpperCase()}
+                      </span>
+                    ) : (
+                      <User size={20} className="text-purple-600" />
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-slate-800">
+                      {user?.name || "Guest User"}
+                    </p>
+                    <p className="truncate text-xs font-normal text-slate-400">
+                      {user?.email || "Welcome back"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Menu Options */}
+                <div className="p-1.5">
+                  {displayMenuItems.map((item) => {
+                    // const Icon = item?.icon;
+                    return (
+                      <a
+                        key={item?.id}
+                        href={item?.link}
+                        className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-purple-600"
+                      >
+                        <div className="flex items-center gap-3">
+                          {/* <Icon
+                            size={18}
+                            className="text-slate-400 transition-colors group-hover:text-purple-600"
+                          /> */}
+                          <span>{item.name}</span>
+                        </div>
+                        <ChevronRight
+                          size={14}
+                          className="text-slate-300 opacity-0 transition-opacity group-hover:opacity-100"
+                        />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -156,7 +225,11 @@ const Navbar = () => {
             <div>
               {/* Header */}
               <div className="flex items-center justify-between p-4 border-b border-gray-100">
-                <img src={assets?.main_logo} alt="DevLearn Logo" className="h-9" />
+                <img
+                  src={assets?.main_logo}
+                  alt="DevLearn Logo"
+                  className="h-9"
+                />
                 <button
                   className="p-1.5 text-gray-500 hover:bg-gray-100 rounded-full transition-colors"
                   onClick={() => {
@@ -192,10 +265,16 @@ const Navbar = () => {
                   >
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 bg-purple-100 text-purple-700 font-semibold rounded-full flex items-center justify-center border border-purple-200">
-                        {user.name ? user.name.charAt(0).toUpperCase() : <User size={20} />}
+                        {user.name ? (
+                          user.name.charAt(0).toUpperCase()
+                        ) : (
+                          <User size={20} />
+                        )}
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900 text-sm">Hi, {user.name}</p>
+                        <p className="font-semibold text-gray-900 text-sm">
+                          Hi, {user.name}
+                        </p>
                         <p className="text-xs text-gray-500">Welcome back</p>
                       </div>
                     </div>

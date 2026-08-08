@@ -30,10 +30,7 @@ const displayMenuItems = [
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const user = {
-    name: "Adnan shaharia mahim",
-    email: "reactorbro7222@gmail.com",
-  };
+  const user = null;
   const dropdownRef = useRef(null);
   const [profileOn, setProfileOn] = useState(false);
   const [modal, setModal] = useState(false);

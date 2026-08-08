@@ -1,15 +1,14 @@
-import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
 
 const mutex = new Mutex();
 
 const BaseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_BASE_SERVER,
-  credentials: "include", 
+  credentials: "include",
 });
 
 export const baseQueryWithReauth = async (args, api, extraOptions) => {
-
   await mutex.waitForUnlock();
 
   let result = await BaseQuery(args, api, extraOptions);
@@ -19,18 +18,16 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
       const release = await mutex.acquire();
 
       try {
-   
         const refreshResult = await BaseQuery(
           {
             url: "/updateAccesstoken",
             method: "GET",
           },
           api,
-          extraOptions
+          extraOptions,
         );
 
         if (refreshResult?.data) {
-     
           result = await BaseQuery(args, api, extraOptions);
         } else {
           handleLogout();
@@ -39,7 +36,6 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
         release();
       }
     } else {
-  
       await mutex.waitForUnlock();
       result = await BaseQuery(args, api, extraOptions);
     }
@@ -53,6 +49,21 @@ const handleLogout = () => {
     !window.location.pathname.includes("/login") &&
     !window.location.pathname.includes("/register")
   ) {
-    window.location.href = "/login"; 
+    window.location.href = "/login";
   }
 };
+export const ApiSlice = createApi({
+  reducerPath: "api",
+  baseQuery: baseQueryWithReauth,
+  tagTypes: ["users", "address", "orders", "products", "partner"],
+  endpoints: (builder) => ({
+    registerUser: builder.mutation({
+      query: (userData) => ({
+        url: "/register",
+        method: "POST",
+        body: userData,
+      }),
+    }),
+  }),
+});
+export const { useRegisterUserMutation } = ApiSlice;

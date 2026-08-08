@@ -16,7 +16,7 @@ import {
   UserPlus,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import AuthModel from "./AuthModel";
@@ -31,15 +31,30 @@ const displayMenuItems = [
 const Navbar = () => {
   const navigate = useNavigate();
   const user = {
-    name: "Adnan",
+    name: "Adnan shaharia mahim",
     email: "reactorbro7222@gmail.com",
   };
+  const dropdownRef = useRef(null);
   const [profileOn, setProfileOn] = useState(false);
   const [modal, setModal] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [openMenu, setOpenMenu] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  // automatic disabled menu for pc
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setProfileOn(false);
+      }
+    }
+    if (profileOn) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [profileOn]);
 
   const handleOpenAuth = (mode) => {
     setAuthMode(mode);
@@ -61,9 +76,10 @@ const Navbar = () => {
   ];
   const displayMenuItems = [
     { id: "1", name: "My Courses", link: "/", icons: "" },
-    { id: "1", name: "My Cart", link: "/", icons: "" },
-    { id: "1", name: "My WishList", link: "/", icons: "" },
+    { id: "2", name: "My Cart", link: "/", icons: "" },
+    { id: "3", name: "My WishList", link: "/", icons: "" },
   ];
+
   return (
     <>
       {/* Primary Navigation Bar */}
@@ -72,7 +88,7 @@ const Navbar = () => {
           {/* Left: Mobile Hamburger & Logo */}
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setOpenMenu(true)}
+              onClick={() => setOpenMenu(!profileOn)}
               className="md:hidden p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600 transition-colors"
               aria-label="Open menu"
             >
@@ -120,7 +136,10 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center gap-3 relative">
+          <div
+            className="hidden md:flex items-center gap-3 relative"
+            ref={dropdownRef}
+          >
             {user ? (
               <button
                 onClick={() => setProfileOn(!profileOn)}
@@ -154,7 +173,10 @@ const Navbar = () => {
             {profileOn && (
               <div className="absolute right-0 top-16 z-50 w-64 overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm shadow-slate-200/50 transition-all">
                 {/* Header Section */}
-                <div className="flex items-center gap-3 border-b border-slate-100 p-4">
+                <button
+                  className="flex items-center gap-3 border-b border-slate-100 p-4"
+                  onClick={() => navigate("/profile")}
+                >
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-purple-200 bg-purple-100 font-semibold text-purple-700 shadow-xs">
                     {user?.name ? (
                       <span className="text-lg font-bold">
@@ -172,7 +194,10 @@ const Navbar = () => {
                       {user?.email || "Welcome back"}
                     </p>
                   </div>
-                </div>
+                  <div>
+                    <ChevronRight size={18} className="text-blue-300" />
+                  </div>
+                </button>
 
                 {/* Menu Options */}
                 <div className="p-1.5">

@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
 
 const mutex = new Mutex();
-
 const BaseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_BASE_SERVER,
   credentials: "include",
@@ -64,6 +63,13 @@ export const ApiSlice = createApi({
         body: userData,
       }),
     }),
+    activateUser:builder.mutation({
+    query:(data)=>({
+    url:"/activation",
+    method:'POST',
+    body:data
+    })
+    })
   }),
 });
-export const { useRegisterUserMutation } = ApiSlice;
+export const { useRegisterUserMutation,useActivateUserMutation} = ApiSlice;

@@ -10,7 +10,6 @@ import { redis } from '../Config/Redis.js';
 dotenv.config({path:path.resolve(process.cwd()+'.env')})
 export const Registration = CatchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
-
   if (!name || !email || !password) {
     return next(new ErrorHandler("Please enter all required fields!", 400));
   }

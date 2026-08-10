@@ -2,8 +2,18 @@ import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { IoClose } from "react-icons/io5";
+import {
+  useActivateUserMutation,
+  useRegisterUserMutation,
+} from "../Features/ApiSlice";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const AuthModal = ({ setModal, state: initialState = "login" }) => {
+  const [userRegister] = useRegisterUserMutation();
+  const navigate=useNavigate()
+  const [userActive] = useActivateUserMutation();
+  const [registerLoading, setRegisterLoading] = useState(false);
   const [registerInfo, setRegisterInfo] = useState({
     name: "",
     email: "",
@@ -13,6 +23,7 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
   const [step, setStep] = useState(1);
   const isLogin = currentState === "login";
   const [code, setCode] = useState("");
+  const [currentActivation, setCurrentActivation] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,6 +36,41 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
       ...prev,
       [name]: value,
     }));
+  };
+  //register new user
+  const registerHandler = async (e) => {
+    e.preventDefault();
+    try {
+      setRegisterLoading(true);
+      const result = await userRegister(registerInfo).unwrap();
+      console.log(result.success)
+      if (result.success==true) {
+        setCurrentActivation(result.activationToken);
+        toast.success(result.message);
+        setRegisterLoading(false);
+      }else if(result.success==false){
+        toast.error(result.message)
+        setRegisterInfo(false)
+      }
+    } catch (error) {
+      setRegisterInfo(false)
+    }
+  };
+  //activations
+  const handleActivations = async(e) => {
+    e.preventDefault();
+    try {
+      const result=await userActive({activation_code:code,activation_token:currentActivation})
+     
+     setRegisterLoading(false)
+    //   if(result.data.success===true){
+    //   toast.success(result.data.message)
+    //   setCurrentState('login')
+    //  }else{
+    //   alert(result.data.message)
+    //  }
+    
+    } catch (error) {}
   };
   return (
     <div
@@ -88,10 +134,7 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
             </div>
 
             {/* Form Part */}
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="flex flex-col gap-4"
-            >
+            <form onSubmit={registerHandler} className="flex flex-col gap-4">
               {!isLogin && (
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium text-gray-700">
@@ -99,7 +142,7 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
                   </label>
                   <input
                     name="name"
-                    value={registerInfo.name}
+                    value={registerInfo?.name||""}
                     onChange={changeRegisterHandler}
                     type="text"
                     placeholder="John Doe"
@@ -115,7 +158,7 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
                 <input
                   name="email"
                   type="email"
-                  value={registerInfo.email}
+                  value={registerInfo?.email||""}
                   onChange={changeRegisterHandler}
                   placeholder="name@example.com"
                   className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm"
@@ -129,7 +172,7 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
                 <input
                   name="password"
                   type="password"
-                  value={registerInfo.password}
+                  value={registerInfo?.password||""}
                   onChange={changeRegisterHandler}
                   placeholder="••••••••"
                   className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm"
@@ -139,7 +182,11 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
                 type="submit"
                 className="w-full bg-[#4266c7] hover:bg-[#3553a7] text-white py-2.5 rounded-lg text-sm font-semibold transition mt-2 shadow-md"
               >
-                {isLogin ? "Login Now" : "Register Now"}
+                {isLogin
+                  ? "Login Now"
+                  : registerLoading
+                    ? "Registering..."
+                    : "Register now"}
               </button>
             </form>
 
@@ -172,12 +219,12 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
             </div>
 
             {/* Input & Form Part */}
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <form onSubmit={handleActivations} className="flex flex-col gap-4">
               <div>
                 <input
                   type="text"
                   maxLength={4}
-                  value={code}
+                  value={code||"0"}
                   onChange={(e) =>
                     setCode(e.target.value.replace(/[^0-9]/g, ""))
                   }

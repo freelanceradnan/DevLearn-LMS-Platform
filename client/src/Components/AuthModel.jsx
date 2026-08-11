@@ -4,16 +4,24 @@ import { FcGoogle } from "react-icons/fc";
 import { IoClose } from "react-icons/io5";
 import {
   useActivateUserMutation,
+  useLoginUserMutation,
   useRegisterUserMutation,
 } from "../Features/ApiSlice";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../Features/AuthSlice";
 
 const AuthModal = ({ setModal, state: initialState = "login" }) => {
+  const dispatch=useDispatch()
   const [userRegister] = useRegisterUserMutation();
-  const navigate=useNavigate()
+  const [loginUser] = useLoginUserMutation();
+  const navigate = useNavigate();
   const [userActive] = useActivateUserMutation();
+  //loading states
   const [registerLoading, setRegisterLoading] = useState(false);
+  const [activateLoading, setActivateLoading] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
   const [registerInfo, setRegisterInfo] = useState({
     name: "",
     email: "",
@@ -24,11 +32,10 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
   const isLogin = currentState === "login";
   const [code, setCode] = useState("");
   const [currentActivation, setCurrentActivation] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
-
+  const [loginInfo, setLoginInfo] = useState({
+    email: "",
+    password: "",
+  });
   const changeRegisterHandler = (e) => {
     const { name, value } = e.target;
 
@@ -43,34 +50,71 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
     try {
       setRegisterLoading(true);
       const result = await userRegister(registerInfo).unwrap();
-      console.log(result.success)
-      if (result.success==true) {
+      if (result.success) {
         setCurrentActivation(result.activationToken);
-        toast.success(result.message);
         setRegisterLoading(false);
-      }else if(result.success==false){
-        toast.error(result.message)
-        setRegisterInfo(false)
+        toast.success(result.message || "Activation Email Sent to Your Email!");
+        setTimeout(() => {
+          setStep(2);
+        }, 1000);
       }
     } catch (error) {
-      setRegisterInfo(false)
+      setRegisterLoading(false);
+      setRegisterInfo({});
+      toast.success("Failed to Register User");
     }
   };
   //activations
-  const handleActivations = async(e) => {
+  const handleActivations = async (e) => {
     e.preventDefault();
+    setActivateLoading(true);
     try {
-      const result=await userActive({activation_code:code,activation_token:currentActivation})
+      const result = await userActive({
+        activation_code: code,
+        activation_token: currentActivation,
+      });
+      setRegisterLoading(false);
+      if (result.data) {
+        toast.success(result.data.message || "User verify success!");
+        setStep(1);
+        setCurrentState("login");
+        setActivateLoading(false);
+      } else {
+        toast.error(
+          result.error.data.message || "Failed to verify Activation code!",
+        );
+        setCode("");
+        setActivateLoading(false);
+      }
+    } catch (error) {
+      setActivateLoading(false);
+    }
+  };
+  //login new user
+
+  const loginHandler = async (e) => {
+    e.preventDefault();
+    setLoginLoading(true);
+    try {
+      const result = await loginUser({
+        email: registerInfo.email,
+        password: registerInfo.password,
+      });
      
-     setRegisterLoading(false)
-    //   if(result.data.success===true){
-    //   toast.success(result.data.message)
-    //   setCurrentState('login')
-    //  }else{
-    //   alert(result.data.message)
-    //  }
-    
-    } catch (error) {}
+      if (result.data) {
+        toast.success("login user success!");
+        dispatch(setUser(result.data.data))
+        setRegisterInfo({});
+        setModal(false)
+        setLoginLoading(false);
+      } else {
+        toast.error(result.error.data.message || "login user falied!");
+        setRegisterInfo({})
+        setLoginLoading(false);
+      }
+    } catch (error) {
+      setLoginLoading(false);
+    }
   };
   return (
     <div
@@ -134,7 +178,10 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
             </div>
 
             {/* Form Part */}
-            <form onSubmit={registerHandler} className="flex flex-col gap-4">
+            <form
+              onSubmit={isLogin ? loginHandler : registerHandler}
+              className="flex flex-col gap-4"
+            >
               {!isLogin && (
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium text-gray-700">
@@ -142,7 +189,7 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
                   </label>
                   <input
                     name="name"
-                    value={registerInfo?.name||""}
+                    value={registerInfo?.name || ""}
                     onChange={changeRegisterHandler}
                     type="text"
                     placeholder="John Doe"
@@ -158,7 +205,7 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
                 <input
                   name="email"
                   type="email"
-                  value={registerInfo?.email||""}
+                  value={registerInfo?.email || ""}
                   onChange={changeRegisterHandler}
                   placeholder="name@example.com"
                   className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm"
@@ -172,7 +219,8 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
                 <input
                   name="password"
                   type="password"
-                  value={registerInfo?.password||""}
+                  value={registerInfo?.password || ""}
+                  autoComplete="current-password"
                   onChange={changeRegisterHandler}
                   placeholder="••••••••"
                   className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm"
@@ -180,13 +228,10 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
               </div>
               <button
                 type="submit"
+                disabled={registerLoading}
                 className="w-full bg-[#4266c7] hover:bg-[#3553a7] text-white py-2.5 rounded-lg text-sm font-semibold transition mt-2 shadow-md"
               >
-                {isLogin
-                  ? "Login Now"
-                  : registerLoading
-                    ? "Registering..."
-                    : "Register now"}
+                {isLogin? loginLoading?"Logining...":"Login": registerLoading? "Registering...":"Register now"}
               </button>
             </form>
 
@@ -224,7 +269,7 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
                 <input
                   type="text"
                   maxLength={4}
-                  value={code||"0"}
+                  value={code || ""}
                   onChange={(e) =>
                     setCode(e.target.value.replace(/[^0-9]/g, ""))
                   }
@@ -235,10 +280,10 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
 
               <button
                 type="submit"
-                disabled={code.length !== 4}
+                disabled={code.length !== 4 || activateLoading}
                 className="w-full bg-[#4266c7] hover:bg-[#3553a7] disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-2.5 rounded-lg text-sm font-semibold transition shadow-md"
               >
-                Activate Account
+                {activateLoading ? "Activating Account..." : "Activate Account"}
               </button>
             </form>
 

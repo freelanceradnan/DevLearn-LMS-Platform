@@ -43,14 +43,6 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
   return result;
 };
 
-const handleLogout = () => {
-  if (
-    !window.location.pathname.includes("/login") &&
-    !window.location.pathname.includes("/register")
-  ) {
-    window.location.href = "/login";
-  }
-};
 export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
@@ -69,7 +61,20 @@ export const ApiSlice = createApi({
     method:'POST',
     body:data
     })
+    }),
+    loginUser:builder.mutation({
+    query:(data)=>({
+    url:'/login',
+    method:'POST',
+    body:data
+    })
+    }),
+    logoutUser:builder.mutation({
+    query:()=>({
+    url:'/logout',
+    method:'POST'
+    })
     })
   }),
 });
-export const { useRegisterUserMutation,useActivateUserMutation} = ApiSlice;
+export const { useRegisterUserMutation,useActivateUserMutation,useLoginUserMutation,useLogoutUserMutation} = ApiSlice;

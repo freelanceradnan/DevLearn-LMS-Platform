@@ -19,7 +19,7 @@ router.get("/", function (req, res) {
 router.post("/register", authController.Registration);
 router.post("/activation", authController.ActiveUser);
 router.post("/login", authController.UserLogin);
-router.post("/logout", isAuthenticated,AdminMiddlewares, authController.LogoutUser);
+router.post("/logout", isAuthenticated, authController.LogoutUser);
 router.get("/refreshtoken", authController.updateToken);
 router.get("/getUserInfo", isAuthenticated, userController.getInfo);
 router.post("/social-auth", authController.socialAuth);

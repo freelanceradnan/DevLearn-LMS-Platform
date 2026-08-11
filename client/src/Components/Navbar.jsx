@@ -7,6 +7,7 @@ import {
   Heart,
   HelpCircle,
   LogOut,
+  LogOutIcon,
   Menu,
   MessageSquare,
   Search,
@@ -20,6 +21,10 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import AuthModel from "./AuthModel";
+import { useDispatch, useSelector } from "react-redux";
+import { useLogoutUserMutation } from "../Features/ApiSlice";
+import toast from "react-hot-toast";
+import { setUser,logoutUser} from "../Features/AuthSlice";
 
 // Updated menu items with distinct icons and IDs
 const displayMenuItems = [
@@ -30,7 +35,9 @@ const displayMenuItems = [
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const user = null;
+  const [logoutuser] = useLogoutUserMutation();
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
   const dropdownRef = useRef(null);
   const [profileOn, setProfileOn] = useState(false);
   const [modal, setModal] = useState(false);
@@ -76,7 +83,19 @@ const Navbar = () => {
     { id: "2", name: "My Cart", link: "/", icons: "" },
     { id: "3", name: "My WishList", link: "/", icons: "" },
   ];
-
+  const logout = async () => {
+    try {
+      const result = await logoutuser().unwrap();
+      toast.success("logout success!");
+    } catch (error) {
+      toast.error("logout failed!");
+    } finally {
+      dispatch(logoutUser());
+      setProfileOn(false)
+      dispatch(ApiSlice.util.resetApiState());
+      
+    }
+  };
   return (
     <>
       {/* Primary Navigation Bar */}
@@ -207,19 +226,18 @@ const Navbar = () => {
                         className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-purple-600"
                       >
                         <div className="flex items-center gap-3">
-                          {/* <Icon
-                            size={18}
-                            className="text-slate-400 transition-colors group-hover:text-purple-600"
-                          /> */}
                           <span>{item.name}</span>
                         </div>
-                        <ChevronRight
-                          size={14}
-                          className="text-slate-300 opacity-0 transition-opacity group-hover:opacity-100"
-                        />
                       </a>
                     );
                   })}
+                  <button
+                    type="button"
+                    onClick={logout}
+                    className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-purple-600"
+                  >
+                    Logout
+                  </button>
                 </div>
               </div>
             )}

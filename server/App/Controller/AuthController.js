@@ -49,6 +49,7 @@ export const UserLogin=CatchAsyncError(async(req,res,next)=>{
     return next(new  ErrorHandler("enter email password to login",400))
   }
   const result=await MyLogin(email,password,res)
+ 
   if(!result.success){
     return next(new ErrorHandler("failed to login",400))
   }

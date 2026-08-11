@@ -112,13 +112,13 @@ export async function MyLogin(email, password, res) {
   const result = SendToken(userObject, 200, res);
   return { success: true, user: userObject, AccessToken: result.AccessToken };
 }
-export async function socialMyAuth(email,name,avatar,res){
- const user = await User.findOne({ email: email });
-  if(!user){
-    await User.create({email,name,avatar})
-    SendToken(user,200,res)
-  }else{
-     SendToken(user,200,res)
+export async function socialMyAuth(email, name, avatar, res) {
+  const user = await User.findOne({ email: email });
+  if (!user) {
+    await User.create({ email, name, avatar });
+    SendToken(user, 200, res);
+  } else {
+    SendToken(user, 200, res);
   }
-  return {success:true}
+  return { success: true };
 }

@@ -1,18 +1,18 @@
 import dotenv from "dotenv";
-dotenv.config({ path: "../../../server/.env" });
+import path from 'path'
+dotenv.config({path:path.resolve(process.cwd(),'../../../server/.env')});
 
 import { User } from "../Models/Users.js";
 import ejs from "ejs";
 import jwt from "jsonwebtoken";
-import path from "path";
+
 import { fileURLToPath } from "url";
 import sendMail from "../Utils/EmailSent.js";
 import bcrypt from "bcryptjs";
 import { SendToken } from "../Utils/Jwt_auth.js";
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+import { OAuth2Client } from 'google-auth-library';
 export async function MyRegister(name, email, password) {
   const normalizedEmail = email.toLowerCase();
 
@@ -112,13 +112,21 @@ export async function MyLogin(email, password, res) {
   const result = SendToken(userObject, 200, res);
   return { success: true, user: userObject, AccessToken: result.AccessToken };
 }
-export async function socialMyAuth(email, name, avatar, res) {
-  const user = await User.findOne({ email: email });
+export async function socialMyAuth(credential,res) {
+  const clientId=process.env.GOOGLE_CLIENT
+  const client = new OAuth2Client(clientId);
+  const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.VITE_GOOGLE_CLIENT_ID,
+    });
+  const userInfo=ticket.payload
+  const user = await User.findOne({ email: userInfo.email });
   if (!user) {
-    await User.create({ email, name, avatar });
-    SendToken(user, 200, res);
+   const newUser= await User.create({ email: userInfo.email, name:userInfo.name, avatar:userInfo.picture });
+    return SendToken(newUser, 200, res);
+ 
   } else {
-    SendToken(user, 200, res);
+    return SendToken(user, 200, res);
   }
-  return { success: true };
+  return { success: true,user:SendToken.user};
 }

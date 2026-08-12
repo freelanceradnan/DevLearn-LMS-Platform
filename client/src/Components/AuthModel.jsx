@@ -6,14 +6,16 @@ import {
   useActivateUserMutation,
   useLoginUserMutation,
   useRegisterUserMutation,
+  useSocialAuthMutation,
 } from "../Features/ApiSlice";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../Features/AuthSlice";
-
+import { GoogleLogin } from "@react-oauth/google";
 const AuthModal = ({ setModal, state: initialState = "login" }) => {
-  const dispatch=useDispatch()
+  const [googleLogin]=useSocialAuthMutation()
+  const dispatch = useDispatch();
   const [userRegister] = useRegisterUserMutation();
   const [loginUser] = useLoginUserMutation();
   const navigate = useNavigate();
@@ -100,22 +102,40 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
         email: registerInfo.email,
         password: registerInfo.password,
       });
-     
+
       if (result.data) {
         toast.success("login user success!");
-        dispatch(setUser(result.data.data))
+        dispatch(setUser(result.data.data));
         setRegisterInfo({});
-        setModal(false)
+        setModal(false);
         setLoginLoading(false);
       } else {
         toast.error(result.error.data.message || "login user falied!");
-        setRegisterInfo({})
+        setRegisterInfo({});
         setLoginLoading(false);
       }
     } catch (error) {
       setLoginLoading(false);
     }
   };
+  const handlesuccess = async(credential) => {
+   try {
+   const result=await googleLogin({credential:credential.credential}).unwrap()
+   if(result){
+    dispatch(setUser(result.data))
+    toast.success(`google ${currentState} success!`)
+    setModal(false)
+   }else{
+    toast.error("failed to authentication with google")
+   }
+  
+   } catch (error) {
+    toast.error("failed to authentication with google")
+   }
+  };
+  const handlerError=async()=>{
+    toast.error("Unable to use google Authentication!try different")
+  }
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200"
@@ -150,14 +170,14 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
 
             {/* Social Buttons */}
             <div className="flex gap-4 w-ful flex-col md:flex-row md:gap-2">
-              <button
-                type="button"
-                className="flex-1 flex items-center justify-center md:gap-2 border border-gray-300 py-2.5 px-4 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition shadow-sm w-full"
-              >
-                <FcGoogle size={20} />
-                <span>
-                  {isLogin ? "Login with Google" : "Sign with Google"}
-                </span>
+              <button type="button">
+                <GoogleLogin onSuccess={handlesuccess} useOneTap
+  type="standard" onError={handlerError}>
+                  <FcGoogle size={20} />
+                  <span>
+                    {isLogin ? "Login with Google" : "Sign with Google"}
+                  </span>
+                </GoogleLogin>
               </button>
               <button
                 type="button"
@@ -231,7 +251,13 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
                 disabled={registerLoading}
                 className="w-full bg-[#4266c7] hover:bg-[#3553a7] text-white py-2.5 rounded-lg text-sm font-semibold transition mt-2 shadow-md"
               >
-                {isLogin? loginLoading?"Logining...":"Login": registerLoading? "Registering...":"Register now"}
+                {isLogin
+                  ? loginLoading
+                    ? "Logining..."
+                    : "Login"
+                  : registerLoading
+                    ? "Registering..."
+                    : "Register now"}
               </button>
             </form>
 

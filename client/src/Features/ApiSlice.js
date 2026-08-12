@@ -74,7 +74,14 @@ export const ApiSlice = createApi({
     url:'/logout',
     method:'POST'
     })
+    }),
+    socialAuth:builder.mutation({
+    query:(credential)=>({
+    url:'/social-auth',
+    method:'POST',
+    body:credential
+    })
     })
   }),
 });
-export const { useRegisterUserMutation,useActivateUserMutation,useLoginUserMutation,useLogoutUserMutation} = ApiSlice;
+export const { useRegisterUserMutation,useActivateUserMutation,useLoginUserMutation,useLogoutUserMutation,useSocialAuthMutation} = ApiSlice;

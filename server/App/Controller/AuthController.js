@@ -120,13 +120,13 @@ export const updateToken = CatchAsyncError(async (req, res, next) => {
   });
 });
 export const socialAuth=CatchAsyncError(async(req,res,next)=>{
-  const {name,email,avatar}=req.body
-  if(!name || !email ||!avatar){
-  return next(new ErrorHandler("email ,password or avatar is missing"))
+  const {credential}=req.body
+  if(!credential){
+    return next(new ErrorHandler("credential is missing"))
   }
-  const result=await socialMyAuth(name,email,avatar,res)
+  const result=await socialMyAuth(credential,res)
   if(!result.success){
     return next(new ErrorHandler("cannot register user with social auth system!"))
   }
-  res.status(200).json({success:true,message:"social auth verification success!"})
+  res.status(200).json({success:true,message:"social auth verification success!",data:result.user})
 })

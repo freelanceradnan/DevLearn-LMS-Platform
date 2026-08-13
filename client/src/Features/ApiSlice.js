@@ -81,7 +81,14 @@ export const ApiSlice = createApi({
     method:'POST',
     body:credential
     })
+    }),
+    githubAuth:builder.mutation({
+     query:(code)=>({
+     url:'/github',
+     method:'POST',
+     body:{code}
+     })
     })
   }),
 });
-export const { useRegisterUserMutation,useActivateUserMutation,useLoginUserMutation,useLogoutUserMutation,useSocialAuthMutation} = ApiSlice;
+export const { useRegisterUserMutation,useActivateUserMutation,useLoginUserMutation,useLogoutUserMutation,useSocialAuthMutation,useGithubAuthMutation} = ApiSlice;

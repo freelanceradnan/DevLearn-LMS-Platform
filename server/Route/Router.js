@@ -23,6 +23,7 @@ router.post("/logout", isAuthenticated, authController.LogoutUser);
 router.get("/refreshtoken", authController.updateToken);
 router.get("/getUserInfo", isAuthenticated, userController.getInfo);
 router.post("/social-auth", authController.socialAuth);
+router.post('/github',authController.github)
 router.put("/update-info", isAuthenticated,userController.updateUserInfo);
 router.patch("/change-password", isAuthenticated,userController.updatePassword);
 router.put("/update-avatar", isAuthenticated,userController.UpdateUserAvatar);

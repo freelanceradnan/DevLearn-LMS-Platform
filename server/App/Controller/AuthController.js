@@ -1,27 +1,32 @@
-
-import dotenv from 'dotenv'
-import path from 'path'
+import dotenv from "dotenv";
+import path from "path";
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
-import { ActiveMyUser, MyLogin, MyRegister, socialMyAuth } from "../Services/AuthServices.js";
+import {
+  ActiveMyUser,
+  MyLogin,
+  MyRegister,
+  socialMyAuth,
+} from "../Services/AuthServices.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
-import { accesstokenOptions, refreshtokenOptions, SendToken } from "../Utils/Jwt_auth.js";
-import  jwt from 'jsonwebtoken';
-import { redis } from '../Config/Redis.js';
-dotenv.config({path:path.resolve(process.cwd()+'.env')})
+import {
+  accesstokenOptions,
+  refreshtokenOptions,
+  SendToken,
+} from "../Utils/Jwt_auth.js";
+import jwt from "jsonwebtoken";
+import { redis } from "../Config/Redis.js";
+dotenv.config({ path: path.resolve(process.cwd() + ".env") });
 export const Registration = CatchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
     return next(new ErrorHandler("Please enter all required fields!", 400));
   }
 
-
   const result = await MyRegister(name, email, password);
-
 
   if (!result.success) {
     return next(new ErrorHandler(result.message, 500));
   }
-
 
   res.status(201).json({
     success: true,
@@ -29,48 +34,76 @@ export const Registration = CatchAsyncError(async (req, res, next) => {
     activationToken: result.activationToken,
   });
 });
-export const ActiveUser=CatchAsyncError(async(req,res,next)=>{
-  const {activation_code,activation_token}=req.body
-  if(!activation_code || !activation_token){
-    return next(new ErrorHandler("activation code or activation token missing"))
+export const ActiveUser = CatchAsyncError(async (req, res, next) => {
+  const { activation_code, activation_token } = req.body;
+  if (!activation_code || !activation_token) {
+    return next(
+      new ErrorHandler("activation code or activation token missing"),
+    );
   }
-  const result=await ActiveMyUser(activation_code,activation_token)
-  if(!result.success){
-  return next(new ErrorHandler("Error to activated user",400))
+  const result = await ActiveMyUser(activation_code, activation_token);
+  if (!result.success) {
+    return next(new ErrorHandler("Error to activated user", 400));
   }
   res.status(201).json({
-    success:true,
-    message:"User Activated success"
-  })
-})
-export const UserLogin=CatchAsyncError(async(req,res,next)=>{
-  const {email,password}=req.body
-  if(!email || !password){
-    return next(new  ErrorHandler("enter email password to login",400))
+    success: true,
+    message: "User Activated success",
+  });
+});
+export const UserLogin = CatchAsyncError(async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next(new ErrorHandler("enter email password to login", 400));
   }
-  const result=await MyLogin(email,password,res)
- 
-  if(!result.success){
-    return next(new ErrorHandler("failed to login",400))
+  const result = await MyLogin(email, password, res);
+
+  if (!result.success) {
+    return next(new ErrorHandler("failed to login", 400));
   }
 
   res.status(200).json({
-    success:true,
-    message:"User login success!",
-    data:result.user,
-    AccessToken:result.AccessToken
-  })
-})
-export const LogoutUser=CatchAsyncError(async(req,res,next)=>{
-  res.clearCookie("access_token","",{maxAge:1})
-  res.clearCookie("refresh_token","",{maxAge:1})
-  const userId=req?.user?._id
-  redis.del(userId)
+    success: true,
+    message: "User login success!",
+    data: result.user,
+    AccessToken: result.AccessToken,
+  });
+});
+export const LogoutUser = CatchAsyncError(async (req, res, next) => {
+  const refreshToken = req.cookies.refresh_token;
+
+  let userId = req?.user?._id;
+
+  if (!userId && refreshToken) {
+    try {
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET,
+      );
+      userId = decoded.id;
+    } catch (err) {}
+  }
+
+  if (userId) {
+    await redis.del(userId);
+  }
+
+  res.clearCookie("access_token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+  });
+
+  res.clearCookie("refresh_token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+  });
+
   res.status(200).json({
-    success:true,
-    message:"logout success!"
-  })
-})
+    success: true,
+    message: "Logout success!",
+  });
+});
 export const updateToken = CatchAsyncError(async (req, res, next) => {
   const refresh_token = req?.cookies?.refresh_token;
 
@@ -85,48 +118,91 @@ export const updateToken = CatchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Invalid or expired refresh token", 400));
   }
 
-
   const session = await redis.get(decoded.id);
 
- 
   if (!session) {
     return next(new ErrorHandler("Session expired, please login again", 400));
   }
 
   const user = JSON.parse(session);
 
+  const AccessToken = jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN, {
+    expiresIn: "5m",
+  });
 
-  const AccessToken = jwt.sign(
-    { id: user._id },
-    process.env.ACCESS_TOKEN,
-    { expiresIn: "5m" }
-  );
-
-  const RefreshToken = jwt.sign(
-    { id: user._id },
-    process.env.REFRESH_TOKEN,
-    { expiresIn: "3d" }
-  );
+  const RefreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN, {
+    expiresIn: "3d",
+  });
 
   //Set cookies
   res.cookie("access_token", AccessToken, accesstokenOptions);
   res.cookie("refresh_token", RefreshToken, refreshtokenOptions);
-//auto expires redis cahing after 7days
-  await redis.set(user._id,JSON.stringify(user),"EX",604800)
+  //auto expires redis cahing after 7days
+  await redis.set(user._id, JSON.stringify(user), "EX", 604800);
 
   res.status(200).json({
     success: true,
     accessToken: AccessToken,
   });
 });
-export const socialAuth=CatchAsyncError(async(req,res,next)=>{
-  const {credential}=req.body
-  if(!credential){
-    return next(new ErrorHandler("credential is missing"))
+export const socialAuth = CatchAsyncError(async (req, res, next) => {
+  const { credential } = req.body;
+  if (!credential) {
+    return next(new ErrorHandler("credential is missing"));
   }
-  const result=await socialMyAuth(credential,res)
-  if(!result.success){
-    return next(new ErrorHandler("cannot register user with social auth system!"))
+  const result = await socialMyAuth(credential, res);
+  if (!result.success) {
+    return next(
+      new ErrorHandler("cannot register user with social auth system!"),
+    );
   }
-  res.status(200).json({success:true,message:"social auth verification success!",data:result.user})
-})
+  res
+    .status(200)
+    .json({
+      success: true,
+      message: "social auth verification success!",
+      data: result.user,
+    });
+});
+export const github = CatchAsyncError(async (req, res, next) => {
+  const { code } = req.body;
+ const tokenResponse = await fetch("https://github.com/login/oauth/access_token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_SECRET,
+      code,
+    }),
+  });
+  const tokenData = await tokenResponse.json();
+  const accessToken = tokenData.access_token;
+  if (!accessToken) {
+    return next(new ErrorHandler("Access token not found", 400));
+  }
+
+  // 1. Access Token দিয়ে GitHub Profile Data সংগ্রহ করা
+  const userResponse = await fetch("https://api.github.com/user", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "User-Agent": "DevLearning-App",
+    },
+  });
+  const githubUser = await userResponse.json();
+  console.log(tokenData)
+  let email = githubUser.email;
+  const userData = {
+    name: githubUser.name || githubUser.login,
+    email: email,
+    avatar: githubUser.avatar_url,
+    githubId: githubUser.id.toString(),
+  };
+  res.status(200).json({
+    success: true,
+    message: "GitHub authentication successful",
+    user: userData,
+  });
+});

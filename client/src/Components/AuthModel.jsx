@@ -136,6 +136,19 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
   const handlerError=async()=>{
     toast.error("Unable to use google Authentication!try different")
   }
+  const handlegithubLogin = () => {
+  const client_id = import.meta.env.VITE_GITHUB_CLIENT_ID;
+  const redirect_url = import.meta.env.VITE_GITHUB_REDIRECT_URL;
+
+  if (!client_id || !redirect_url) {
+    console.error("Environment variables missing!");
+    return;
+  }
+
+  window.location.href = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(
+    redirect_url
+  )}&scope=user:email`;
+};
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200"
@@ -181,6 +194,7 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
               </button>
               <button
                 type="button"
+                onClick={handlegithubLogin}
                 className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2.5 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition shadow-sm w-full"
               >
                 <FaGithub size={20} />

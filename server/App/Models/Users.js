@@ -12,6 +12,14 @@ const userSchema=mongoose.Schema({
     Courses:[
         {course_id:String}
     ],
+    googleId: {
+      type: String,
+      default: null,
+    },
+    githubId: {
+      type: String,
+      default: null,
+    },
     isVerified:{type:Boolean,default:false}
 },{timestamps:true,versionKey:false})
 export const User=mongoose.model('Users',userSchema)

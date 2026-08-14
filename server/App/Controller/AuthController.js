@@ -147,10 +147,8 @@ export const updateToken = CatchAsyncError(async (req, res, next) => {
 });
 export const socialAuth = CatchAsyncError(async (req, res, next) => {
   const { credential } = req.body;
-  if (!credential) {
-    return next(new ErrorHandler("credential is missing"));
-  }
-  const result = await socialMyAuth(credential, res);
+  const {githubDetails}=req.body
+  const result = await socialMyAuth(credential, res,githubDetails);
   if (!result.success) {
     return next(
       new ErrorHandler("cannot register user with social auth system!"),
@@ -166,7 +164,9 @@ export const socialAuth = CatchAsyncError(async (req, res, next) => {
 });
 export const github = CatchAsyncError(async (req, res, next) => {
   const { code } = req.body;
- const tokenResponse = await fetch("https://github.com/login/oauth/access_token", {
+
+  // 1. Exchange OAuth code for an Access Token
+  const tokenResponse = await fetch("https://github.com/login/oauth/access_token", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -178,13 +178,15 @@ export const github = CatchAsyncError(async (req, res, next) => {
       code,
     }),
   });
+
   const tokenData = await tokenResponse.json();
   const accessToken = tokenData.access_token;
+
   if (!accessToken) {
     return next(new ErrorHandler("Access token not found", 400));
   }
 
-  // 1. Access Token দিয়ে GitHub Profile Data সংগ্রহ করা
+  // 2. Fetch User Profile
   const userResponse = await fetch("https://api.github.com/user", {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -192,14 +194,31 @@ export const github = CatchAsyncError(async (req, res, next) => {
     },
   });
   const githubUser = await userResponse.json();
-  console.log(tokenData)
+
   let email = githubUser.email;
+
+  if (!email) {
+    const emailsResponse = await fetch("https://api.github.com/user/emails", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "User-Agent": "DevLearning-App",
+      },
+    });
+
+    if (emailsResponse.ok) {
+      const emails = await emailsResponse.json();
+      const primaryEmailObj = emails.find((e) => e.primary && e.verified);
+      email = primaryEmailObj ? primaryEmailObj.email : emails[0]?.email || null;
+    }
+  }
+
   const userData = {
     name: githubUser.name || githubUser.login,
     email: email,
     avatar: githubUser.avatar_url,
     githubId: githubUser.id.toString(),
   };
+
   res.status(200).json({
     success: true,
     message: "GitHub authentication successful",

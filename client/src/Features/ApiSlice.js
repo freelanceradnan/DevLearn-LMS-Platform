@@ -76,10 +76,10 @@ export const ApiSlice = createApi({
     })
     }),
     socialAuth:builder.mutation({
-    query:(credential)=>({
+    query:({credential,githubDetails})=>({
     url:'/social-auth',
     method:'POST',
-    body:credential
+    body:{credential,githubDetails}
     })
     }),
     githubAuth:builder.mutation({

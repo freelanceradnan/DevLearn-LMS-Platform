@@ -4,6 +4,7 @@ import {
   BookOpen,
   ChevronRight,
   CreditCard,
+  Headset,
   Heart,
   HelpCircle,
   LogOut,
@@ -13,6 +14,7 @@ import {
   Search,
   Settings,
   ShoppingBag,
+  ShoppingCart,
   User,
   UserPlus,
   X,
@@ -22,16 +24,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import AuthModel from "./AuthModel";
 import { useDispatch, useSelector } from "react-redux";
-import { useLogoutUserMutation } from "../Features/ApiSlice";
+import { ApiSlice, useLogoutUserMutation } from "../Features/ApiSlice";
 import toast from "react-hot-toast";
 import { setUser,logoutUser} from "../Features/AuthSlice";
+import ProfileMenu from "./ProfileMenu";
+import UserMenu from "./UserMenu";
 
-// Updated menu items with distinct icons and IDs
-const displayMenuItems = [
-  { id: "courses", name: "My Courses", link: "/courses", icon: BookOpen },
-  { id: "cart", name: "My Cart", link: "/cart", icon: ShoppingBag },
-  { id: "wishlist", name: "My Wishlist", link: "/wishlist", icon: Heart },
-];
+// every users visible otpions
+const guestMenu=[
+   { name: "My Cart", to: "/cart",icons:<ShoppingCart size={16}/>},
+    { name: "My WishList", to: "/withlist",icons:<Heart size={16}/>},
+     { name: "Help and Support", to: "/support",icons:<Headset size={16}/>},
+]
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -73,16 +77,6 @@ const Navbar = () => {
     }
   };
 
-  const mobileMenuItems = [
-    { id: "courses", name: "Courses", link: "/courses", icon: BookOpen },
-    { id: "invite", name: "Invite Friends", link: "/invite", icon: UserPlus },
-    { id: "help", name: "Help & Support", link: "/help", icon: HelpCircle },
-  ];
-  const displayMenuItems = [
-    { id: "1", name: "My Courses", link: "/", icons: "" },
-    { id: "2", name: "My Cart", link: "/", icons: "" },
-    { id: "3", name: "My WishList", link: "/", icons: "" },
-  ];
   const logout = async () => {
     try {
       const result = await logoutuser().unwrap();
@@ -202,7 +196,7 @@ const Navbar = () => {
                       <User size={20} className="text-purple-600" />
                     )}
                   </div>
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0 flex-1 flex flex-col items-start">
                     <p className="truncate text-sm font-semibold text-slate-800">
                       {user?.name || "Guest User"}
                     </p>
@@ -217,27 +211,23 @@ const Navbar = () => {
 
                 {/* Menu Options */}
                 <div className="p-1.5">
-                  {displayMenuItems.map((item) => {
-                    // const Icon = item?.icon;
-                    return (
-                      <a
-                        key={item?.id}
-                        href={item?.link}
-                        className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-purple-600"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span>{item.name}</span>
-                        </div>
-                      </a>
-                    );
-                  })}
-                  <button
-                    type="button"
-                    onClick={logout}
-                    className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-purple-600"
-                  >
-                    Logout
-                  </button>
+             {user?(
+<>
+ <UserMenu logout={logout}/>
+</>
+                ):(
+<>
+
+                   <div className="flex flex-col gap-2.5 items-start">
+                       {guestMenu.map((items,index) => (
+                         <Link key={index} className="hover:bg-[#f0f6ff] w-full py-1 text-sm px-1 flex gap-2 items-center text-[#676a83]">
+                            <span> {items.icons}</span>
+                             {items.name}</Link>
+                       ))}
+                       
+                     </div>
+</>
+                )}
                 </div>
               </div>
             )}
@@ -339,26 +329,24 @@ const Navbar = () => {
               </div>
 
               {/* Primary Mobile Menu Items */}
-              <div className="p-2 space-y-1">
-                {mobileMenuItems.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <button
-                      key={item.id}
-                      className="w-full flex items-center justify-between p-3 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-purple-700 text-sm font-medium transition-colors"
-                      onClick={() => {
-                        setOpenMenu(false);
-                        navigate(item.link);
-                      }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Icon size={18} className="text-gray-500" />
-                        <span>{item.name}</span>
-                      </div>
-                      <ChevronRight size={16} className="text-gray-400" />
-                    </button>
-                  );
-                })}
+              <div className="p-3 space-y-1">
+                {user?(
+<>
+ <UserMenu logout={logout}/>
+</>
+                ):(
+<>
+
+                   <div className="flex flex-col gap-2.5 items-start">
+                       {guestMenu.map((items,index) => (
+                         <Link key={index} className="hover:bg-[#f0f6ff] w-full py-1 text-sm px-1 flex gap-2 items-center text-[#676a83]">
+                            <span> {items.icons}</span>
+                             {items.name}</Link>
+                       ))}
+                       
+                     </div>
+</>
+                )}
               </div>
             </div>
 
@@ -397,57 +385,7 @@ const Navbar = () => {
 
               {/* Account Navigation */}
               <div className="p-4 space-y-6 flex-1 overflow-y-auto">
-                <h2 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-2">
-                  Your Account
-                </h2>
-
-                {/*Alerts */}
-                <div>
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                    Alerts
-                  </p>
-                  <div className="space-y-1">
-                    <button className="w-full flex items-center gap-3 p-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-md transition-colors">
-                      <Bell size={16} /> Notifications
-                    </button>
-                    <button className="w-full flex items-center gap-3 p-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-md transition-colors">
-                      <MessageSquare size={16} /> Messages
-                    </button>
-                    <button className="w-full flex items-center gap-3 p-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-md transition-colors">
-                      <Heart size={16} /> Wishlist
-                    </button>
-                  </div>
-                </div>
-
-                {/* Section 2: Account */}
-                <div>
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                    Account
-                  </p>
-                  <div className="space-y-1">
-                    <button className="w-full flex items-center gap-3 p-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-md transition-colors">
-                      <Settings size={16} /> Account Settings
-                    </button>
-                    <button className="w-full flex items-center gap-3 p-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-md transition-colors">
-                      <CreditCard size={16} /> Purchase History
-                    </button>
-                  </div>
-                </div>
-
-                {/* Section 3: Profile */}
-                <div>
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                    Profile
-                  </p>
-                  <div className="space-y-1">
-                    <button className="w-full flex items-center gap-3 p-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-md transition-colors">
-                      <User size={16} /> Public Profile
-                    </button>
-                    <button className="w-full flex items-center gap-3 p-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors">
-                      <LogOut size={16} /> Logout
-                    </button>
-                  </div>
-                </div>
+              <ProfileMenu/>
               </div>
             </div>
           )}

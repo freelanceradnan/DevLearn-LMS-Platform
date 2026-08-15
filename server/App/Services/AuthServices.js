@@ -104,7 +104,11 @@ export async function MyLogin(email, password, res) {
   if (!isExistingUser) {
     throw new Error("User not found!");
   }
+  if(isExistingUser.password===undefined){
+  throw new Error('You have a account with google/github login with this!')
+  }
   const isMatch = await bcrypt.compare(password, isExistingUser.password);
+  
   if (!isMatch) {
     throw new Error("user and pass not match!");
   }
@@ -121,8 +125,6 @@ export async function socialMyAuth(credential, res, githubDetails) {
     let avatar = "";
     let googleId = null;
     let githubId = null;
-
-    // ১. গুগল থেকে ক্র্যাডেনশিয়াল আসলে তা ভেরিফাই করা
     if (credential) {
       const clientId = process.env.GOOGLE_CLIENT || process.env.VITE_GOOGLE_CLIENT_ID;
       const client = new OAuth2Client(clientId);
@@ -135,30 +137,25 @@ export async function socialMyAuth(credential, res, githubDetails) {
       const payload = ticket.getPayload();
       email = payload.email;
       name = payload.name;
-      avatar = payload.picture; // গুগল পিকচার দেয় 'picture' নামে
+      avatar = payload.picture; 
       googleId = payload.sub;
     } 
-    // ২. গিটহাবের ডেটা প্রসেস করা
+   
     else if (githubDetails) {
       email = githubDetails.email;
       name = githubDetails.name;
-      // গিটহাবের অবজেক্টে avatar বা avatar_url বা picture যাই আসুক তা রিসিভ করবে
       avatar = githubDetails.avatar || githubDetails.avatar_url || githubDetails.picture;
       githubId = String(githubDetails.githubId || githubDetails.id);
     } else {
       return res.status(400).json({ success: false, message: "No authentication credentials provided" });
     }
-
-    // ইমেইল না থাকলে এরর হ্যান্ডেল করা
     if (!email) {
       return res.status(400).json({ success: false, message: "Email is required for social authentication" });
     }
 
-    // ৩. ব্যাকএন্ড ডেটাবেজে ইউজার খোঁজা
     let user = await User.findOne({ email });
 
     if (!user) {
-      // নতুন ইউজার হলে ডাটাবেজে সেভ করা
       user = await User.create({
         email,
         name,
@@ -167,7 +164,6 @@ export async function socialMyAuth(credential, res, githubDetails) {
         githubId,
       });
     } else {
-      // পুরাতন ইউজার হলে গিটহাব/গুগল আইডি লিংক করা (যদি আগে না থাকে)
       let isUpdated = false;
 
       if (googleId && !user.googleId) {
@@ -187,8 +183,6 @@ export async function socialMyAuth(credential, res, githubDetails) {
         await user.save();
       }
     }
-
-    // ৪. টোকেন রেসপন্স পাঠানো
     return SendToken(user, 200, res);
 
   } catch (error) {

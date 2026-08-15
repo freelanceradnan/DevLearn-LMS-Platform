@@ -19,7 +19,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
       try {
         const refreshResult = await BaseQuery(
           {
-            url: "/updateAccesstoken",
+            url: "/refreshtoken",
             method: "GET",
           },
           api,

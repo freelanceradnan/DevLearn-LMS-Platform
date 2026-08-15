@@ -6,6 +6,7 @@ import CategoriesCard from '../Components/CategoriesCard';
 import Testimonial from '../Components/Testimonial';
 import Faq from '../Components/Faq';
 import AuthModel from '../Components/AuthModel';
+import PartnersSection from '../Components/TrustedParners';
 
 const Home = () => {
   
@@ -15,8 +16,9 @@ const Home = () => {
       <PopularCourses/>
       <CategoriesCard/>
       <Testimonial/>
+    
       <Faq/>
-     
+       <PartnersSection/>
     
     </div>
   );

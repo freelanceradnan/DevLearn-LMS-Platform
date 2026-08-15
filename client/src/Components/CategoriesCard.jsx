@@ -10,9 +10,9 @@ const CategoriesCard = () => {
   ];
     return (
         <div className='w-full max-w-7xl mx-auto px-4 py-8'>
-            <section className="bg-[#F0F6FF] px-4">
+            <section className="bg-[FFFFFF] px-4">
       <div className="max-w-4xl mx-auto py-10">
-        <h2 className="text-center text-xl md:text-xl font-bold text-gray-900 mb-4">
+        <h2 className="text-2xl section-title md:text-xl font-bold text-gray-900 mb-4 text-center">
           What brings you to DevLearn today?
         </h2>
 

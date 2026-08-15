@@ -39,11 +39,11 @@ const PopularCourses = () => {
         }
     ]
     return (
-        <div className='w-full max-w-7xl mx-auto px-4 py-6'>
+        <div className='w-full max-w-7xl mx-auto px-4 py-6 bg-[#EFEFF7]'>
            <div className='flex justify-between pb-12'>
              <div className='w-1/2'>
-                <h2 className='text-2xl text-[#000000]'>Trending courses</h2>
-                <p className='text-sm text-[#263d47]'>Get the skills of real-world</p>
+                <h2 className='text-2xl text-[#000000] section-title'>Get choice of your course</h2>
+               
              </div>
              <button className='flex gap-1 justify-center items-center text-[#6D28D5] text-sm font-semibold'>See More <ArrowRight size={20}/></button>
            </div>

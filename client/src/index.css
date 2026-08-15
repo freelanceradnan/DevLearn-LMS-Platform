@@ -1,6 +1,51 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap');
 
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500;
+}
 .footer-h2{
   font-weight:600;
-  font-size: 1.2rem;
+  font-size: 1rem;
+}
+.hero-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600; 
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500; 
+  line-height: 1.6;
+  color: #dde3ee;
+}
+
+.hero-button {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.section-title {
+  font-family: 'Plus Jakarta Sans', sans-serif; 
+  font-weight: 500; 
+  font-size: 1.8rem;
+  line-height: 1.25;
+  color: #2b2b36;
+  letter-spacing: -0.01em;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }

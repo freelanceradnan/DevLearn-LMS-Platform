@@ -34,16 +34,14 @@ const dummyData = [
 
 const Testimonial = () => {
   return (
-    <section className="w-full bg-slate-50 px-4 sm:px-6 lg:px-8">
+    <section className="max-w-7xl bg-[#EFEFF7] px-4 sm:px-6 lg:px-8 py-10 mx-auto">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="mx-auto pb-10">
-          <h2 className="text-2xl text-slate-900 tracking-tight">
+          <h2 className="text-2xl text-[#000000] section-title">
             Why people choose DevLearn Academy
           </h2>
-          <p className="text-sm text-slate-600">
-            Discover how millions of learners are transforming their careers and lives.
-          </p>
+          
         </div>
 
         {/* Testimonials Grid */}

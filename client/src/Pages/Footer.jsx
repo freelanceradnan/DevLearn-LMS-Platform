@@ -3,15 +3,15 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-slate-50 border-t border-slate-200 text-slate-600 text-sm">
+    <footer className="w-full bg-[#282834] border-t border-slate-200 text-slate-600 text-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Footer Top Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-6">
           
           {/* Column 1: About */}
           <div className="flex flex-col gap-3">
-            <h2 className="text-base font-semibold text-slate-900 tracking-wide">About</h2>
-            <ul className="space-y-2">
+            <h2 className="text-base font-semibold text-[#FAFAFA] tracking-wide">About</h2>
+            <ul className="space-y-2 text-[#6A6A75]">
               <li><a href="#" className="hover:text-blue-600 transition-colors">About us</a></li>
               <li><a href="#" className="hover:text-blue-600 transition-colors">Careers</a></li>
               <li><a href="#" className="hover:text-blue-600 transition-colors">Contact us</a></li>
@@ -23,8 +23,8 @@ const Footer = () => {
 
           {/* Column 2: Discover */}
           <div className="flex flex-col gap-3">
-            <h2 className="text-base font-semibold text-slate-900 tracking-wide">Discover DevLearn</h2>
-            <ul className="space-y-2">
+            <h2 className="text-base font-semibold text-[#FAFAFA] tracking-wide">Discover DevLearn</h2>
+            <ul className="space-y-2 text-[#6A6A75]">
               <li><a href="#" className="hover:text-blue-600 transition-colors">Get the app</a></li>
               <li><a href="#" className="hover:text-blue-600 transition-colors">Teach on DevLearn</a></li>
               <li><a href="#" className="hover:text-blue-600 transition-colors">Plans and Pricing</a></li>
@@ -35,8 +35,8 @@ const Footer = () => {
 
           {/* Column 3: Legal */}
           <div className="flex flex-col gap-3">
-            <h2 className="text-base font-semibold text-slate-900 tracking-wide">Legal & Accessibility</h2>
-            <ul className="space-y-2">
+            <h2 className="text-base font-semibold text-[#FAFAFA] tracking-wide">Legal & Accessibility</h2>
+            <ul className="space-y-2 text-[#6A6A75]">
               <li><a href="#" className="hover:text-blue-600 transition-colors">Accessibility statement</a></li>
               <li><a href="#" className="hover:text-blue-600 transition-colors">Privacy policy</a></li>
               <li><a href="#" className="hover:text-blue-600 transition-colors">Sitemap</a></li>
@@ -46,9 +46,9 @@ const Footer = () => {
 
           {/* Column 4: Contact */}
           <div className="flex flex-col gap-3">
-            <h2 className="text-base font-semibold text-slate-900 tracking-wide">Contact Us</h2>
-            <address className="not-italic space-y-2.5">
-              <div className="flex items-start gap-2">
+            <h2 className="text-base font-semibold text-[#FAFAFA] tracking-wide">Contact Us</h2>
+            <address className="not-italic space-y-2.5 text-[#6A6A75]">
+              <div className="flex items-start gap-2 ">
                 <svg className="w-4 h-4 mt-0.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -73,7 +73,7 @@ const Footer = () => {
         </div>
 
         {/* Socials Links*/}
-        <div className="pt-8 border-t border-slate-300">
+        <div className="pt-8 border-t border-[#494958]">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500">
             <div>
               © 2026 DevLearn Inc. All rights reserved.

@@ -20,7 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import AuthModel from "./AuthModel";
 import { useDispatch, useSelector } from "react-redux";
@@ -181,11 +181,14 @@ const Navbar = () => {
               </>
             )}
             {profileOn && (
-              <div className="absolute right-0 top-16 z-50 w-64 overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm shadow-slate-200/50 transition-all">
+              <div className="absolute right-0 top-15 z-50 w-64 overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm shadow-slate-200/50 transition-all">
                 {/* Header Section */}
                 <button
                   className="flex items-center gap-3 border-b border-slate-100 p-4"
-                  onClick={() => navigate("/profile")}
+                  onClick={() =>{
+                     navigate("/profile/info")
+                     setProfileOn(false)
+                  }}
                 >
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-purple-200 bg-purple-100 font-semibold text-purple-700 shadow-xs">
                     {user?.name ? (
@@ -210,7 +213,7 @@ const Navbar = () => {
                 </button>
 
                 {/* Menu Options */}
-                <div className="p-1.5">
+                <div className="py-2 px-6">
              {user?(
 <>
  <UserMenu logout={logout}/>
@@ -291,7 +294,10 @@ const Navbar = () => {
                 {user ? (
                   <button
                     className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-purple-50 transition-colors text-left"
-                    onClick={() => setProfileMenuOpen(true)}
+                    onClick={() =>{
+                       navigate('/profile')
+                       setOpenMenu(false)
+                    }}
                   >
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 bg-purple-100 text-purple-700 font-semibold rounded-full flex items-center justify-center border border-purple-200">
@@ -364,28 +370,13 @@ const Navbar = () => {
             >
               {/* Back Header */}
               <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-                <button
-                  className="flex items-center gap-1.5 text-sm font-semibold text-gray-700 hover:text-purple-700 transition-colors"
-                  onClick={() => setProfileMenuOpen(false)}
-                >
-                  <ArrowLeft size={16} />
-                  <span>Back</span>
-                </button>
-                <button
-                  className="p-1 text-gray-400 hover:text-gray-600 rounded-full"
-                  onClick={() => {
-                    setOpenMenu(false);
-                    setProfileMenuOpen(false);
-                  }}
-                  aria-label="Close menu"
-                >
-                  <X size={18} />
-                </button>
+              
+               
               </div>
 
               {/* Account Navigation */}
               <div className="p-4 space-y-6 flex-1 overflow-y-auto">
-              <ProfileMenu/>
+              <Navigate to="/profile"/>
               </div>
             </div>
           )}

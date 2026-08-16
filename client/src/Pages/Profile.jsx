@@ -10,7 +10,7 @@ const Profile = () => {
                 <ProfileMenu/>
             </div>
             {/* options menu */}
-            <div className=''>
+            <div className='w-full mx-auto'>
            <Outlet/>
             </div>
         </div>

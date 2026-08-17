@@ -49,6 +49,8 @@ const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+
   // automatic disabled menu for pc
   useEffect(() => {
     function handleClickOutside(event) {
@@ -76,7 +78,12 @@ const Navbar = () => {
       navigate(`/courses?search=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
-
+  //checking isadmin login
+useEffect(() => {
+    if (user?.role === 'admin') {
+      navigate('/admin', { replace: true });
+    }
+  }, [user, navigate]);
   const logout = async () => {
     try {
       const result = await logoutuser().unwrap();

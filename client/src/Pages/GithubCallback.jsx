@@ -22,7 +22,7 @@ const GitHubCallback = () => {
         const result=await  githubAccess(code).unwrap()
        if(result.user){
        const githubLogin=await githubUser({githubDetails:result.user}).unwrap()
-       dispatch(setUser(result.user))
+       dispatch(setUser(githubLogin?.data))
        toast.success('login with github added')
        navigate('/')
        }

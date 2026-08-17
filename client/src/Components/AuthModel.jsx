@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { IoClose } from "react-icons/io5";
@@ -10,10 +10,11 @@ import {
 } from "../Features/ApiSlice";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../Features/AuthSlice";
 import { GoogleLogin } from "@react-oauth/google";
 const AuthModal = ({ setModal, state: initialState = "login" }) => {
+  const {user}=useSelector((state)=>state.auth)
   const [googleLogin]=useSocialAuthMutation()
   const dispatch = useDispatch();
   const [userRegister] = useRegisterUserMutation();
@@ -46,6 +47,7 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
       [name]: value,
     }));
   };
+
   //register new user
   const registerHandler = async (e) => {
     e.preventDefault();
@@ -104,11 +106,14 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
       });
 
       if (result.data) {
+        const userdata=result.data.data
         toast.success("login user success!");
-        dispatch(setUser(result.data.data));
+        dispatch(setUser());
+        
         setRegisterInfo({});
         setModal(false);
         setLoginLoading(false);
+        
       } else {
         toast.error(result.error.data.message || "login user falied!");
         setRegisterInfo({});
@@ -259,7 +264,11 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
                   placeholder="••••••••"
                   className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm"
                 />
+                 <button className="flex justify-end text-sm font-semibold text-[#4266c7]" type="button" onClick={()=>setStep(3)}>
+                Forgot Password?
+              </button>
               </div>
+             
               <button
                 type="submit"
                 disabled={registerLoading}
@@ -338,6 +347,51 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
               </button>
             </div>
           </div>
+        )}
+        {step===3 &&(
+          <>
+          <div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-800">
+                  Forgot Password
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  Forgot password for Access Back to Login
+                </p>
+                </div>
+                 <div className="flex flex-col gap-1.5 my-6">
+                <label className="text-sm font-medium text-gray-700">
+                  Enter your login Email
+                </label>
+                <input
+                  name="password"
+                  type="email"
+                  value={registerInfo?.password || ""}
+                  autoComplete="current-password"
+                  onChange={changeRegisterHandler}
+                  placeholder="new@gmail.com"
+                  className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm"
+                />
+                <button
+                type="button"
+                className="w-full bg-[#4266c7] hover:bg-[#3553a7] text-white py-2.5 rounded-lg text-sm font-semibold transition mt-2 shadow-md"
+              
+              >
+               Sent Otp
+              </button>
+                 <div className="text-center text-sm text-gray-600 flex gap-2 justify-center py-2">
+             <div>Already Have Password?</div>
+              <button
+                type="button"
+                onClick={() =>setStep(1)}
+                className="text-[#4266c7] font-semibold hover:underline"
+              >
+                Login Now
+              </button>
+            </div>
+              </div>
+              </div>
+          </>
         )}
       </div>
     </div>

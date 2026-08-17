@@ -19,7 +19,7 @@ const ProfileInfo = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-6 space-y-6">
+    <div className="md:max-w-3xl mx-auto md:px-6 space-y-6 w-full py-5 md:py-0">
   
       <div className="border border-gray-200 rounded-lg p-6 bg-white shadow-sm flex items-center gap-6">
         <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center border text-gray-400 font-semibold text-xl">

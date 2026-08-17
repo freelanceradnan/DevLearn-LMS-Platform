@@ -1,11 +1,12 @@
 import { Bell, CreditCard, Heart, LogOut, MessageSquareHeart, Settings, ShieldX, User } from 'lucide-react';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../Features/AuthSlice';
 const ProfileMenu = () => {
   const dispatch=useDispatch()
   const navigate=useNavigate()
+  const location = useLocation();
   const [ActiveMenu,setActiveMenu]=useState()
   const ProfileMenuOptions=[
     {name:"Profile Info",link:'/profile/info',icon:<User size={16}/>},
@@ -38,7 +39,7 @@ const ProfileMenu = () => {
                   </p> */}
                   <div className="space-y-1 flex flex-col items-start">
                     {ProfileMenuOptions.map((item,index)=>{
-                      const isActive=item.name===ActiveMenu;
+                      const isActive = location.pathname === item.link;
                       return (<Link className={`w-full flex items-center gap-3 p-2 text-sm text-gray-700 hover:bg-purple-50 ${isActive?"text-purple-700 bg-purple-200":""} rounded-md transition-colors` }key={index} onClick={()=>setActiveMenu(item.name)} to={item.link}>
                         <span >{item.icon}</span>
                         {item.name}

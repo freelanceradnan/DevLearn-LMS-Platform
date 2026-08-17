@@ -49,3 +49,20 @@ body {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+/* In index.css / globals.css */
+@layer utilities {
+  /* Dark styled scrollbar */
+  .dark-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  .dark-scrollbar::-webkit-scrollbar-track {
+    background: #0f172a; /* slate-900 */
+  }
+  .dark-scrollbar::-webkit-scrollbar-thumb {
+    background: #334155; /* slate-700 */
+    border-radius: 9999px;
+  }
+  .dark-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #475569; /* slate-600 */
+  }
+}

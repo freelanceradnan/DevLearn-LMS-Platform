@@ -1,74 +1,37 @@
 import React from 'react';
-import {
-  LayoutDashboard,
-  Users,
-  FileText,
-  PlusSquare,
-  Video,
-  Image,
-  HelpCircle,
-  Grid,
-  UserCheck,
-  BarChart2,
-  TrendingUp,
-  PieChart,
-  LogOut,
-} from 'lucide-react';
+import { LogOut } from 'lucide-react';
+import { assets } from '../assets/assets';
 
-export default function Sidebar() {
-  const menuGroups = [
-    {
-      group: 'Overview',
-      items: [
-        { label: 'Dashboard', icon: LayoutDashboard },
-        { label: 'Users', icon: Users },
-        { label: 'Invoices', icon: FileText },
-      ],
-    },
-    {
-      group: 'Content',
-      items: [
-        { label: 'Create Course', icon: PlusSquare },
-        { label: 'Live Courses', icon: Video },
-        { label: 'Hero', icon: Image },
-        { label: 'FAQ', icon: HelpCircle },
-        { label: 'Categories', icon: Grid },
-      ],
-    },
-    {
-      group: 'Management',
-      items: [
-        { label: 'Manage Team', icon: UserCheck },
-      ],
-    },
-    {
-      group: 'Analytics',
-      items: [
-        { label: 'Courses Analytics', icon: BarChart2 },
-        { label: 'Orders Analytics', icon: TrendingUp },
-        { label: 'Users Analytics', icon: PieChart },
-      ],
-    },
-  ];
-
-  return (
-    <aside className="w-64 h-screen bg-[#FFFFFF] text-zinc-300 flex flex-col fixed top-0 left-0 border-r border-[#CBD0DD] z-20">
+export default function Sidebar({ showMobileMenu, setShowMobileMenu, menuGroups = [] }) {
+ 
+  const RenderNavContent = () => (
+    <>
       {/* Header */}
-      <div className="h-15 flex items-center px-6 border-b border-[#CBD0DD] font-bold text-lg tracking-wider text-black">
-        Admin Panel
+      <header className="flex h-16 items-center border border-[#E0E0E2] bg-[#F4F4F6] px-6 tracking-wider text-[#18181A]">
+  <div>
+    <div className="flex items-center gap-1.5">
+      <img src={assets.adminLogo} alt="DevLearn Logo" className="w-8" />
+      <div>
+        <span className="font-semibold uppercase text-sm">DevLearn</span>
+      <h2 className="text-xs font-light text-gray-500">Control everything here</h2>
       </div>
+    </div>
+    
+  </div>
+</header>
 
+      {/* Navigation List */}
       <nav 
         className="flex-1 overflow-y-auto px-4 py-4 space-y-6 
           [&::-webkit-scrollbar]:w-1.5
           [&::-webkit-scrollbar-track]:bg-transparent
           [&::-webkit-scrollbar-thumb]:bg-transparent
-          hover:[&::-webkit-scrollbar-thumb]:bg-zinc-700
-          [&::-webkit-scrollbar-thumb]:rounded-full"
+          hover:[&::-webkit-scrollbar-thumb]:bg-zinc-300
+          [&::-webkit-scrollbar-thumb]:rounded-full bg-[#F4F4F6]"
       >
         {menuGroups.map((group, groupIdx) => (
           <div key={groupIdx}>
-            <p className="px-3 text-[11px] font-semibold text-zinc-500 uppercase tracking-widest mb-2">
+            <p className="px-3 text-[11px] font-semibold text-[#6f6f7a] uppercase tracking-widest mb-2">
               {group.group}
             </p>
             <ul className="space-y-1">
@@ -78,10 +41,12 @@ export default function Sidebar() {
                   <li key={itemIdx}>
                     <a
                       href="#"
-                      className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-[#EFF2F6] hover:text-[#EFF2F6] transition-colors"
+                      className="group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-[#E7E7E9] transition-colors"
                     >
-                      <Icon size={18} className="text-[#2d2d35] group-hover:text-white" />
-                      <span className='text-[#565663] text-xs'>{item.label}</span>
+                      <Icon size={18} className="text-[#2d2d35] group-hover:text-black" />
+                      <span className="text-[#6f6f7a]  group-hover:text-black text-xs font-medium">
+                        {item.label}
+                      </span>
                     </a>
                   </li>
                 );
@@ -92,15 +57,39 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer / Logout */}
-      <div className="p-4 border-t border-zinc-300">
+      <div className="p-4 bg-[#FFFFFF] rounded-sm">
         <button
           type="button"
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-red-400 hover:bg-red-950/40 hover:text-red-300 transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"
         >
           <LogOut size={18} />
           <span>Logout</span>
         </button>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop Fixed Sidebar */}
+      <aside className="w-64 h-screen bg-white hidden md:flex flex-col fixed top-0 left-0 border-r border-[#CBD0DD] z-20">
+        <RenderNavContent />
+      </aside>
+
+      {/* Mobile Drawer Overlay */}
+      {showMobileMenu && (
+        <div 
+          className="fixed inset-0 w-full h-screen backdrop-blur-md bg-black/40 z-50 md:hidden"
+          onClick={() => setShowMobileMenu?.(false)}
+        >
+          <div 
+            className="w-64 h-screen bg-white flex flex-col fixed top-0 left-0 border-r border-[#CBD0DD] z-50 shadow-xl" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <RenderNavContent />
+          </div>
+        </div>
+      )}
+    </>
   );
 }

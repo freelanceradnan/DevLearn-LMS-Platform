@@ -9,6 +9,7 @@ import UserSecurity from "./Components/UserSecurity";
 import AdminProtected from "./Components/AdminProtected";
 import AdminLayout from "./Components/AdminLayout";
 import Dashboard from "./Components/Dashboard";
+import CreateCourse from "./Components/AdminDeshboard/CreateCourse/CreateCourse";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
       <Route element={<AdminProtected/>}>
       <Route path="/admin" element={<AdminLayout/>}>
       <Route index element={<Dashboard/>}/>
+      <Route path="createCourse" element={<CreateCourse/>}/>
       </Route>
       </Route>
     </Routes>

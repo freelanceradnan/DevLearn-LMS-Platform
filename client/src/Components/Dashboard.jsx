@@ -7,23 +7,10 @@ import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
     const navigate=useNavigate()
-    const [logout]=useLogoutUserMutation()
-    const dispatch=useDispatch()
-    const logoutuser=async()=>{
-    try {
-    const result=await logout().unwrap()
-    if(result){
-    await dispatch(logoutUser())
-    }
-    toast.success('logout done')
-    navigate('/')
-    } catch (error) {
-        
-    }
-    }
+   
     return (
         <div>
-            <button className='bg-blue-500 p-2 text-white rounded-sm' type='button' onClick={logoutuser}>Logout</button>
+          
         </div>
     );
 };

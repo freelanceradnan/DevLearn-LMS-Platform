@@ -1,9 +1,29 @@
 import React from 'react';
 import { LogOut } from 'lucide-react';
 import { assets } from '../assets/assets';
+import { useLogoutUserMutation } from '../Features/ApiSlice';
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../Features/AuthSlice';
+import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export default function Sidebar({ showMobileMenu, setShowMobileMenu, menuGroups = [] }) {
- 
+  const [logout]=useLogoutUserMutation()
+  const navigate=useNavigate()
+    const dispatch=useDispatch()
+
+    const logoutuser=async()=>{
+    try {
+    const result=await logout().unwrap()
+    if(result){
+    await dispatch(logoutUser())
+    }
+    toast.success('logout done')
+    navigate('/')
+    } catch (error) {
+        
+    }
+    }
   const RenderNavContent = () => (
     <>
       {/* Header */}
@@ -39,15 +59,15 @@ export default function Sidebar({ showMobileMenu, setShowMobileMenu, menuGroups 
                 const Icon = item.icon;
                 return (
                   <li key={itemIdx}>
-                    <a
-                      href="#"
+                    <Link
+                      to={`/admin/${item.link}`}
                       className="group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-[#E7E7E9] transition-colors"
                     >
                       <Icon size={18} className="text-[#2d2d35] group-hover:text-black" />
                       <span className="text-[#6f6f7a]  group-hover:text-black text-xs font-medium">
                         {item.label}
                       </span>
-                    </a>
+                    </Link>
                   </li>
                 );
               })}
@@ -60,7 +80,7 @@ export default function Sidebar({ showMobileMenu, setShowMobileMenu, menuGroups 
       <div className="p-4 bg-[#FFFFFF] rounded-sm">
         <button
           type="button"
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition-colors" onClick={logoutuser}
         >
           <LogOut size={18} />
           <span>Logout</span>

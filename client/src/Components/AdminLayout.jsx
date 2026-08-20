@@ -24,31 +24,31 @@ export default function AdminLayout() {
     {
       group: "Overview",
       items: [
-        { label: "Dashboard", icon: LayoutDashboard },
-        { label: "Users", icon: Users },
-        { label: "Invoices", icon: FileText },
+        { label: "Dashboard", icon: LayoutDashboard,link:"/overview"},
+        { label: "Users", icon: Users,link:"/Users"},
+        { label: "Invoices", icon: FileText,link:"/Invoices"},
       ],
     },
     {
       group: "Content",
       items: [
-        { label: "Create Course", icon: PlusSquare },
-        { label: "Live Courses", icon: Video },
-        { label: "Hero", icon: Image },
-        { label: "FAQ", icon: HelpCircle },
-        { label: "Categories", icon: Grid },
+        { label: "Create Course", icon: PlusSquare, link:"/createCourse"},
+        { label: "Live Courses", icon: Video,link:"/liveCourse"},
+        { label: "Hero", icon: Image,link:"/heroSection"},
+        { label: "FAQ", icon: HelpCircle,link:"/faqSection"},
+        { label: "Categories", icon: Grid,link:"/categoriesSection"},
       ],
     },
     {
       group: "Management",
-      items: [{ label: "Manage Team", icon: UserCheck }],
+      items: [{ label: "Manage Team", icon: UserCheck,link:"/Manageteam"}],
     },
     {
       group: "Analytics",
       items: [
-        { label: "Courses Analytics", icon: BarChart2 },
-        { label: "Orders Analytics", icon: TrendingUp },
-        { label: "Users Analytics", icon: PieChart },
+        { label: "Courses Analytics", icon: BarChart2,link:"/coursesAnalytics"},
+        { label: "Orders Analytics", icon: TrendingUp,link:"/ordersAnalytics"},
+        { label: "Users Analytics", icon: PieChart,link:"/usersAnalytics"},
       ],
     },
   ];

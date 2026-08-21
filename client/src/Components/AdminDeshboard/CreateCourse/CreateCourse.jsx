@@ -8,12 +8,11 @@ const CreateCourse = () => {
     return (
         <div className='max-w-5xl flex'>
         <div className='w-[80%]'>
-        <h2 className='text-[#444050] text-xl font-semibold'>Add A New Course</h2>
-        <p className='text-sm text-[#444050]'>Create a new course for website.</p>
+       
        {/* course-info */}
         <div>
             
-        {active==0 && <CourseInfo/>}
+        {active==0 && <CourseInfo setActive={setActive}/>}
         {active==1 && <h2>this is one</h2>}
         {active==2 && <h2>this is two</h2>}
         {active==3 && <h2>this is three</h2>}

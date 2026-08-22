@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const CreateCourse = ({active, setActive}) => {
+const CourseInfo = ({active, setActive}) => {
  
   const [formData, setFormData] = useState({
     name: '',
@@ -25,8 +25,8 @@ const CreateCourse = ({active, setActive}) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg my-8">
-      <h2 className="text-2xl font-bold text-gray-800 border-b">
+    <div className="max-w-2xl mx-auto md:p-4 bg-white shadow-md rounded-lg">
+      <h2 className="text-2xl font-bold text-gray-800 py-2">
         Add Your Course Information
       </h2>
 
@@ -178,4 +178,4 @@ const CreateCourse = ({active, setActive}) => {
   );
 };
 
-export default CreateCourse;
+export default CourseInfo;

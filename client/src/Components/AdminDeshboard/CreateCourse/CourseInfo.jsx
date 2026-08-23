@@ -1,17 +1,8 @@
 import React, { useState } from 'react';
 
-const CourseInfo = ({active, setActive}) => {
+const CourseInfo = ({active, setActive,formData, setFormData}) => {
  
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: '',
-    estimatedPrice: '',
-    tags: '',
-    level: '',
-    demoUrl: '',
-    image: null,
-  });
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;

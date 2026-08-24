@@ -1,18 +1,35 @@
 import React, { useState } from "react";
-import { Plus, X, ArrowLeft, ArrowRight, Sparkles, AlertCircle } from "lucide-react";
+import {
+  Plus,
+  X,
+  ArrowLeft,
+  ArrowRight,
+  Sparkles,
+  AlertCircle,
+} from "lucide-react";
 
-const CourseOptions = ({ active, setActive }) => {
-  const [benefits, setBenefits] = useState([]);
-  const [prerequisites, setPrerequisites] = useState([]);
-  const [benefitValue, setBenefitValue] = useState("");
-  const [prerequisiteValue, setPrerequisiteValue] = useState("");
+const CourseOptions = ({
+  active,
+  setActive,
+  setPrerequisites,
+  benefits,
+  setBenefits,
+  prerequisites,
+  benefitValue,
+  setBenefitValue,
+   prerequisiteValue,
+              setPrerequisiteValue
+}) => {
   const [error, setError] = useState({ benefit: "", prerequisite: "" });
 
   // Add Benefit
   const handleAddBenefit = (e) => {
     e.preventDefault();
     if (!benefitValue.trim()) {
-      setError((prev) => ({ ...prev, benefit: "Benefit title cannot be empty." }));
+      setError((prev) => ({
+        ...prev,
+        benefit: "Benefit title cannot be empty.",
+      }));
       return;
     }
     setBenefits((prev) => [...prev, { title: benefitValue.trim() }]);
@@ -29,7 +46,10 @@ const CourseOptions = ({ active, setActive }) => {
   const handleAddPrerequisite = (e) => {
     e.preventDefault();
     if (!prerequisiteValue.trim()) {
-      setError((prev) => ({ ...prev, prerequisite: "Prerequisite title cannot be empty." }));
+      setError((prev) => ({
+        ...prev,
+        prerequisite: "Prerequisite title cannot be empty.",
+      }));
       return;
     }
     setPrerequisites((prev) => [...prev, { title: prerequisiteValue.trim() }]);
@@ -39,7 +59,9 @@ const CourseOptions = ({ active, setActive }) => {
 
   // Delete Prerequisite
   const handleDeletePrerequisite = (indexToDelete) => {
-    setPrerequisites((prev) => prev.filter((_, index) => index !== indexToDelete));
+    setPrerequisites((prev) =>
+      prev.filter((_, index) => index !== indexToDelete),
+    );
   };
 
   return (
@@ -54,10 +76,9 @@ const CourseOptions = ({ active, setActive }) => {
             Specify student benefits and required prerequisites for your course.
           </p>
         </div>
-       
       </div>
 
-      <div className="space-y-10">
+      <div className="space-y-5">
         {/* Course Benefits Section */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
@@ -76,11 +97,14 @@ const CourseOptions = ({ active, setActive }) => {
                 value={benefitValue}
                 onChange={(e) => {
                   setBenefitValue(e.target.value);
-                  if (error.benefit) setError((prev) => ({ ...prev, benefit: "" }));
+                  if (error.benefit)
+                    setError((prev) => ({ ...prev, benefit: "" }));
                 }}
                 placeholder="e.g. Master modern full-stack application development"
                 className={`w-full px-4 py-2.5 text-sm text-slate-800 bg-slate-50 border rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all ${
-                  error.benefit ? "border-red-400" : "border-slate-200 focus:border-indigo-500"
+                  error.benefit
+                    ? "border-red-400"
+                    : "border-slate-200 focus:border-indigo-500"
                 }`}
               />
               <button
@@ -144,11 +168,14 @@ const CourseOptions = ({ active, setActive }) => {
                 value={prerequisiteValue}
                 onChange={(e) => {
                   setPrerequisiteValue(e.target.value);
-                  if (error.prerequisite) setError((prev) => ({ ...prev, prerequisite: "" }));
+                  if (error.prerequisite)
+                    setError((prev) => ({ ...prev, prerequisite: "" }));
                 }}
                 placeholder="e.g. Basic knowledge of JavaScript and React"
                 className={`w-full px-4 py-2.5 text-sm text-slate-800 bg-slate-50 border rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all ${
-                  error.prerequisite ? "border-red-400" : "border-slate-200 focus:border-indigo-500"
+                  error.prerequisite
+                    ? "border-red-400"
+                    : "border-slate-200 focus:border-indigo-500"
                 }`}
               />
               <button
@@ -166,7 +193,7 @@ const CourseOptions = ({ active, setActive }) => {
           </form>
 
           {/* Prerequisites Tags / List */}
-          <div className="space-y-2 pt-1">
+          <div className="space-y-1 pt-1">
             {prerequisites.length === 0 ? (
               <p className="text-xs text-slate-400 italic bg-slate-50 p-3 rounded-xl border border-dashed border-slate-200 text-center">
                 No prerequisites added yet.

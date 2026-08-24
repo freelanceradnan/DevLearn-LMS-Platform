@@ -1,3 +1,4 @@
+import { ArrowRight } from 'lucide-react';
 import React, { useState } from 'react';
 
 const CourseInfo = ({active, setActive,formData, setFormData}) => {
@@ -11,6 +12,7 @@ const CourseInfo = ({active, setActive,formData, setFormData}) => {
 
   const handleNext = (e) => {
     e.preventDefault();
+   console.log('d')
     // Handle form validation or submission here
     setActive(1);
   };
@@ -157,12 +159,14 @@ const CourseInfo = ({active, setActive,formData, setFormData}) => {
 
         {/* Controls */}
         <div className="flex justify-end pt-4">
-          <button
-            type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-2 rounded-md transition duration-200"
-          >
-            Next
-          </button>
+        <button
+          type="button"
+          onClick={()=>setActive(1)}
+          className="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95"
+         
+        >
+          Next <ArrowRight className="w-4 h-4" />
+        </button>
         </div>
       </form>
     </div>

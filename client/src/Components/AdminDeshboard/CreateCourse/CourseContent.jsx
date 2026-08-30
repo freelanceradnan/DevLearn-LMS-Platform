@@ -91,7 +91,7 @@ const CourseContent = ({
   };
 
   return (
-    <div className="md:w-[80%] m-auto  p-3">
+    <div className="m-auto  p-3">
       <form onSubmit={handleSubmit}>
         {courseContentData?.map((item, index) => {
           const showSectionInput =

@@ -123,6 +123,7 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
       setLoginLoading(false);
     }
   };
+  //google login
   const handlesuccess = async(credential) => {
    try {
    const result=await googleLogin({credential:credential.credential}).unwrap()

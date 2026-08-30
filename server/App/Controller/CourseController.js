@@ -4,7 +4,7 @@ import { v2 as cloudinary } from "cloudinary";
 import {  AddMyQuestion, AddMyReply, AddMyReview, AddReplyMyReview, CourseService, DeleteMyCourse, GetMyAllCourse, GetMySingleCourse, GetMyUserCourse, UpdateMyCourse } from "../Services/CourseServices.js";
 import course from "../Models/Course.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
-
+import axios from 'axios'
 export const CreateCourse=CatchAsyncError(async(req,res,next)=>{
     const {data}=req.body
    if(data.thumbnail){
@@ -146,3 +146,24 @@ export const DeleteCourse=CatchAsyncError(async(req,res,next)=>{
     message:"Course delete Success!"
   })
 })
+export const generateVideoUrl = CatchAsyncError(async (req, res, next) => {
+  const { videoId } = req.body;
+
+  if (!videoId) {
+    return next(new ErrorHandler("Video ID is required!", 400));
+  }
+
+  const response = await axios.post(
+    `https://dev.vdocipher.com/api/videos/${videoId}/otp`,
+    { ttl: 300 },
+    {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Apisecret ${process.env.VIDEO_CYPHER_API}`,
+      },
+    }
+  );
+
+  res.status(200).json(response.data);
+});

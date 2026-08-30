@@ -16,7 +16,10 @@ const CourseInfo = ({active, setActive,formData, setFormData}) => {
     // Handle form validation or submission here
     setActive(1);
   };
-
+ const handleImage=(e)=>{
+  const file=e.target.files[0]
+  console.log(file)
+ }
   return (
     <div className="max-w-2xl mx-auto md:p-4 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold text-gray-800 py-2">
@@ -132,12 +135,12 @@ const CourseInfo = ({active, setActive,formData, setFormData}) => {
               Demo URL
             </label>
             <input
-              type="url"
+              type="text"
               id="demoUrl"
               name="demoUrl"
               value={formData.demoUrl}
               onChange={handleChange}
-              placeholder="https://youtube.com/..."
+              placeholder="Enter videocyper video Id"
               className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -150,12 +153,17 @@ const CourseInfo = ({active, setActive,formData, setFormData}) => {
           </label>
           <input
             type="file"
+            onChange={handleImage}
             id="image"
             name="image"
             accept="image/*"
             className="border border-gray-300 rounded-md p-2 w-full file:mr-4 file:py-1 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
           />
         </div>
+      <div>
+
+        {/* <img src={set} alt="" /> */}
+      </div>
 
         {/* Controls */}
         <div className="flex justify-end pt-4">

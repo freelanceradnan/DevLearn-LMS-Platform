@@ -19,7 +19,7 @@ const AdminNav = ({
   const user = { name: "Adnan" };
   const [showMenu, setShowMenu] = useState(false);
 
-  // Toggle mobile menu and ensure user menu closes immediately
+ 
   const handleMobileMenuToggle = () => {
     setShowMenu(false);
     setShowMobileMenu(!showMobileMenu);

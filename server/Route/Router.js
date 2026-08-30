@@ -29,6 +29,7 @@ router.patch("/change-password", isAuthenticated,userController.updatePassword);
 router.put("/update-avatar", isAuthenticated,userController.UpdateUserAvatar);
 //course related router
 router.post('/create-course',isAuthenticated,AdminMiddlewares,CourseController.CreateCourse)
+router.post('/generateUrl',CourseController.generateVideoUrl)
 router.post('/update-course/:id',isAuthenticated,AdminMiddlewares,CourseController.UpdateCourse)
 router.get('/course/:id',CourseController.GetSingleCourse)
 router.get('/courses',CourseController.GetAllCourse)

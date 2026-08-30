@@ -3,6 +3,7 @@ import CourseInfo from "./CourseInfo";
 import CourseIndicator from "./CourseIndicator";
 import CourseOptions from "./CourseOptions";
 import CourseContent from "./CourseContent";
+import CoursePreview from "./CoursePreview";
 
 const CreateCourse = () => {
   const [active, setActive] = useState(0);
@@ -38,6 +39,15 @@ const [courseContentData,setCourseContentData]=useState([
     suggestion:"",
   }
 ])
+const courseData={
+  ...formData,
+  courseData:courseContentData
+}
+const createCourseHandler=(e)=>{
+  e.preventDefault()
+}
+
+
   return (
     <div className="max-w-5xl md:flex">
       <div className="md:w-[70%]">
@@ -47,8 +57,6 @@ const [courseContentData,setCourseContentData]=useState([
             <CourseInfo
               active={active}
               setActive={setActive}
-              formData={formData}
-              setFormData={setFormData}
               formData={formData}
               setFormData={setFormData}
             />
@@ -61,7 +69,6 @@ const [courseContentData,setCourseContentData]=useState([
               benefits={benefits}
               setBenefits={setBenefits}
               prerequisites={prerequisites}
-              setPrerequisites={setPrerequisites}
               benefitValue={benefitValue}
               setBenefitValue={setBenefitValue}
               prerequisiteValue={prerequisiteValue}
@@ -69,7 +76,7 @@ const [courseContentData,setCourseContentData]=useState([
             />
           )}
           {active == 2 && <CourseContent active={active} setActive={setActive} courseContentData={courseContentData} setCourseContentData={setCourseContentData}/>}
-          {active == 3 && <h2>this is three</h2>}
+          {active == 3 && <CoursePreview createCourseHandler={createCourseHandler} courseData={courseData}/>}
         </div>
       </div>
       <div className="md:w-[30%] mt-10">

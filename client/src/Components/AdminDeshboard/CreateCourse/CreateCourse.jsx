@@ -41,6 +41,8 @@ const [courseContentData,setCourseContentData]=useState([
 ])
 const courseData={
   ...formData,
+  benefits,
+  prerequisites,
   courseData:courseContentData
 }
 const createCourseHandler=(e)=>{
@@ -76,7 +78,7 @@ const createCourseHandler=(e)=>{
             />
           )}
           {active == 2 && <CourseContent active={active} setActive={setActive} courseContentData={courseContentData} setCourseContentData={setCourseContentData}/>}
-          {active == 3 && <CoursePreview createCourseHandler={createCourseHandler} courseData={courseData}/>}
+          {active == 3 && <CoursePreview createCourseHandler={createCourseHandler} courseData={courseData} setActive={setActive} active={active}/>}
         </div>
       </div>
       <div className="md:w-[30%] mt-10">

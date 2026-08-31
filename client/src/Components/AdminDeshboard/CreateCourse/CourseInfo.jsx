@@ -1,5 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const CourseInfo = ({active, setActive,formData, setFormData}) => {
  
@@ -20,8 +21,29 @@ const CourseInfo = ({active, setActive,formData, setFormData}) => {
   const file=e.target.files[0]
   console.log(file)
  }
+
+ const handlerNext=()=>{
+  const requiredFields = [
+    formData.name,
+    formData.description,
+    formData.price,
+    formData.estimatedPrice,
+    formData.tags,
+    formData.level,
+    formData.demoUrl,
+    formData.image,
+  ];
+  const hasEmptyField = requiredFields.some(
+    (field) => typeof field === 'string' && field.trim() === ''
+  );
+  if(hasEmptyField){
+toast.error(`Please filled all input filed`)
+  }else{
+setActive(active+1)
+  }
+ }
   return (
-    <div className="max-w-2xl mx-auto md:p-4 bg-white shadow-md rounded-lg">
+    <div className="max-w-2xl mx-auto md:p-4 bg-white rounded-lg">
       <h2 className="text-2xl font-bold text-gray-800 py-2">
         Add Your Course Information
       </h2>
@@ -169,7 +191,7 @@ const CourseInfo = ({active, setActive,formData, setFormData}) => {
         <div className="flex justify-end pt-4">
         <button
           type="button"
-          onClick={()=>setActive(1)}
+          onClick={handlerNext}
           className="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95"
          
         >

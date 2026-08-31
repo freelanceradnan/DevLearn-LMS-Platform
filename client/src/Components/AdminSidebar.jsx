@@ -4,41 +4,42 @@ import { assets } from '../assets/assets';
 import { useLogoutUserMutation } from '../Features/ApiSlice';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../Features/AuthSlice';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 export default function Sidebar({ showMobileMenu, setShowMobileMenu, menuGroups = [] }) {
-  const [logout]=useLogoutUserMutation()
-  const navigate=useNavigate()
-    const dispatch=useDispatch()
+  const [logout] = useLogoutUserMutation();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const logoutuser=async()=>{
+  const logoutuser = async () => {
     try {
-    const result=await logout().unwrap()
-    if(result){
-    await dispatch(logoutUser())
-    }
-    toast.success('logout done')
-    navigate('/')
+      const result = await logout().unwrap();
+      if (result) {
+        await dispatch(logoutUser());
+      }
+      toast.success('logout done');
+      navigate('/');
     } catch (error) {
-        
+      toast.error('Logout failed');
     }
-    }
+  };
+
   const RenderNavContent = () => (
     <>
       {/* Header */}
-      <header className="flex h-16 items-center border border-[#E0E0E2] bg-[#F4F4F6] px-6 tracking-wider text-[#18181A]">
-  <div>
-    <div className="flex items-center gap-1.5">
-      <img src={assets.adminLogo} alt="DevLearn Logo" className="w-8" />
-      <div>
-        <span className="font-semibold uppercase text-sm">DevLearn</span>
-      <h2 className="text-xs font-light text-gray-500">Control everything here</h2>
-      </div>
-    </div>
-    
-  </div>
-</header>
+      <header className="flex h-16 items-center border-b border-[#E0E0E2] bg-[#FFFFFF] px-6 tracking-wider text-[#18181A]">
+        <div>
+          <div className="flex items-center gap-1.5">
+            <img src={assets.adminLogo} alt="DevLearn Logo" className="w-8" />
+            <div>
+              <span className="font-semibold uppercase text-sm">DevLearn</span>
+              <h2 className="text-xs font-light text-gray-500">Control everything here</h2>
+            </div>
+          </div>
+        </div>
+      </header>
 
       {/* Navigation List */}
       <nav 
@@ -47,7 +48,7 @@ export default function Sidebar({ showMobileMenu, setShowMobileMenu, menuGroups 
           [&::-webkit-scrollbar-track]:bg-transparent
           [&::-webkit-scrollbar-thumb]:bg-transparent
           hover:[&::-webkit-scrollbar-thumb]:bg-zinc-300
-          [&::-webkit-scrollbar-thumb]:rounded-full bg-[#F4F4F6]"
+          [&::-webkit-scrollbar-thumb]:rounded-full bg-[#FFFFFF]"
       >
         {menuGroups.map((group, groupIdx) => (
           <div key={groupIdx}>
@@ -57,14 +58,34 @@ export default function Sidebar({ showMobileMenu, setShowMobileMenu, menuGroups 
             <ul className="space-y-1">
               {group.items.map((item, itemIdx) => {
                 const Icon = item.icon;
+                
+                // Format the link path cleanly (removing leading slash if present)
+                const cleanLink = item.link.startsWith('/') ? item.link.slice(1) : item.link;
+                const fullPath = `/admin/${cleanLink}`;
+                
+                // Determine active state strictly from current browser URL
+                const isActive = location.pathname.toLowerCase() === fullPath.toLowerCase();
+
                 return (
                   <li key={itemIdx}>
                     <Link
-                      to={`/admin/${item.link}`}
-                      className="group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium hover:bg-[#E7E7E9] transition-colors"
+                      to={fullPath}
+                      onClick={() => setShowMobileMenu?.(false)}
+                      className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-[#E7E7E9] transition-colors ${
+                        isActive ? "bg-[#EEFAE8]" : ""
+                      }`}
                     >
-                      <Icon size={18} className="text-[#2d2d35] group-hover:text-black" />
-                      <span className="text-[#6f6f7a]  group-hover:text-black text-xs font-medium">
+                      <Icon 
+                        size={18} 
+                        className={`text-[#2d2d35] group-hover:text-black ${
+                          isActive ? "text-[#57af85]" : ""
+                        }`} 
+                      />
+                      <span 
+                        className={`text-[#6f6f7a] group-hover:text-black text-xs font-semibold ${
+                          isActive ? "text-[#14d377]" : ""
+                        }`}
+                      >
                         {item.label}
                       </span>
                     </Link>
@@ -77,10 +98,11 @@ export default function Sidebar({ showMobileMenu, setShowMobileMenu, menuGroups 
       </nav>
 
       {/* Footer / Logout */}
-      <div className="p-4 bg-[#FFFFFF] rounded-sm">
+      <div className="p-4 bg-[#FFFFFF] rounded-sm border-t border-[#E0E0E2]">
         <button
           type="button"
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition-colors" onClick={logoutuser}
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition-colors" 
+          onClick={logoutuser}
         >
           <LogOut size={18} />
           <span>Logout</span>

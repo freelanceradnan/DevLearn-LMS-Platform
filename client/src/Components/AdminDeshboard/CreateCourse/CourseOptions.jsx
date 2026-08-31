@@ -7,6 +7,7 @@ import {
   Sparkles,
   AlertCircle,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 const CourseOptions = ({
   active,
@@ -63,9 +64,21 @@ const CourseOptions = ({
       prev.filter((_, index) => index !== indexToDelete),
     );
   };
-
+const handlerNext=()=>{
+  const hasEmptyBenefit = benefits.length === 0 || benefits.some(
+    (b) => (typeof b === 'string' ? b.trim() === '' : b.title?.trim() === '')
+  );
+  const hasEmptyPrerequsities = prerequisites.length === 0 || prerequisites.some(
+    (b) => (typeof b === 'string' ? b.trim() === '' : b.title?.trim() === '')
+  );
+  if(hasEmptyBenefit || hasEmptyPrerequsities){
+    toast.error('please filed atlast 1 info')
+  }else{
+setActive(active+1)
+  }
+}
   return (
-    <div className="max-w-2xl mx-auto md:p-4 bg-white shadow-md rounded-lg">
+    <div className="max-w-2xl mx-auto md:p-4 bg-white rounded-lg">
       {/* Header */}
       <div className="border-b border-slate-100 pb-5 mb-8 flex justify-between items-center">
         <div>
@@ -226,7 +239,7 @@ const CourseOptions = ({
       <div className="flex justify-between items-center pt-8 mt-10 border-t border-slate-100">
         <button
           type="button"
-          onClick={() => setActive && setActive(active - 1)}
+          onClick={()=>setActive(active-1)}
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-xl transition-all active:scale-95"
         >
           <ArrowLeft className="w-4 h-4" /> Previous
@@ -234,7 +247,7 @@ const CourseOptions = ({
 
         <button
           type="button"
-          onClick={() => setActive && setActive(active + 1)}
+          onClick={handlerNext}
           className="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl shadow-md hover:shadow-lg transition-all active:scale-95"
         >
           Next <ArrowRight className="w-4 h-4" />

@@ -81,7 +81,7 @@ const Navbar = () => {
   //checking isadmin login
 useEffect(() => {
     if (user?.role === 'admin') {
-      navigate('/admin', { replace: true });
+      navigate('/admin/dashboard', { replace: true });
     }
   }, [user, navigate]);
   const logout = async () => {

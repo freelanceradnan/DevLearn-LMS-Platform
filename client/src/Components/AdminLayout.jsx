@@ -24,7 +24,7 @@ export default function AdminLayout() {
     {
       group: "Overview",
       items: [
-        { label: "Dashboard", icon: LayoutDashboard,link:"/overview"},
+        { label: "Dashboard", icon: LayoutDashboard,link:"/dashboard"},
         { label: "Users", icon: Users,link:"/Users"},
         { label: "Invoices", icon: FileText,link:"/Invoices"},
       ],

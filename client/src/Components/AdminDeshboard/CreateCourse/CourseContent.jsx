@@ -102,7 +102,7 @@ const CourseContent = ({
             <div
               key={index}
               className={`w-full bg-[#cdc8c817] p-4 ${
-                showSectionInput ? "mt-10" : "mb-0"
+                showSectionInput ? "" : "mb-0"
               }`}
             >
               {showSectionInput && (

@@ -10,7 +10,7 @@ const Dashboard = () => {
    
     return (
         <div>
-          
+          <h2>adnan</h2>
         </div>
     );
 };

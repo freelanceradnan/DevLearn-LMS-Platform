@@ -4,7 +4,9 @@ import CourseOptions from "./CourseOptions";
 import CourseContent from "./CourseContent";
 import CoursePreview from "./CoursePreview";
 import { ChevronRight, Check } from "lucide-react";
-import { useImageUploadMutation } from "../../../Features/ApiSlice";
+import { useCreateCourseMutation, useImageUploadMutation } from "../../../Features/ApiSlice";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const STEPS = [
   { id: 0, title: "Course Info" },
@@ -14,7 +16,9 @@ const STEPS = [
 ];
 
 const CreateCourse = () => {
+  const navigate=useNavigate()
   const [upload] = useImageUploadMutation();
+  const [createcourse]=useCreateCourseMutation()
   const [imageFile, setImageFile] = useState(null);
   const [active, setActive] = useState(0);
   const [benefits, setBenefits] = useState([]);
@@ -23,15 +27,14 @@ const CreateCourse = () => {
   const [prerequisiteValue, setPrerequisiteValue] = useState("");
 
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    estimatedPrice: "",
-    tags: "",
-    level: "",
-    demoUrl: "",
-    image: null,
-  });
+  name: "",
+  description: "",
+  price: "",
+  estimatedPrice: "",
+  tags: "",
+  level: "",
+  demoUrl: "",
+});
 
   const [courseContentData, setCourseContentData] = useState([
     {
@@ -52,19 +55,46 @@ const CreateCourse = () => {
   };
 
   const createCourseHandler = async (e) => {
-    e.preventDefault();
-    if (imageFile) {
-       const formdataUpload = new FormData();
-      formdataUpload.append("image", imageFile);
-      const data = await upload(formdataUpload).unwrap();
-      finalImageUrl = data.url || data.secure_url;
-      if (!finalImageUrl) {
-        toast.error("Please provide a valid image!");
-        setSaving(false);
-        return;
-      }
+  e.preventDefault();
+  
+
+  if (!imageFile) {
+    toast.error("Please provide a valid image!");
+ 
+    return;
+  }
+
+  try {
+    const formdataUpload = new FormData();
+    formdataUpload.append("image", imageFile);
+
+    const uploadRes = await upload(formdataUpload).unwrap();
+    const finalImageUrl = uploadRes.url || uploadRes.secure_url;
+
+    if (!finalImageUrl) {
+      toast.error("Image upload failed. Please try again!");
+     
+      return;
     }
-  };
+
+    const payload = {
+  ...formData,          
+  thumbnail: finalImageUrl,
+  courseData: courseContentData, 
+  benefits: benefits,
+  prerequisites: prerequisites,
+};
+
+    const result = await createcourse(payload).unwrap();
+    navigate('/admin/liveCourse')
+    toast.success("Course created successfully!");
+  } catch (error) {
+    console.error("Create course error:", error);
+    toast.error(error?.data?.message || "Something went wrong. Please try again!");
+  } finally {
+    
+  }
+};
 
   return (
     <div className="mx-auto max-w-5xl space-y-8 p-6">
@@ -160,7 +190,7 @@ const CreateCourse = () => {
           />
         )}
       </div>
-      <button className="bg-blue-500 px-1 py-2" onClick={createCourseHandler}>Create course</button>
+      
     </div>
   );
 };

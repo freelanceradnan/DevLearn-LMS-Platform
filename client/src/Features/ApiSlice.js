@@ -95,7 +95,14 @@ export const ApiSlice = createApi({
       method:'POST',
       body:formdata
       })
+    }),
+    CreateCourse:builder.mutation({
+      query:(data)=>({
+       url:'/create-course',
+       method:'POST',
+       body:data
+      })
     })
   }),
 });
-export const { useRegisterUserMutation,useActivateUserMutation,useLoginUserMutation,useLogoutUserMutation,useSocialAuthMutation,useGithubAuthMutation,useImageUploadMutation} = ApiSlice;
+export const { useRegisterUserMutation,useActivateUserMutation,useLoginUserMutation,useLogoutUserMutation,useSocialAuthMutation,useGithubAuthMutation,useImageUploadMutation,useCreateCourseMutation} = ApiSlice;

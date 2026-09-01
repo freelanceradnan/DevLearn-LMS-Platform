@@ -12,7 +12,7 @@ export const uploader = async (req, res) => {
     const b64 = Buffer.from(req.file.buffer).toString("base64");
 
     const dataURI = `data:${req.file.mimetype};base64,${b64}`;
-
+console.log("Cloudinary Config Status:", cloudinary.config());
     const result = await cloudinary.uploader.upload(dataURI, {
       folder: "lms-platform",
       resource_type: "auto",
@@ -25,7 +25,7 @@ export const uploader = async (req, res) => {
     });
   } catch (error) {
     console.error("Upload Error:", error);
-
+console.error("Upload Error FULL:", JSON.stringify(error, null, 2));
     res.status(500).json({
       success: false,
       message: error.message,

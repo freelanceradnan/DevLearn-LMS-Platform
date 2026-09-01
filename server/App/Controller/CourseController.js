@@ -6,19 +6,9 @@ import course from "../Models/Course.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 import axios from 'axios'
 export const CreateCourse=CatchAsyncError(async(req,res,next)=>{
-    const {data}=req.body
-   if(data.thumbnail){
-     const myCloud = await cloudinary.uploader.upload(avatar, {
-          folder: 'avatars-lms',
-          width: 150,
-          crop: 'scale',
-        });
-    const data={
-        public_id:myCloud.public_id,
-        url:myCloud.secure_url
-    }
-   }
-   const result=await CourseService(data,res)
+    
+ 
+   const result = await CourseService(req.body, res)
    
 })
 export const UpdateCourse = CatchAsyncError(async (req, res, next) => {

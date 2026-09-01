@@ -52,7 +52,7 @@ const courseSchema =new mongoose.Schema({
   },
   tags: { type: String, required: true },
   level: { type: String, required: true },
-  demourl: { type: String, required: true },
+  demoUrl: { type: String, required: true },
   benefits: [{ title: { type: String } }],
  prerequisites: [{ title: { type: String } }],
   reviews: [reviewSchema],

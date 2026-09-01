@@ -5,22 +5,19 @@ import toast from "react-hot-toast";
 const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImageFile}) => {
   
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+ const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData((prev) => ({
+    ...prev,
+    [name]: (name === "price" || name === "estimatedPrice") ? Number(value) : value,
+  }));
+};
 
   const handleNext = (e) => {
     e.preventDefault();
-    console.log("d");
-    // Handle form validation or submission here
     setActive(1);
   };
-  //  const handleImage=(e)=>{
-  //   const file=e.target.files[0]
-  //   console.log(file)
-  //  }
-  console.log(imageFile);
+ 
   const handlerNext = () => {
     const requiredFields = [
       formData.name,

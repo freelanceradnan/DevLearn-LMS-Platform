@@ -102,10 +102,10 @@ const CoursePreview = ({ createCourseHandler, courseData, setActive, active }) =
 
         <button
           type="button"
-          onClick={() => setActive && setActive(active + 1)}
+          onClick={createCourseHandler}
           className="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl shadow-sm hover:shadow transition-all active:scale-95"
         >
-          Next <ArrowRight className="w-4 h-4" />
+          Create Course <ArrowRight className="w-4 h-4" />
         </button>
       </div>
     </div>

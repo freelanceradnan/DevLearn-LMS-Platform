@@ -11,7 +11,7 @@ import { AdminMiddlewares } from "../App/Middleware/AdminMiddleware.js";
 import * as UploadController from '../App/Controller/UploadController.js'
 import multer from 'multer';
 const storage = multer.memoryStorage();
-export const upload = multer({ storage });
+const upload = multer({ storage: multer.memoryStorage() });
 
 
 const router = express();

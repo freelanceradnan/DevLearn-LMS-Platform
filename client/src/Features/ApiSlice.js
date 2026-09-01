@@ -88,7 +88,14 @@ export const ApiSlice = createApi({
      method:'POST',
      body:{code}
      })
+    }),
+    ImageUpload:builder.mutation({
+      query:(formdata)=>({
+      url:'/upload',
+      method:'POST',
+      body:formdata
+      })
     })
   }),
 });
-export const { useRegisterUserMutation,useActivateUserMutation,useLoginUserMutation,useLogoutUserMutation,useSocialAuthMutation,useGithubAuthMutation} = ApiSlice;
+export const { useRegisterUserMutation,useActivateUserMutation,useLoginUserMutation,useLogoutUserMutation,useSocialAuthMutation,useGithubAuthMutation,useImageUploadMutation} = ApiSlice;

@@ -8,6 +8,10 @@ import * as NotificationController from "../App/Controller/NotificationControlle
 import * as AnalysisController from '../App/Controller/AnalysisController.js'
 import * as LayoutController from '../App/Controller/LayoutController.js'
 import { AdminMiddlewares } from "../App/Middleware/AdminMiddleware.js";
+import * as UploadController from '../App/Controller/UploadController.js'
+import multer from 'multer';
+const storage = multer.memoryStorage();
+export const upload = multer({ storage });
 
 
 const router = express();
@@ -28,6 +32,7 @@ router.put("/update-info", isAuthenticated,userController.updateUserInfo);
 router.patch("/change-password", isAuthenticated,userController.updatePassword);
 router.put("/update-avatar", isAuthenticated,userController.UpdateUserAvatar);
 //course related router
+router.post('/upload',upload.single('image'),UploadController.uploader)
 router.post('/create-course',isAuthenticated,AdminMiddlewares,CourseController.CreateCourse)
 router.post('/generateUrl',CourseController.generateVideoUrl)
 router.post('/update-course/:id',isAuthenticated,AdminMiddlewares,CourseController.UpdateCourse)

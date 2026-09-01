@@ -58,12 +58,8 @@ export default function Sidebar({ showMobileMenu, setShowMobileMenu, menuGroups 
             <ul className="space-y-1">
               {group.items.map((item, itemIdx) => {
                 const Icon = item.icon;
-                
-                // Format the link path cleanly (removing leading slash if present)
                 const cleanLink = item.link.startsWith('/') ? item.link.slice(1) : item.link;
                 const fullPath = `/admin/${cleanLink}`;
-                
-                // Determine active state strictly from current browser URL
                 const isActive = location.pathname.toLowerCase() === fullPath.toLowerCase();
 
                 return (

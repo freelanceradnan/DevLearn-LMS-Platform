@@ -101,8 +101,17 @@ export const ApiSlice = createApi({
        url:'/create-course',
        method:'POST',
        body:data
-      })
-    })
+      }),
+      
+    }),
+    AllCourses:builder.query({
+        query:()=>({
+        url:'/all-course',
+        method:'GET'
+        }),
+        transformResponse:(response)=>response.data
+      }),
+   
   }),
 });
-export const { useRegisterUserMutation,useActivateUserMutation,useLoginUserMutation,useLogoutUserMutation,useSocialAuthMutation,useGithubAuthMutation,useImageUploadMutation,useCreateCourseMutation} = ApiSlice;
+export const { useRegisterUserMutation,useActivateUserMutation,useLoginUserMutation,useLogoutUserMutation,useSocialAuthMutation,useGithubAuthMutation,useImageUploadMutation,useCreateCourseMutation,useAllCoursesQuery} = ApiSlice;

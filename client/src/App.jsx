@@ -10,6 +10,7 @@ import AdminProtected from "./Components/AdminProtected";
 import AdminLayout from "./Components/AdminLayout";
 import Dashboard from "./Components/Dashboard";
 import CreateCourse from "./Components/AdminDeshboard/CreateCourse/CreateCourse";
+import AllCourses from "./Components/AdminDeshboard/LiveCourses/AllCourses";
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
       <Route element={<AdminProtected/>}>
       <Route path="/admin" element={<AdminLayout/>}>
       <Route index element={<Dashboard/>}/>
+       <Route path="allcourses" element={<AllCourses/>}/>
       <Route path="createCourse" element={<CreateCourse/>}/>
       <Route path="dashboard" element={<CreateCourse/>}/>
       </Route>

@@ -33,7 +33,7 @@ export default function AdminLayout() {
       group: "Content",
       items: [
         { label: "Create Course", icon: PlusSquare, link:"/createCourse"},
-        { label: "Live Courses", icon: Video,link:"/liveCourse"},
+        { label: "Live Courses", icon: Video,link:"/allcourses"},
         { label: "Hero", icon: Image,link:"/heroSection"},
         { label: "FAQ", icon: HelpCircle,link:"/faqSection"},
         { label: "Categories", icon: Grid,link:"/categoriesSection"},

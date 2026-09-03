@@ -17,9 +17,11 @@ import {
   Video,
 } from "lucide-react";
 import AdminNav from "./AdminNav";
+import { LogoutModal } from "./LogoutModel";
 
 export default function AdminLayout() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [OpenLogoutModel,setOpenLogoutModel]=useState(false)
   const menuGroups = [
     {
       group: "Overview",
@@ -60,17 +62,22 @@ export default function AdminLayout() {
             showMobileMenu={showMobileMenu}
             setShowMobileMenu={setShowMobileMenu}
             menuGroups={menuGroups}
+            OpenLogoutModel={OpenLogoutModel}
+            setOpenLogoutModel={setOpenLogoutModel}
           />
         </div>
 
         <div className="flex-1 md:pl-64 flex flex-col min-h-screen">
          <AdminNav setShowMobileMenu={setShowMobileMenu} showMobileMenu={showMobileMenu}/>
-
-          <main className="flex-1 p-6">
+           <main className="flex-1 p-6">
             <Outlet />
           </main>
+          {OpenLogoutModel && <LogoutModal OpenLogoutModel={OpenLogoutModel} setOpenLogoutModel={setOpenLogoutModel}/>}
+          
         </div>
+     
       </div>
+     
     </div>
   );
 }

@@ -55,63 +55,79 @@ export const ApiSlice = createApi({
         body: userData,
       }),
     }),
-    activateUser:builder.mutation({
-    query:(data)=>({
-    url:"/activation",
-    method:'POST',
-    body:data
-    })
+    activateUser: builder.mutation({
+      query: (data) => ({
+        url: "/activation",
+        method: "POST",
+        body: data,
+      }),
     }),
-    loginUser:builder.mutation({
-    query:(data)=>({
-    url:'/login',
-    method:'POST',
-    body:data
-    })
+    loginUser: builder.mutation({
+      query: (data) => ({
+        url: "/login",
+        method: "POST",
+        body: data,
+      }),
     }),
-    logoutUser:builder.mutation({
+    logoutUser: builder.mutation({
+      query: () => ({
+        url: "/logout",
+        method: "POST",
+      }),
+    }),
+    socialAuth: builder.mutation({
+      query: ({ credential, githubDetails }) => ({
+        url: "/social-auth",
+        method: "POST",
+        body: { credential, githubDetails },
+      }),
+    }),
+    githubAuth: builder.mutation({
+      query: (code) => ({
+        url: "/github",
+        method: "POST",
+        body: { code },
+      }),
+    }),
+    ImageUpload: builder.mutation({
+      query: (formdata) => ({
+        url: "/upload",
+        method: "POST",
+        body: formdata,
+      }),
+    }),
+    CreateCourse: builder.mutation({
+      query: (data) => ({
+        url: "/create-course",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    AllCourses: builder.query({
+      query: () => ({
+        url: "/all-course",
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
+    GetAllUsers:builder.query({
     query:()=>({
-    url:'/logout',
-    method:'POST'
+    url:'/getAlluser',
+    method:'GET'
+    }),
+     transformResponse: (response) => response.data,
     })
-    }),
-    socialAuth:builder.mutation({
-    query:({credential,githubDetails})=>({
-    url:'/social-auth',
-    method:'POST',
-    body:{credential,githubDetails}
-    })
-    }),
-    githubAuth:builder.mutation({
-     query:(code)=>({
-     url:'/github',
-     method:'POST',
-     body:{code}
-     })
-    }),
-    ImageUpload:builder.mutation({
-      query:(formdata)=>({
-      url:'/upload',
-      method:'POST',
-      body:formdata
-      })
-    }),
-    CreateCourse:builder.mutation({
-      query:(data)=>({
-       url:'/create-course',
-       method:'POST',
-       body:data
-      }),
-      
-    }),
-    AllCourses:builder.query({
-        query:()=>({
-        url:'/all-course',
-        method:'GET'
-        }),
-        transformResponse:(response)=>response.data
-      }),
-   
   }),
 });
-export const { useRegisterUserMutation,useActivateUserMutation,useLoginUserMutation,useLogoutUserMutation,useSocialAuthMutation,useGithubAuthMutation,useImageUploadMutation,useCreateCourseMutation,useAllCoursesQuery} = ApiSlice;
+export const {
+  useRegisterUserMutation,
+  useActivateUserMutation,
+  useLoginUserMutation,
+  useLogoutUserMutation,
+  useSocialAuthMutation,
+  useGithubAuthMutation,
+  useImageUploadMutation,
+  useCreateCourseMutation,
+  useAllCoursesQuery,
+  useGetAllUsersQuery
+} = ApiSlice;

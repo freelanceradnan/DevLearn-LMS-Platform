@@ -11,6 +11,8 @@ import AdminLayout from "./Components/AdminLayout";
 import Dashboard from "./Components/Dashboard";
 import CreateCourse from "./Components/AdminDeshboard/CreateCourse/CreateCourse";
 import AllCourses from "./Components/AdminDeshboard/LiveCourses/AllCourses";
+import Users from "./Components/AdminDeshboard/AllUsers/Users";
+import ManageTeam from "./Components/AdminDeshboard/ManageTeam/ManageTeam";
 
 
 function App() {
@@ -33,6 +35,8 @@ function App() {
       <Route index element={<Dashboard/>}/>
        <Route path="allcourses" element={<AllCourses/>}/>
       <Route path="createCourse" element={<CreateCourse/>}/>
+      <Route path="Manageteam" element={<ManageTeam/>}/>
+      <Route path="Users" element={<Users/>}/>
       <Route path="dashboard" element={<CreateCourse/>}/>
       </Route>
       </Route>

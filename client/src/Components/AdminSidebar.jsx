@@ -7,24 +7,14 @@ import { logoutUser } from '../Features/AuthSlice';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-export default function Sidebar({ showMobileMenu, setShowMobileMenu, menuGroups = [] }) {
+export default function Sidebar({ showMobileMenu, setShowMobileMenu, menuGroups = [],OpenLogoutModel,setOpenLogoutModel}) {
   const [logout] = useLogoutUserMutation();
+  
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const logoutuser = async () => {
-    try {
-      const result = await logout().unwrap();
-      if (result) {
-        await dispatch(logoutUser());
-      }
-      toast.success('logout done');
-      navigate('/');
-    } catch (error) {
-      toast.error('Logout failed');
-    }
-  };
+ 
 
   const RenderNavContent = () => (
     <>
@@ -98,7 +88,7 @@ export default function Sidebar({ showMobileMenu, setShowMobileMenu, menuGroups 
         <button
           type="button"
           className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition-colors" 
-          onClick={logoutuser}
+          onClick={()=>setOpenLogoutModel(true)}
         >
           <LogOut size={18} />
           <span>Logout</span>

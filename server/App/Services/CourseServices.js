@@ -54,6 +54,7 @@ export const UpdateMyCourse = async (courseId, data) => {
 export const GetMySingleCourse = async (CourseId) => {
   //redis get
   const isCaching = await redis.get(CourseId);
+  
   if (isCaching) {
     const getCourse = JSON.parse(isCaching);
     return { success: true, getCourse };
@@ -71,23 +72,37 @@ export const GetMySingleCourse = async (CourseId) => {
   }
 };
 export const GetMyAllCourse = async () => {
+  
   const caching = await redis.get("allcourses");
+
+  
   if (caching) {
     const allcourses = JSON.parse(caching);
-    return { success: true, getCourse: allcourses };
-  } else {
-    const getCourse = await course
-      .find()
-      .select(
-        "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links",
-      );
 
-    const setcourses = await redis.set("allcourses", JSON.stringify(getCourse));
-    return {
-      success: true,
-      getCourse,
-    };
+    
+    if (Array.isArray(allcourses) && allcourses.length > 0) {
+      return { success: true, getCourse: allcourses };
+    }
   }
+
+  
+  const getCourse = await course
+    .find()
+    .select(
+      "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
+    );
+
+
+  if (getCourse.length > 0) {
+    await redis.set("allcourses", JSON.stringify(getCourse));
+  } else {
+    await redis.del("allcourses");
+  }
+
+  return {
+    success: true,
+    getCourse,
+  };
 };
 export const GetMyUserCourse = async (courseList, courseId) => {
   const courseExists = courseList.find(
@@ -261,12 +276,16 @@ return {
   fullcourse
 }
 }
-export async function DeleteMyCourse(id){
-const isExistCourse=await course.findById(id)
-if(!isExistCourse){
-  throw new Error("course not found!")
-}
-const DeleteCourse=await course.findByIdAndDelete(id)
-const DeleteRedis=await redis.del(id)
-return {success:true}
+export async function DeleteMyCourse(id) {
+  const isExistCourse = await course.findById(id);
+  if (!isExistCourse) {
+    throw new Error("Course not found!");
+  }
+  await course.findByIdAndDelete(id);
+
+  // await redis.del(id);
+
+  await redis.del("allcourses");
+
+  return { success: true };
 }

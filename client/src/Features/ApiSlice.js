@@ -46,7 +46,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["users", "address", "orders", "products", "partner"],
+  tagTypes: ["users", "course", "orders", "products", "partner"],
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (userData) => ({
@@ -68,6 +68,7 @@ export const ApiSlice = createApi({
         method: "POST",
         body: data,
       }),
+      
     }),
     logoutUser: builder.mutation({
       query: () => ({
@@ -102,6 +103,7 @@ export const ApiSlice = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags:['course']
     }),
     AllCourses: builder.query({
       query: () => ({
@@ -109,6 +111,7 @@ export const ApiSlice = createApi({
         method: "GET",
       }),
       transformResponse: (response) => response.data,
+      providesTags:['course']
     }),
     GetAllUsers:builder.query({
     query:()=>({
@@ -116,6 +119,29 @@ export const ApiSlice = createApi({
     method:'GET'
     }),
      transformResponse: (response) => response.data,
+     providesTags:['users']
+    }),
+    DeleteUser:builder.mutation({
+    query:(id)=>({
+    url:`/DeleteUser/${id}`,
+    method:'DELETE'
+    }),
+    invalidatesTags:['users']
+    }),
+    DeleteCourse:builder.mutation({
+      query:(id)=>({
+       url:`/DeleteCourse/${id}`,
+       method:'DELETE'
+      }),
+    invalidatesTags:['course']
+    }),
+    ChangeRole:builder.mutation({
+    query:({id,role})=>({
+    url:'/update-user',
+    method:'PUT',
+    body:{id,role}
+    }),
+    invalidatesTags:['users']
     })
   }),
 });
@@ -129,5 +155,8 @@ export const {
   useImageUploadMutation,
   useCreateCourseMutation,
   useAllCoursesQuery,
-  useGetAllUsersQuery
+  useDeleteUserMutation,
+  useGetAllUsersQuery,
+  useDeleteCourseMutation,
+  useChangeRoleMutation
 } = ApiSlice;

@@ -1,11 +1,15 @@
 import { Pencil, Trash2, TriangleAlert, Users } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useGetAllUsersQuery } from '../../../Features/ApiSlice';
+import ChangeRole from '../../ChangeRole';
 
 const ManageTeam = () => {
     const {data,isError,isLoading}=useGetAllUsersQuery()
     const [totalData,setTotalData]=useState([])
     const [loading,setLoading]=useState(true)
+     const [editModal,setEditModal]=useState(false)
+      const [editRole,setEditRole]=useState("")
+      const [editId,setEditId]=useState("")
     useEffect(()=>{
     setTotalData(data?.filter((c)=>c.role==='admin'))
     setLoading(false)
@@ -77,11 +81,15 @@ const ManageTeam = () => {
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-2">
                             <button
-                              aria-label="Edit course"
-                              className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-indigo-600 transition-colors"
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </button>
+                                                  aria-label="Edit course"
+                                                  className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-indigo-600 transition-colors" onClick={()=>{
+                                                    setEditModal(true);
+                                                    setEditRole(item?.role)
+                                                    setEditId(item?._id)
+                                                  }}
+                                                >
+                                                  <Pencil className="h-4 w-4" />
+                                                </button>
                             <button
                               aria-label="Delete course"
                               className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"
@@ -95,6 +103,7 @@ const ManageTeam = () => {
                   </tbody>
                 </table>
         </div>
+        {editModal && <ChangeRole editModal={editModal} setEditModal={setEditModal} role={editRole} editId={editId}/>}
         </div>
     );
 };

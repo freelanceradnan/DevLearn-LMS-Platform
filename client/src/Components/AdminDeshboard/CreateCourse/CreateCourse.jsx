@@ -86,7 +86,7 @@ const CreateCourse = () => {
 };
 
     const result = await createcourse(payload).unwrap();
-    navigate('/admin/liveCourse')
+    navigate('/admin/allcourses')
     toast.success("Course created successfully!");
   } catch (error) {
     console.error("Create course error:", error);

@@ -1,10 +1,12 @@
 import { Pencil, Trash2, BookOpen, Star, DollarSign, Users } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { useAllCoursesQuery } from '../../../Features/ApiSlice';
+import DeleteModel from '../../DeleteModel';
 
 const AllCourses = () => {
     const { data, isLoading, isError } = useAllCoursesQuery();
-    console.log(data)
+    const [deleteUserModel, setDeleteUserModel] = useState(false);
+      const [deleteId, setDeleteId] = useState("");
     if (isLoading) {
         return (
             <div className="flex h-64 items-center justify-center">
@@ -20,7 +22,10 @@ const AllCourses = () => {
             </div>
         );
     }
-
+ const deleteHandler=(delId)=>{
+    setDeleteUserModel(true)
+    setDeleteId(delId)
+ }
     return (
         <div className="p-6">
             <div className="mb-6 flex items-center justify-between">
@@ -84,7 +89,7 @@ const AllCourses = () => {
                                         </button>
                                         <button 
                                             aria-label="Delete course" 
-                                            className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"
+                                            className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors" onClick={()=>deleteHandler(item._id)}
                                         >
                                             <Trash2 className="h-4 w-4" />
                                         </button>
@@ -95,6 +100,7 @@ const AllCourses = () => {
                     </tbody>
                 </table>
             </div>
+            {deleteUserModel && <DeleteModel deleteUserModel={deleteUserModel} setDeleteUserModel={setDeleteUserModel} deleteId={deleteId} state={"course"}/>}
         </div>
     );
 };

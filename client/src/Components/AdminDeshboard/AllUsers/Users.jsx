@@ -4,15 +4,35 @@ import {
   BookOpen,
   Star,
   DollarSign,
-  Users
+  Users,
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
+import DeleteModel from "../../DeleteModel";
 import { useGetAllUsersQuery } from "../../../Features/ApiSlice";
-
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import ChangeRole from "../../ChangeRole";
 
 const AllUsers = () => {
   const { data, isLoading, isError } = useGetAllUsersQuery();
-
+  const [deleteUserModel, setDeleteUserModel] = useState(false);
+  const [editModal,setEditModal]=useState(false)
+  const [editRole,setEditRole]=useState("")
+  const [editId,setEditId]=useState("")
+  const {user}=useSelector(state=>state.auth)
+ 
+  const [deleteId, setDeleteId] = useState("");
+  const deleteHandler = (itemId) => {
+    if(user._id===itemId){
+    toast.error('Access Denied! You can not delete your own account!')
+    }else{
+    setDeleteId(itemId);
+    setDeleteUserModel(true);
+    }
+  };
+  const editHandler=()=>{
+setEditModal(true)
+  }
   if (isLoading) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -70,32 +90,35 @@ const AllUsers = () => {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-1 text-amber-500 font-medium">
-                  
                     <span>{item.email || "N/A"}</span>
                   </div>
                 </td>
                 <td className="px-6 py-4 font-semibold text-gray-700">
-                 {item.role||"user"}
+                  {item.role || "user"}
                 </td>
                 <td className="px-6 py-4">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700">
-                 
-                      {new Date(item.createdAt).toLocaleDateString() ||
-                    item.createdAt}
+                    {new Date(item.createdAt).toLocaleDateString() ||
+                      item.createdAt}
                   </span>
                 </td>
-               
+
                 <td className="px-6 py-4">
                   <div className="flex items-center justify-end gap-2">
                     <button
                       aria-label="Edit course"
-                      className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-indigo-600 transition-colors"
+                      className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-indigo-600 transition-colors" onClick={()=>{
+                        setEditModal(true);
+                        setEditRole(item?.role)
+                        setEditId(item?._id)
+                      }}
                     >
                       <Pencil className="h-4 w-4" />
                     </button>
                     <button
                       aria-label="Delete course"
                       className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"
+                      onClick={() => deleteHandler(item._id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -106,6 +129,15 @@ const AllUsers = () => {
           </tbody>
         </table>
       </div>
+
+      {deleteUserModel && (
+        <DeleteModel
+          deleteUserModel={deleteUserModel}
+          setDeleteUserModel={setDeleteUserModel}
+          deleteId={deleteId}
+        />
+      )}
+      {editModal && <ChangeRole editModal={editModal} setEditModal={setEditModal} role={editRole} editId={editId}/>}
     </div>
   );
 };

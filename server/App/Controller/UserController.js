@@ -88,6 +88,7 @@ export const GetAllCourse=CatchAsyncError(async(req,res,next)=>{
 //update users role
 export const UpdateUserRole=CatchAsyncError(async(req,res,next)=>{
   const {id,role}=req.body
+  console.log(id,role)
   if(!id || !role){
     return next (new ErrorHandler("Id and role required for changing!"))
   }

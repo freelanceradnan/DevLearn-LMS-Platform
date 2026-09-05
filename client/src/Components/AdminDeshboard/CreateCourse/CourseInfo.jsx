@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
-const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImageFile}) => {
+const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImageFile,state}) => {
   
 
  const handleChange = (e) => {
@@ -41,7 +41,7 @@ const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImag
   return (
     <div className="max-w-2xl mx-auto md:p-4 bg-white rounded-lg">
       <h2 className="text-2xl font-bold text-gray-800 py-2">
-        Add Your Course Information
+       {state? "Edit Your Course":" Add Your Course Information"}
       </h2>
 
       <form onSubmit={handleNext} className="w-full flex flex-col gap-5">
@@ -187,13 +187,17 @@ const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImag
           <div className="flex items-center gap-4">
             {(imageFile || formData.image) && (
               <div className="size-16 rounded-lg border border-zinc-200 overflow-hidden shrink-0 bg-app-cream">
-                <img
-                  src={
-                    imageFile ? URL.createObjectURL(imageFile) : formData.image
-                  }
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                />
+              <img
+  src={
+    imageFile instanceof File || imageFile instanceof Blob
+      ? URL.createObjectURL(imageFile)
+      : typeof imageFile === "string"
+      ? imageFile
+      : formData?.image || "/placeholder.png" 
+  }
+  alt="Preview"
+  className="w-full h-full object-cover"
+/>
               </div>
             )}
             <input

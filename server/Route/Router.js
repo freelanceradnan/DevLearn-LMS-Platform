@@ -35,7 +35,7 @@ router.put("/update-avatar", isAuthenticated,userController.UpdateUserAvatar);
 router.post('/upload',upload.single('image'),UploadController.uploader)
 router.post('/create-course',isAuthenticated,AdminMiddlewares,CourseController.CreateCourse)
 router.post('/generateUrl',CourseController.generateVideoUrl)
-router.post('/update-course/:id',isAuthenticated,AdminMiddlewares,CourseController.UpdateCourse)
+router.put('/update-course/:id',isAuthenticated,AdminMiddlewares,CourseController.UpdateCourse)
 router.get('/course/:id',CourseController.GetSingleCourse)
 router.get('/courses',CourseController.GetAllCourse)
 router.get('/myCourse/:id',isAuthenticated,CourseController.GetUserCourse)

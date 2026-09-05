@@ -33,7 +33,10 @@ const CourseOptions = ({
       }));
       return;
     }
-    setBenefits((prev) => [...prev, { title: benefitValue.trim() }]);
+    setBenefits((prev) => [
+  ...(Array.isArray(prev) ? prev : []), 
+  { title: benefitValue.trim() }
+]);
     setBenefitValue("");
     setError((prev) => ({ ...prev, benefit: "" }));
   };
@@ -53,7 +56,8 @@ const CourseOptions = ({
       }));
       return;
     }
-    setPrerequisites((prev) => [...prev, { title: prerequisiteValue.trim() }]);
+    setPrerequisites((prev) => [...(Array.isArray(prev) ? prev : []), 
+  { title: prerequisiteValue.trim() }]);
     setPrerequisiteValue("");
     setError((prev) => ({ ...prev, prerequisite: "" }));
   };
@@ -99,7 +103,7 @@ setActive(active+1)
               Course Benefits
             </label>
             <span className="text-xs text-slate-400 font-medium">
-              {benefits.length} Added
+              {benefits?.length||"0"} Added
             </span>
           </div>
 
@@ -115,7 +119,7 @@ setActive(active+1)
                 }}
                 placeholder="e.g. Master modern full-stack application development"
                 className={`w-full px-4 py-2.5 text-sm text-slate-800 bg-slate-50 border rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all ${
-                  error.benefit
+                  error?.benefit
                     ? "border-red-400"
                     : "border-slate-200 focus:border-indigo-500"
                 }`}
@@ -136,12 +140,12 @@ setActive(active+1)
 
           {/* Benefits Tags / List */}
           <div className="space-y-2 pt-1">
-            {benefits.length === 0 ? (
+            {benefits?.length === 0 ? (
               <p className="text-xs text-slate-400 italic bg-slate-50 p-3 rounded-xl border border-dashed border-slate-200 text-center">
                 No benefits added yet.
               </p>
             ) : (
-              benefits.map((item, index) => (
+              benefits?.map((item, index) => (
                 <div
                   key={index}
                   className="group flex items-center justify-between p-3 bg-slate-50 border border-slate-200/80 hover:border-indigo-200 hover:bg-indigo-50/30 rounded-xl transition-all"
@@ -170,7 +174,7 @@ setActive(active+1)
               Course Prerequisites
             </label>
             <span className="text-xs text-slate-400 font-medium">
-              {prerequisites.length} Added
+              {prerequisites?.length} Added
             </span>
           </div>
 
@@ -207,12 +211,12 @@ setActive(active+1)
 
           {/* Prerequisites Tags / List */}
           <div className="space-y-1 pt-1">
-            {prerequisites.length === 0 ? (
+            {prerequisites?.length === 0 ? (
               <p className="text-xs text-slate-400 italic bg-slate-50 p-3 rounded-xl border border-dashed border-slate-200 text-center">
                 No prerequisites added yet.
               </p>
             ) : (
-              prerequisites.map((item, index) => (
+              prerequisites?.map((item, index) => (
                 <div
                   key={index}
                   className="group flex items-center justify-between p-3 bg-slate-50 border border-slate-200/80 hover:border-indigo-200 hover:bg-indigo-50/30 rounded-xl transition-all"

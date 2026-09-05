@@ -2,7 +2,7 @@ import React from 'react';
 import CoursePlayer from './CoursePlayer';
 import { ArrowLeft, ArrowRight, Check, Sparkles, BookOpen } from 'lucide-react';
 
-const CoursePreview = ({ createCourseHandler, courseData, setActive, active }) => {
+const CoursePreview = ({ createCourseHandler, courseData, setActive, active,state}) => {
   const discountPercentagePrice = courseData?.estimatedPrice 
     ? Math.round(((courseData.estimatedPrice - courseData.price) / courseData.estimatedPrice) * 100)
     : 0;
@@ -100,13 +100,22 @@ const CoursePreview = ({ createCourseHandler, courseData, setActive, active }) =
           <ArrowLeft className="w-4 h-4" /> Previous
         </button>
 
-        <button
+       {state?
+       <button
+          type="button"
+          onClick={createCourseHandler}
+          className="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl shadow-sm hover:shadow transition-all active:scale-95"
+        >
+          Update Course <ArrowRight className="w-4 h-4" />
+        </button>:
+         <button
           type="button"
           onClick={createCourseHandler}
           className="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl shadow-sm hover:shadow transition-all active:scale-95"
         >
           Create Course <ArrowRight className="w-4 h-4" />
-        </button>
+        </button> 
+      }
       </div>
     </div>
   );

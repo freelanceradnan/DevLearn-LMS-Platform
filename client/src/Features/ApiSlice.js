@@ -68,7 +68,7 @@ export const ApiSlice = createApi({
         method: "POST",
         body: data,
       }),
-      
+
     }),
     logoutUser: builder.mutation({
       query: () => ({
@@ -142,7 +142,16 @@ export const ApiSlice = createApi({
     body:{id,role}
     }),
     invalidatesTags:['users']
-    })
+    }),
+   
+updateCourse: builder.mutation({
+  query: ({ editId, payload }) => ({
+    url: `/update-course/${editId}`,
+    method: 'PUT',
+    body: {data:payload}, 
+  }),
+  invalidatesTags:['course']
+}),
   }),
 });
 export const {
@@ -158,5 +167,6 @@ export const {
   useDeleteUserMutation,
   useGetAllUsersQuery,
   useDeleteCourseMutation,
-  useChangeRoleMutation
+  useChangeRoleMutation,
+  useUpdateCourseMutation
 } = ApiSlice;

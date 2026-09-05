@@ -3,10 +3,17 @@ import CourseInfo from "./CourseInfo";
 import CourseOptions from "./CourseOptions";
 import CourseContent from "./CourseContent";
 import CoursePreview from "./CoursePreview";
-import { ChevronRight, Check } from "lucide-react";
-import { useCreateCourseMutation, useImageUploadMutation } from "../../../Features/ApiSlice";
+import { ChevronRight, Check, ArrowLeft, ChevronLeft } from "lucide-react";
+import {
+  useAllCoursesQuery,
+  useCreateCourseMutation,
+  useImageUploadMutation,
+  useUpdateCourseMutation,
+ 
+} from "../../../Features/ApiSlice";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const STEPS = [
   { id: 0, title: "Course Info" },
@@ -15,27 +22,28 @@ const STEPS = [
   { id: 3, title: "Preview & Submit" },
 ];
 
-const CreateCourse = () => {
-  const navigate=useNavigate()
+const CreateCourse = ({ state, setEditMode, editData,editId}) => {
+
+  const navigate = useNavigate();
+  const [updateCourse]=useUpdateCourseMutation()
   const [upload] = useImageUploadMutation();
-  const [createcourse]=useCreateCourseMutation()
+  const [createcourse] = useCreateCourseMutation();
   const [imageFile, setImageFile] = useState(null);
   const [active, setActive] = useState(0);
   const [benefits, setBenefits] = useState([]);
   const [prerequisites, setPrerequisites] = useState([]);
   const [benefitValue, setBenefitValue] = useState("");
   const [prerequisiteValue, setPrerequisiteValue] = useState("");
-
+  console.log(imageFile)
   const [formData, setFormData] = useState({
-  name: "",
-  description: "",
-  price: "",
-  estimatedPrice: "",
-  tags: "",
-  level: "",
-  demoUrl: "",
-});
-
+    name: "",
+    description: "",
+    price: "",
+    estimatedPrice: "",
+    tags: "",
+    level: "",
+    demoUrl: "",
+  });
   const [courseContentData, setCourseContentData] = useState([
     {
       videoUrl: "",
@@ -47,6 +55,28 @@ const CreateCourse = () => {
     },
   ]);
 
+  //edit form data auto filled
+  useEffect(() => {
+    if(editData){
+      setFormData({
+      name: editData?.name,
+      description: editData?.description,
+      price: editData?.price,
+      estimatedPrice: editData?.estimatedPrice,
+      tags: editData?.description,
+      level: editData?.level,
+      demoUrl: editData?.demoUrl,
+    });
+    setImageFile(editData.thumbnail.url)
+    setBenefits(editData?.benefits);
+    setPrerequisites(editData?.prerequisites);
+    if (editData?.courseData) {
+    const courseDataCopy = structuredClone(editData.courseData);
+    setCourseContentData(courseDataCopy);
+  }
+    }
+  }, [editData]);
+
   const courseData = {
     ...formData,
     benefits,
@@ -55,49 +85,69 @@ const CreateCourse = () => {
   };
 
   const createCourseHandler = async (e) => {
-  e.preventDefault();
-  
+    e.preventDefault();
 
-  if (!imageFile) {
-    toast.error("Please provide a valid image!");
- 
-    return;
-  }
+    if (!imageFile) {
+      toast.error("Please provide a valid image!");
 
-  try {
-    const formdataUpload = new FormData();
-    formdataUpload.append("image", imageFile);
-
-    const uploadRes = await upload(formdataUpload).unwrap();
-    const finalImageUrl = uploadRes.url || uploadRes.secure_url;
-
-    if (!finalImageUrl) {
-      toast.error("Image upload failed. Please try again!");
-     
       return;
     }
 
-    const payload = {
-  ...formData,          
-  thumbnail: finalImageUrl,
-  courseData: courseContentData, 
-  benefits: benefits,
-  prerequisites: prerequisites,
-};
+    try {
+      const formdataUpload = new FormData();
+      formdataUpload.append("image", imageFile);
 
-    const result = await createcourse(payload).unwrap();
-    navigate('/admin/allcourses')
-    toast.success("Course created successfully!");
-  } catch (error) {
-    console.error("Create course error:", error);
-    toast.error(error?.data?.message || "Something went wrong. Please try again!");
-  } finally {
-    
-  }
-};
+      const uploadRes = await upload(formdataUpload).unwrap();
+      const finalImageUrl = uploadRes.url || uploadRes.secure_url;
+     
+      if (!finalImageUrl) {
+        toast.error("Image upload failed. Please try again!");
+
+        return;
+      }
+
+      const payload = {
+        ...formData,
+        thumbnail: {
+         public_id: uploadRes.public_id,
+         url: finalImageUrl,
+  },
+        courseData: courseContentData,
+        benefits: benefits,
+        prerequisites: prerequisites,
+      };
+   
+      if(state){
+  
+      const result = await updateCourse({ editId, payload }).unwrap();
+      setEditMode(false)
+      toast.success('updated course success')
+      
+      }else{
+      const result = await createcourse(payload).unwrap();
+      navigate("/admin/allcourses");
+      toast.success("Course created successfully!");
+      }
+    } catch (error) {
+      console.error("Create course error:", error);
+      toast.error(
+        error?.data?.message || "Something went wrong. Please try again!",
+      );
+    } finally {
+    }
+  };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8 p-6">
+    <div className="mx-auto max-w-5xl space-y-4 p-6">
+      {state && (
+        <button
+          className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow-xs transition-colors hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+          onClick={() => setEditMode(false)}
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Back
+        </button>
+      )}
       <nav
         aria-label="Progress"
         className="rounded-xl border border-gray-100 bg-white p-1 shadow-sm justify-center w-full"
@@ -151,6 +201,7 @@ const CreateCourse = () => {
       <div className="rounded-xl border border-gray-100 bg-white p-2 shadow-sm">
         {active === 0 && (
           <CourseInfo
+            state={state}
             active={active}
             setActive={setActive}
             formData={formData}
@@ -187,10 +238,10 @@ const CreateCourse = () => {
             courseData={courseData}
             setActive={setActive}
             active={active}
+            state={state}
           />
         )}
       </div>
-      
     </div>
   );
 };

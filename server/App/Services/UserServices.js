@@ -85,7 +85,7 @@ export async function getMyAllUsers(){
     .select("-password")
     .sort({ createdAt: -1 })
     .lean();
-  console.log(users)
+
   return {success:true,users}
 }
 export async function getMyAllCourse(){

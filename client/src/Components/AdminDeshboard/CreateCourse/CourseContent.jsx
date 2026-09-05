@@ -67,11 +67,11 @@ const CourseContent = ({
 
   const addNewSectionHandler = () => {
     if (
-      courseContentData[courseContentData.length - 1].title === "" ||
-      courseContentData[courseContentData.length - 1].videoUrl === "" ||
-      courseContentData[courseContentData.length - 1].description === "" ||
-      courseContentData[courseContentData.length - 1].links[0].title === "" ||
-      courseContentData[courseContentData.length - 1].links[0].url === ""
+courseContentData[courseContentData?.length - 1]?.title === "" ||
+courseContentData[courseContentData?.length - 1]?.videoUrl === "" ||
+courseContentData[courseContentData?.length - 1]?.description === "" ||
+courseContentData[courseContentData?.length - 1]?.links?.[0]?.title === "" ||
+courseContentData[courseContentData?.length - 1]?.links?.[0]?.url === ""
     ) {
       alert("Please fill all fields first!");
       return;
@@ -213,7 +213,7 @@ const CourseContent = ({
                     />
                   </div>
 
-                  {item?.links.map((link, linkIndex) => (
+                  {item?.links?.map((link, linkIndex) => (
                     <div className="mb-3 block" key={linkIndex}>
                       <div className="w-full flex items-center justify-between mb-1">
                         <label className="text-[16px] text-black dark:text-white font-Poppins">

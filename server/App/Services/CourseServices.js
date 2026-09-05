@@ -19,42 +19,43 @@ export const CourseService = async (data, res) => {
 };
 export const UpdateMyCourse = async (courseId, data) => {
   try {
-    if (data.thumbnail && typeof data.thumbnail === "string") {
-      await cloudinary.uploader.destroy(data?.thumbnail?.public_id);
+    const myCourseInfo = await course.findById(courseId);
 
-      const myCloud = await cloudinary.uploader.upload(data.thumbnail, {
-        folder: "avatars-lms",
-        width: 150,
-        crop: "scale",
+    if (!myCourseInfo) {
+      return { success: false, message: "Course not found!" };
+    }
+
+    const oldPublicId = myCourseInfo?.thumbnail?.public_id;
+    const newPublicId = data?.thumbnail?.public_id;
+
+   
+    if (newPublicId && oldPublicId && newPublicId !== oldPublicId) {
+      
+  
+      await cloudinary.uploader.destroy(oldPublicId, {
+        resource_type: "image",
+        invalidate: true,
       });
-
-      data.thumbnail = {
-        public_id: myCloud.public_id,
-        url: myCloud.secure_url,
-      };
     }
 
     const courseInfo = await course.findByIdAndUpdate(
       courseId,
       { $set: data },
-      { returnDocument: "after" },
+      { returnDocument: "after", runValidators: true }
     );
 
-    return {
-      success: true,
-      courseInfo,
-    };
+    await redis.del('allcourses');
+
+    return { success: true, courseInfo };
   } catch (error) {
-    return {
-      success: false,
-      message: error.message,
-    };
+    console.error("UpdateMyCourse Error:", error);
+    return { success: false, message: error.message };
   }
 };
 export const GetMySingleCourse = async (CourseId) => {
   //redis get
   const isCaching = await redis.get(CourseId);
-  
+
   if (isCaching) {
     const getCourse = JSON.parse(isCaching);
     return { success: true, getCourse };
@@ -64,7 +65,12 @@ export const GetMySingleCourse = async (CourseId) => {
       .select(
         "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links",
       );
-    const caching = await redis.set(CourseId, JSON.stringify(getCourse),'EX',604800);//7days cashing
+    const caching = await redis.set(
+      CourseId,
+      JSON.stringify(getCourse),
+      "EX",
+      604800,
+    ); //7days cashing
     return {
       success: true,
       getCourse,
@@ -72,26 +78,21 @@ export const GetMySingleCourse = async (CourseId) => {
   }
 };
 export const GetMyAllCourse = async () => {
-  
   const caching = await redis.get("allcourses");
 
-  
   if (caching) {
     const allcourses = JSON.parse(caching);
 
-    
     if (Array.isArray(allcourses) && allcourses.length > 0) {
       return { success: true, getCourse: allcourses };
     }
   }
 
-  
   const getCourse = await course
     .find()
     .select(
-      "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
+      "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links",
     );
-
 
   if (getCourse.length > 0) {
     await redis.set("allcourses", JSON.stringify(getCourse));
@@ -149,11 +150,10 @@ export async function AddMyQuestion(contentId, question, courseId, user) {
 
   courseContent.questions.push(newQuestions);
   await Notification.create({
-    title:"New Questions Received!",
-    user_id:user._id,
-    message:`New Question added in ${courseContent.title}`
-
-  })
+    title: "New Questions Received!",
+    user_id: user._id,
+    message: `New Question added in ${courseContent.title}`,
+  });
   await fullcourse.save();
 
   return { success: true };
@@ -196,10 +196,10 @@ export async function AddMyReply(contentId, reply, courseId, questionId, user) {
 
   if (questionUserId === currentUserId) {
     await Notification.create({
-      user_id:user._id,
-      title:"New Question Reply Received!",
-      message:`You have a new questions reply in ${courseContent.title}`
-    })
+      user_id: user._id,
+      title: "New Question Reply Received!",
+      message: `You have a new questions reply in ${courseContent.title}`,
+    });
   } else {
     const questionOwner = await User.findById(question.user);
     const data = {
@@ -236,45 +236,48 @@ export async function AddMyReview(user, courseId, review, rating) {
     rating: rating,
     comment: review,
   };
-  fullcourse?.reviews?.push(reviewData)
+  fullcourse?.reviews?.push(reviewData);
   const reviews = fullcourse?.reviews;
 
-if (fullcourse) {
-  const totalRating = reviews?.reduce((sum, rev) => sum + (rev.rating || 0), 0) || 0;
-  fullcourse.ratings = reviews?.length ? totalRating / reviews.length : 0;
-}
-  await fullcourse?.save()
-  const notification={
-    title:"New Review Receive!",
-    message:`${user?.name} has given a review in ${fullcourse?.name}`
+  if (fullcourse) {
+    const totalRating =
+      reviews?.reduce((sum, rev) => sum + (rev.rating || 0), 0) || 0;
+    fullcourse.ratings = reviews?.length ? totalRating / reviews.length : 0;
   }
-  return { success: true,fullcourse};
+  await fullcourse?.save();
+  const notification = {
+    title: "New Review Receive!",
+    message: `${user?.name} has given a review in ${fullcourse?.name}`,
+  };
+  return { success: true, fullcourse };
 }
-export async function AddReplyMyReview(comment,courseId,reviewId,user){
-const fullcourse=await course.findById(courseId)
-if(!fullcourse){
-  throw new Error("course not found!")
-}
+export async function AddReplyMyReview(comment, courseId, reviewId, user) {
+  const fullcourse = await course.findById(courseId);
+  if (!fullcourse) {
+    throw new Error("course not found!");
+  }
 
-const FullReviewData=await fullcourse.reviews.find((rev)=>rev._id.toString()===reviewId)
+  const FullReviewData = await fullcourse.reviews.find(
+    (rev) => rev._id.toString() === reviewId,
+  );
 
-if(!FullReviewData){
-throw new Error("Review not found!")
-}
+  if (!FullReviewData) {
+    throw new Error("Review not found!");
+  }
 
-const ReplyData={
-  user:user,
-  comment
-}
-if(!FullReviewData.commentReplies){
-  FullReviewData.commentReplies=[]
-}
-FullReviewData?.commentReplies?.push(ReplyData)
-await fullcourse?.save()
-return {
-  success:true,
-  fullcourse
-}
+  const ReplyData = {
+    user: user,
+    comment,
+  };
+  if (!FullReviewData.commentReplies) {
+    FullReviewData.commentReplies = [];
+  }
+  FullReviewData?.commentReplies?.push(ReplyData);
+  await fullcourse?.save();
+  return {
+    success: true,
+    fullcourse,
+  };
 }
 export async function DeleteMyCourse(id) {
   const isExistCourse = await course.findById(id);

@@ -34,7 +34,7 @@ const CreateCourse = ({ state, setEditMode, editData,editId}) => {
   const [prerequisites, setPrerequisites] = useState([]);
   const [benefitValue, setBenefitValue] = useState("");
   const [prerequisiteValue, setPrerequisiteValue] = useState("");
-  console.log(imageFile)
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -83,57 +83,52 @@ const CreateCourse = ({ state, setEditMode, editData,editId}) => {
     prerequisites,
     courseData: courseContentData,
   };
-
+//create course and update
   const createCourseHandler = async (e) => {
     e.preventDefault();
-
-    if (!imageFile) {
-      toast.error("Please provide a valid image!");
-
-      return;
-    }
-
     try {
+      let thumbnailObj = formData?.thumbnail;
+      //checking image upload or not
+      const isNewFileSelected = imageFile && imageFile instanceof File;
+      if (isNewFileSelected) {
       const formdataUpload = new FormData();
       formdataUpload.append("image", imageFile);
 
       const uploadRes = await upload(formdataUpload).unwrap();
-      const finalImageUrl = uploadRes.url || uploadRes.secure_url;
-     
+      const finalImageUrl = uploadRes?.url || uploadRes?.secure_url;
+
       if (!finalImageUrl) {
         toast.error("Image upload failed. Please try again!");
-
         return;
       }
 
-      const payload = {
-        ...formData,
-        thumbnail: {
-         public_id: uploadRes.public_id,
-         url: finalImageUrl,
-  },
-        courseData: courseContentData,
-        benefits: benefits,
-        prerequisites: prerequisites,
+      thumbnailObj = {
+        public_id: uploadRes.public_id,
+        url: finalImageUrl,
       };
-   
-      if(state){
-  
-      const result = await updateCourse({ editId, payload }).unwrap();
-      setEditMode(false)
-      toast.success('updated course success')
-      
-      }else{
-      const result = await createcourse(payload).unwrap();
+    
+    }
+    const payload = {
+      ...formData,
+      thumbnail: thumbnailObj, 
+      courseData: courseContentData,
+      benefits: benefits,
+      prerequisites: prerequisites,
+    };
+  if (state) {
+      await updateCourse({ editId, payload }).unwrap();
+      setEditMode(false);
+      toast.success("Course updated successfully!");
+    } else {
+      await createcourse(payload).unwrap();
       navigate("/admin/allcourses");
       toast.success("Course created successfully!");
-      }
+    }
     } catch (error) {
-      console.error("Create course error:", error);
-      toast.error(
-        error?.data?.message || "Something went wrong. Please try again!",
-      );
-    } finally {
+      console.error("Course action error:", error);
+    toast.error(
+      error?.data?.message || "Something went wrong. Please try again!"
+    );
     }
   };
 

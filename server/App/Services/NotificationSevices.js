@@ -6,7 +6,7 @@ return {success:true,notifications}
 }
 export async function updateMyNotificationStatus(notificationId){
 const notification=await Notification.findById(notificationId)
-console.log(notificationId)
+
 if(!notification){
 throw new Error("Notifications not found!")
 }else{

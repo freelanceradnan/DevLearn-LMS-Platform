@@ -39,7 +39,6 @@ const guestMenu=[
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [logoutuser] = useLogoutUserMutation();
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const dropdownRef = useRef(null);

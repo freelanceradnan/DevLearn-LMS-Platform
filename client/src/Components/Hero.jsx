@@ -1,7 +1,28 @@
 import React from "react";
 import { assets } from "../assets/assets";
+import { useGetHeroInfoQuery } from "../Features/ApiSlice";
+import { useState } from "react";
+import { useEffect } from "react";
+
+
 
 export default function Hero() {
+  const {data}=useGetHeroInfoQuery()
+  const [heroData,setHeroData]=useState({
+    title:"",
+    subTitle:"",
+    image:""
+  })
+  useEffect(()=>{
+  if(data){
+  setHeroData({
+    title:data[0].title||"Learn New Skills With Online Best Mentors",
+    subTitle:data[0].subTitle||"Choose from over 100,000 online video courses with new additions published every month.",
+    image:data[0].image.url||assets?.newHeroimg
+  })
+  }
+  },[data])
+
   return (
     <>
     <section className="bg-[#33333D] max-w-7xl mx-auto rounded-3xl my-5 p-6 md:p-12 lg:p-16 text-white font-['Plus_Jakarta_Sans']">
@@ -12,14 +33,12 @@ export default function Hero() {
           
           {/* Main Title */}
           <h1 className="hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight flex flex-col gap-1 sm:gap-2">
-            <span>Learn New Skills</span>
-            <span>With Online</span>
-            <span>Best Mentors</span>
+           {heroData.title}
           </h1>
 
           {/* Subtitle */}
           <p className="hero-subtitle text-gray-300 text-sm sm:text-base md:text-lg font-normal leading-relaxed max-w-md">
-            Choose from over 100,000 online video courses with new additions published every month.
+            {heroData.subTitle}
           </p>
 
           {/* Search Input Box */}
@@ -55,7 +74,7 @@ export default function Hero() {
         {/* Right Image Column */}
         <div className="w-full md:w-1/2 flex justify-center md:justify-end">
           <img
-            src={assets?.newHeroimg}
+            src={heroData.image}
             alt="Student using laptop"
             className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg object-contain"
           />

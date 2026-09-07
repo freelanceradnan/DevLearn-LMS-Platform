@@ -68,7 +68,6 @@ export const ApiSlice = createApi({
         method: "POST",
         body: data,
       }),
-
     }),
     logoutUser: builder.mutation({
       query: () => ({
@@ -103,7 +102,7 @@ export const ApiSlice = createApi({
         method: "POST",
         body: data,
       }),
-      invalidatesTags:['course']
+      invalidatesTags: ["course"],
     }),
     AllCourses: builder.query({
       query: () => ({
@@ -111,47 +110,61 @@ export const ApiSlice = createApi({
         method: "GET",
       }),
       transformResponse: (response) => response.data,
-      providesTags:['course']
+      providesTags: ["course"],
     }),
-    GetAllUsers:builder.query({
+    GetAllUsers: builder.query({
+      query: () => ({
+        url: "/getAlluser",
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+      providesTags: ["users"],
+    }),
+    DeleteUser: builder.mutation({
+      query: (id) => ({
+        url: `/DeleteUser/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["users"],
+    }),
+    DeleteCourse: builder.mutation({
+      query: (id) => ({
+        url: `/DeleteCourse/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["course"],
+    }),
+    ChangeRole: builder.mutation({
+      query: ({ id, role }) => ({
+        url: "/update-user",
+        method: "PUT",
+        body: { id, role },
+      }),
+      invalidatesTags: ["users"],
+    }),
+
+    updateCourse: builder.mutation({
+      query: ({ editId, payload }) => ({
+        url: `/update-course/${editId}`,
+        method: "PUT",
+        body: { data: payload },
+      }),
+      invalidatesTags: ["course"],
+    }),
+    updateHero: builder.mutation({
+      query: ({dataId,payload}) => ({
+        url: `/update-hero/${dataId}`,
+        method: "PUT",
+        body: {data:payload},
+      }),
+    }),
+    GetHeroInfo:builder.query({
     query:()=>({
-    url:'/getAlluser',
+    url:'/hero-info',
     method:'GET'
     }),
-     transformResponse: (response) => response.data,
-     providesTags:['users']
-    }),
-    DeleteUser:builder.mutation({
-    query:(id)=>({
-    url:`/DeleteUser/${id}`,
-    method:'DELETE'
-    }),
-    invalidatesTags:['users']
-    }),
-    DeleteCourse:builder.mutation({
-      query:(id)=>({
-       url:`/DeleteCourse/${id}`,
-       method:'DELETE'
-      }),
-    invalidatesTags:['course']
-    }),
-    ChangeRole:builder.mutation({
-    query:({id,role})=>({
-    url:'/update-user',
-    method:'PUT',
-    body:{id,role}
-    }),
-    invalidatesTags:['users']
-    }),
-   
-updateCourse: builder.mutation({
-  query: ({ editId, payload }) => ({
-    url: `/update-course/${editId}`,
-    method: 'PUT',
-    body: {data:payload}, 
-  }),
-  invalidatesTags:['course']
-}),
+    transformResponse:(response)=>response.data
+    })
   }),
 });
 export const {
@@ -168,5 +181,7 @@ export const {
   useGetAllUsersQuery,
   useDeleteCourseMutation,
   useChangeRoleMutation,
-  useUpdateCourseMutation
+  useUpdateCourseMutation,
+  useUpdateHeroMutation,
+  useGetHeroInfoQuery
 } = ApiSlice;

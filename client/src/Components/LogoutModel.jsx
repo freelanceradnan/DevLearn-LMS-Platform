@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 export const LogoutModal  = ({OpenLogoutModel,setOpenLogoutModel }) => {
   const dispatch=useDispatch()
   const [logoutuser] = useLogoutUserMutation();
-
+ 
  const Logout = async () => {
     try {
       const result = await logoutuser().unwrap();

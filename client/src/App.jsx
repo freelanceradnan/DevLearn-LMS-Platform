@@ -13,6 +13,7 @@ import CreateCourse from "./Components/AdminDeshboard/CreateCourse/CreateCourse"
 import AllCourses from "./Components/AdminDeshboard/LiveCourses/AllCourses";
 import Users from "./Components/AdminDeshboard/AllUsers/Users";
 import ManageTeam from "./Components/AdminDeshboard/ManageTeam/ManageTeam";
+import Hero from "./Components/AdminDeshboard/HeroSection/Hero";
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
       <Route path="Manageteam" element={<ManageTeam/>}/>
       <Route path="Users" element={<Users/>}/>
       <Route path="dashboard" element={<CreateCourse/>}/>
+      <Route path="heroSection" element={<Hero/>}/>
       </Route>
       </Route>
     </Routes>

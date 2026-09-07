@@ -56,8 +56,7 @@ const Hero = () => {
           public_id: uploadRes.public_id,
           url: uploadRes.url,
         };
-      }
-      const payload = {
+         const payload = {
         title: heroData.title,
         subTitle: heroData.subTitle,
         image: {
@@ -75,6 +74,27 @@ const Hero = () => {
 
         const result = await updateHero({ dataId, payload }).unwrap();
       }
+      }else{
+          const payload = {
+        title: heroData.title,
+        subTitle: heroData.subTitle,
+        image: {
+          public_id: data[0]?.image?.public_id,
+          url: data[0]?.image?.url,
+        },
+      }
+         if (payload) {
+        const dataId = data?.[0]?._id;
+
+        if (!dataId) {
+          toast.error("Hero section ID not found!");
+          return;
+        }
+
+        const result = await updateHero({ dataId, payload }).unwrap();
+      }
+     
+    }
     } catch (error) {}
   };
 
@@ -141,8 +161,8 @@ const Hero = () => {
                 <div className="relative size-20 rounded-xl border border-gray-200 overflow-hidden shrink-0 bg-gray-50 flex items-center justify-center shadow-inner">
                   <img
                     src={
-                      typeof heroData.image === "object"
-                        ? URL.createObjectURL(heroData.image)
+                      imageFile?
+                         URL.createObjectURL(imageFile)
                         : heroData.image
                     }
                     alt="Hero Preview"

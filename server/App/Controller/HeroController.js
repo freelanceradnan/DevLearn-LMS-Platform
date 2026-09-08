@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
-import Hero from "../Models/Layout.js";
-import cloudinary from "./../Config/Cloudinary.js";
 
+import cloudinary from "./../Config/Cloudinary.js";
+import LayoutModels from '../Models/Layout.js';
+const { Hero } = LayoutModels;
 export const UpdateHero = CatchAsyncError(async (req, res, next) => {
   const { data } = req.body;
   const id = req.params.id;

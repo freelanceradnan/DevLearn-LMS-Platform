@@ -164,6 +164,20 @@ export const ApiSlice = createApi({
     method:'GET'
     }),
     transformResponse:(response)=>response.data
+    }),
+    UpdateFaq:builder.mutation({
+    query:(payload)=>({
+      url:'/update-faq',
+      method:'POST',
+      body:payload
+    })
+    }),
+    GetFaq:builder.query({
+      query:()=>({
+      url:'/get-faq',
+      method:'GET'
+      }),
+      transformResponse:(response)=>response.data
     })
   }),
 });
@@ -183,5 +197,7 @@ export const {
   useChangeRoleMutation,
   useUpdateCourseMutation,
   useUpdateHeroMutation,
-  useGetHeroInfoQuery
+  useGetHeroInfoQuery,
+  useUpdateFaqMutation,
+  useGetFaqQuery
 } = ApiSlice;

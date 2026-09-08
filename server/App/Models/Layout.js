@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 
 const HeroSection = new mongoose.Schema({
   title: { type: String },
@@ -8,5 +8,18 @@ const HeroSection = new mongoose.Schema({
     url: { type: String },
   },
 });
+const faqItemSchema = new mongoose.Schema({
+  question: { type: String, required: true },
+  answer: { type: String, required: true },
+}); 
+
+
+const faqSectionSchema = new mongoose.Schema({
+  faqSections: [faqItemSchema],
+},{
+  versionKey:false
+});
 const Hero = mongoose.model("Hero", HeroSection);
-export default Hero;
+const Faq = mongoose.model("Faq", faqSectionSchema);
+export default {Hero,Faq}
+

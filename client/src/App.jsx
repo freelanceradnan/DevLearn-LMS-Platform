@@ -15,6 +15,7 @@ import Users from "./Components/AdminDeshboard/AllUsers/Users";
 import ManageTeam from "./Components/AdminDeshboard/ManageTeam/ManageTeam";
 import Hero from "./Components/AdminDeshboard/HeroSection/Hero";
 import FaqSection from "./Components/AdminDeshboard/FaqSection/FaqSection";
+import Categories from "./Components/AdminDeshboard/Categories/Categories";
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
       <Route path="createCourse" element={<CreateCourse/>}/>
       <Route path="faqSection" element={<FaqSection/>}/>
       <Route path="Manageteam" element={<ManageTeam/>}/>
+      <Route path="categoriesSection" element={<Categories/>}/>
       <Route path="Users" element={<Users/>}/>
       <Route path="dashboard" element={<CreateCourse/>}/>
       <Route path="heroSection" element={<Hero/>}/>

@@ -46,7 +46,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["users", "course", "orders", "products", "partner"],
+  tagTypes: ["users", "course", "orders", "faq", "partner"],
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (userData) => ({
@@ -170,14 +170,16 @@ export const ApiSlice = createApi({
       url:'/update-faq',
       method:'POST',
       body:payload
-    })
+    }),
+    invalidatesTags:['faq']
     }),
     GetFaq:builder.query({
       query:()=>({
       url:'/get-faq',
       method:'GET'
       }),
-      transformResponse:(response)=>response.data
+      transformResponse:(response)=>response.data,
+      providesTags:['faq']
     })
   }),
 });

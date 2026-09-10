@@ -180,6 +180,13 @@ export const ApiSlice = createApi({
       }),
       transformResponse:(response)=>response.data,
       providesTags:['faq']
+    }),
+    UpdateCategory:builder.mutation({
+     query: (categories) => ({
+    url: '/updateCategory',
+    method: 'PUT',
+    body: { data: categories } 
+  })
     })
   }),
 });
@@ -201,5 +208,6 @@ export const {
   useUpdateHeroMutation,
   useGetHeroInfoQuery,
   useUpdateFaqMutation,
-  useGetFaqQuery
+  useGetFaqQuery,
+  useUpdateCategoryMutation
 } = ApiSlice;

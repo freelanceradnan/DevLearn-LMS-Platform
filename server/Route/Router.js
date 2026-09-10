@@ -11,6 +11,7 @@ import { AdminMiddlewares } from "../App/Middleware/AdminMiddleware.js";
 import * as UploadController from '../App/Controller/UploadController.js'
 import * as HeroController from '../App/Controller/HeroController.js'
 import * as FaqController from '../App/Controller/FaqController.js'
+import * as CategoryController from '../App/Controller/CategoryController.js'
 import multer from 'multer';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -39,6 +40,7 @@ router.put('/update-hero/:id',isAuthenticated,AdminMiddlewares,HeroController.Up
 router.get('/hero-info',HeroController.GetHeroInfo)
 router.post('/update-faq',isAuthenticated,AdminMiddlewares,FaqController.UpdateFaq)
 router.get('/get-faq',FaqController.GetFaq)
+router.put('/updateCategory',isAuthenticated,AdminMiddlewares,CategoryController.updateCategory)
 router.post('/create-course',isAuthenticated,AdminMiddlewares,CourseController.CreateCourse)
 router.post('/generateUrl',CourseController.generateVideoUrl)
 router.put('/update-course/:id',isAuthenticated,AdminMiddlewares,CourseController.UpdateCourse)

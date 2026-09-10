@@ -19,7 +19,14 @@ const faqSectionSchema = new mongoose.Schema({
 },{
   versionKey:false
 });
+const categoryItem=new mongoose.Schema({
+  name:{type:String,required:true}
+})
+const CategorySchema=new mongoose.Schema({
+  categories:[categoryItem]
+})
 const Hero = mongoose.model("Hero", HeroSection);
 const Faq = mongoose.model("Faq", faqSectionSchema);
-export default {Hero,Faq}
+const Category = mongoose.model("Category", CategorySchema);
+export default {Hero,Faq,Category}
 

@@ -13,11 +13,11 @@ export const getUsersAnalytics=CatchAsyncError(async(req,res,next)=>{
     })
 })
 export const getCourseAnalytics=CatchAsyncError(async(req,res,next)=>{
-    const course=await generateLast12MonthsData(course)
+    const courseInfo=await generateLast12MonthsData(course)
     res.status(200).json({
         success:true,
         message:"Users analysis found!",
-        course
+        courseInfo
     })
 })
 export const getOrdersAnalytics=CatchAsyncError(async(req,res,next)=>{

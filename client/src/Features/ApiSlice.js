@@ -152,42 +152,72 @@ export const ApiSlice = createApi({
       invalidatesTags: ["course"],
     }),
     updateHero: builder.mutation({
-      query: ({dataId,payload}) => ({
+      query: ({ dataId, payload }) => ({
         url: `/update-hero/${dataId}`,
         method: "PUT",
-        body: {data:payload},
+        body: { data: payload },
       }),
     }),
-    GetHeroInfo:builder.query({
+    GetHeroInfo: builder.query({
+      query: () => ({
+        url: "/hero-info",
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
+    UpdateFaq: builder.mutation({
+      query: (payload) => ({
+        url: "/update-faq",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["faq"],
+    }),
+    GetFaq: builder.query({
+      query: () => ({
+        url: "/get-faq",
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+      providesTags: ["faq"],
+    }),
+    UpdateCategory: builder.mutation({
+      query: (categories) => ({
+        url: "/updateCategory",
+        method: "PUT",
+        body: { data: categories },
+      }),
+    }),
+    GetAllCategory: builder.query({
+      query: () => ({
+        url: "/getAllCategory",
+        method: "GET",
+      }),
+      transformResponse: (response) => response.data,
+    }),
+    CourseAnalytics: builder.query({
+      query: () => ({
+        url: "/courses-analytics",
+        method: "GET",
+      }),
+      transformResponse:(response)=>response.courseInfo.last12Months
+
+    }),
+    UsersAnalytics:builder.query({
+      query:()=>({
+        url:'/users-analytics',
+        method:'GET'
+      }),
+       transformResponse:(response)=>response.users.last12Months
+    }),
+    OrderAnalytics:builder.query({
     query:()=>({
-    url:'/hero-info',
+    url:'/orders-analytics',
     method:'GET'
     }),
-    transformResponse:(response)=>response.data
-    }),
-    UpdateFaq:builder.mutation({
-    query:(payload)=>({
-      url:'/update-faq',
-      method:'POST',
-      body:payload
-    }),
-    invalidatesTags:['faq']
-    }),
-    GetFaq:builder.query({
-      query:()=>({
-      url:'/get-faq',
-      method:'GET'
-      }),
-      transformResponse:(response)=>response.data,
-      providesTags:['faq']
-    }),
-    UpdateCategory:builder.mutation({
-     query: (categories) => ({
-    url: '/updateCategory',
-    method: 'PUT',
-    body: { data: categories } 
-  })
+    transformResponse:(response)=>response.orders.last12Months
     })
+    
   }),
 });
 export const {
@@ -209,5 +239,9 @@ export const {
   useGetHeroInfoQuery,
   useUpdateFaqMutation,
   useGetFaqQuery,
-  useUpdateCategoryMutation
+  useUpdateCategoryMutation,
+  useGetAllCategoryQuery,
+  useCourseAnalyticsQuery,
+  useUsersAnalyticsQuery,
+  useOrderAnalyticsQuery
 } = ApiSlice;

@@ -16,6 +16,9 @@ import ManageTeam from "./Components/AdminDeshboard/ManageTeam/ManageTeam";
 import Hero from "./Components/AdminDeshboard/HeroSection/Hero";
 import FaqSection from "./Components/AdminDeshboard/FaqSection/FaqSection";
 import Categories from "./Components/AdminDeshboard/Categories/Categories";
+import CoursesAnalytices from "./Components/AdminDeshboard/CoursesAnalytics/CoursesAnalytices";
+import UsersAnalytics from "./Components/AdminDeshboard/UsersAnalytics/UsersAnalytics";
+import OrdersAnalytics from "./Components/AdminDeshboard/OrderAnalytics/OrderAnalytics";
 
 
 function App() {
@@ -41,6 +44,9 @@ function App() {
       <Route path="faqSection" element={<FaqSection/>}/>
       <Route path="Manageteam" element={<ManageTeam/>}/>
       <Route path="categoriesSection" element={<Categories/>}/>
+      <Route path="coursesAnalytics" element={<CoursesAnalytices/>}/>
+      <Route path="usersAnalytics" element={<UsersAnalytics/>}/>
+      <Route path="ordersAnalytics" element={<OrdersAnalytics/>}/>
       <Route path="Users" element={<Users/>}/>
       <Route path="dashboard" element={<CreateCourse/>}/>
       <Route path="heroSection" element={<Hero/>}/>

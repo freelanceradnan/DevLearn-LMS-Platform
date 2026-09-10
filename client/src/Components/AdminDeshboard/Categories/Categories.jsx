@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Plus, Trash2, Save, FolderPlus, Tag } from "lucide-react";
-import { useUpdateCategoryMutation } from "../../../Features/ApiSlice";
+import { useGetAllCategoryQuery, useUpdateCategoryMutation } from "../../../Features/ApiSlice";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [item, setItem] = useState("");
   const [updateCategory, { isLoading }] = useUpdateCategoryMutation();
+  const {data}=useGetAllCategoryQuery()
 
 
+//getting all categroies
+  useEffect(()=>{
+  if(data){
+    setCategories(data[0].categories)
+  }
+  },[data])
   const AddCategories = (e) => {
     e.preventDefault();
     if (item.trim() === "") {
@@ -28,7 +35,7 @@ const Categories = () => {
   const UpdateCategory = async (e) => {
     e.preventDefault();
     try {
-      const result = await updateCategory({ data: categories }).unwrap();
+      const result = await updateCategory(categories ).unwrap();
       if (result?.success) {
         toast.success(result.message || "Categories updated successfully!");
       }

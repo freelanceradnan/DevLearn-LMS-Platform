@@ -40,10 +40,12 @@ const CreateCourse = ({ state, setEditMode, editData,editId}) => {
     description: "",
     price: "",
     estimatedPrice: "",
+    categoryId:"",
     tags: "",
     level: "",
     demoUrl: "",
   });
+  // console.log(formData)
   const [courseContentData, setCourseContentData] = useState([
     {
       videoUrl: "",
@@ -133,7 +135,7 @@ const CreateCourse = ({ state, setEditMode, editData,editId}) => {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-4 p-6">
+    <div className="mx-auto max-w-5xl space-y-4">
       {state && (
         <button
           className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow-xs transition-colors hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/50"

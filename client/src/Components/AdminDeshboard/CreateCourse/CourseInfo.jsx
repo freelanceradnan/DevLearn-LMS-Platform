@@ -1,17 +1,29 @@
 import { ArrowRight } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useGetAllCategoryQuery } from "../../../Features/ApiSlice";
 
 const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImageFile,state}) => {
-  
+    const {data}=useGetAllCategoryQuery()
+    const [CategoryData,setCategoryData]=useState([])
+    
+    useEffect(()=>{
+   if (Array.isArray(data) && data.length > 0) {
+    const categories = data[0]?.categories || [];
+    setCategoryData(categories);
+  }
+    },[data])
 
  const handleChange = (e) => {
   const { name, value } = e.target;
+
+  
   setFormData((prev) => ({
     ...prev,
     [name]: (name === "price" || name === "estimatedPrice") ? Number(value) : value,
   }));
 };
+
 
   const handleNext = (e) => {
     e.preventDefault();
@@ -25,6 +37,7 @@ const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImag
       formData.price,
       formData.estimatedPrice,
       formData.tags,
+      formData.categoryId,
       formData.level,
       formData.demoUrl,
       formData.image,
@@ -38,6 +51,7 @@ const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImag
       setActive(active + 1);
     }
   };
+
   return (
     <div className="max-w-2xl mx-auto md:p-4 bg-white rounded-lg">
       <h2 className="text-2xl font-bold text-gray-800 py-2">
@@ -122,8 +136,9 @@ const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImag
         </div>
 
         {/* Course Tags */}
-        <div className="flex flex-col gap-1">
-          <label htmlFor="tags" className="text-sm font-medium text-gray-700">
+        <div className="flex justify-between gap-4">
+        <div className="flex flex-col gap-1 w-full">
+           <label htmlFor="tags" className="text-sm font-medium text-gray-700">
             Course Tags
           </label>
           <input
@@ -135,6 +150,24 @@ const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImag
             placeholder="React, Tailwind, Frontend (comma separated)"
             className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+        </div>
+        <div className="flex flex-col gap-1 w-full">
+           <label htmlFor="tags" className="text-sm font-medium text-gray-700">
+           Select Course Category
+          </label>
+         <select
+              id="categoryId"
+              name="categoryId"
+              value={formData.categoryId}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option >Select A Option</option>
+             {CategoryData.map((item,index)=>(
+              <option value={item._id} key={index}>{item.name}</option>
+             ))}
+            </select>
+        </div>
         </div>
 
         {/* Level & Demo URL */}

@@ -50,6 +50,7 @@ const courseSchema =new mongoose.Schema({
     public_id: {  type: String },
     url: { type: String },
   },
+  categoryId:{type:String},
   tags: { type: String, required: true },
   level: { type: String, required: true },
   demoUrl: { type: String, required: true },

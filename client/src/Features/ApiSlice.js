@@ -46,7 +46,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["users", "course", "orders", "faq", "partner"],
+  tagTypes: ["users", "course", "orders", "faq", "category"],
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (userData) => ({
@@ -187,6 +187,7 @@ export const ApiSlice = createApi({
         method: "PUT",
         body: { data: categories },
       }),
+    invalidatesTags:['category']
     }),
     GetAllCategory: builder.query({
       query: () => ({
@@ -194,6 +195,7 @@ export const ApiSlice = createApi({
         method: "GET",
       }),
       transformResponse: (response) => response.data,
+      providesTags:['category']
     }),
     CourseAnalytics: builder.query({
       query: () => ({

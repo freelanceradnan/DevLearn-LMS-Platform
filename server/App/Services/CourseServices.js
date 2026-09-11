@@ -11,6 +11,7 @@ import Notification from "../Models/Notification.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 export const CourseService = async (data, res) => {
+   await redis.del("allcourses");
   const createcourse = await course.create(data);
   res.status(201).json({
     success: true,
@@ -58,6 +59,7 @@ export const GetMySingleCourse = async (CourseId) => {
 
   if (isCaching) {
     const getCourse = JSON.parse(isCaching);
+ 
     return { success: true, getCourse };
   } else {
     const getCourse = await course
@@ -65,6 +67,7 @@ export const GetMySingleCourse = async (CourseId) => {
       .select(
         "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links",
       );
+     
     const caching = await redis.set(
       CourseId,
       JSON.stringify(getCourse),
@@ -81,6 +84,7 @@ export const GetMyAllCourse = async () => {
   const caching = await redis.get("allcourses");
 
   if (caching) {
+    
     const allcourses = JSON.parse(caching);
 
     if (Array.isArray(allcourses) && allcourses.length > 0) {

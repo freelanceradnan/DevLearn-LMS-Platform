@@ -19,6 +19,8 @@ import Categories from "./Components/AdminDeshboard/Categories/Categories";
 import CoursesAnalytices from "./Components/AdminDeshboard/CoursesAnalytics/CoursesAnalytices";
 import UsersAnalytics from "./Components/AdminDeshboard/UsersAnalytics/UsersAnalytics";
 import OrdersAnalytics from "./Components/AdminDeshboard/OrderAnalytics/OrderAnalytics";
+import Overview from "./Components/AdminDeshboard/Overview/Overview";
+import Invoices from "./Components/AdminDeshboard/Invoices/Invoices";
 
 
 function App() {
@@ -40,6 +42,7 @@ function App() {
       <Route path="/admin" element={<AdminLayout/>}>
       <Route index element={<Dashboard/>}/>
        <Route path="allcourses" element={<AllCourses/>}/>
+       <Route path="dashboard" element={<Overview/>}/>
       <Route path="createCourse" element={<CreateCourse/>}/>
       <Route path="faqSection" element={<FaqSection/>}/>
       <Route path="Manageteam" element={<ManageTeam/>}/>
@@ -49,6 +52,7 @@ function App() {
       <Route path="ordersAnalytics" element={<OrdersAnalytics/>}/>
       <Route path="Users" element={<Users/>}/>
       <Route path="dashboard" element={<CreateCourse/>}/>
+      <Route path="Invoices" element={<Invoices/>}/>
       <Route path="heroSection" element={<Hero/>}/>
       </Route>
       </Route>

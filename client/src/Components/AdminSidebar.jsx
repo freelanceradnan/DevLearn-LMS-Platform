@@ -19,7 +19,7 @@ export default function Sidebar({ showMobileMenu, setShowMobileMenu, menuGroups 
   const RenderNavContent = () => (
     <>
       {/* Header */}
-      <header className="flex h-16 items-center border-b border-[#E0E0E2] bg-[#FFFFFF] px-6 tracking-wider text-[#18181A]">
+      <header className="flex h-14 items-center border-b border-[#E0E0E2] bg-[#FFFFFF] px-6 tracking-wider text-[#18181A]">
         <div>
           <div className="flex items-center gap-1.5">
             <img src={assets.adminLogo} alt="DevLearn Logo" className="w-8" />

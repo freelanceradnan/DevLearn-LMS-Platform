@@ -93,7 +93,7 @@ const Overview = () => {
                         <h3 className="text-lg font-bold text-gray-800">Earning / Analytics</h3>
                         <p className="text-xs text-gray-400">Overview of recent performance metrics</p>
                     </div>
-                    <div className="w-full">
+                    <div className="w-full h-full flex items-center">
                         <OverviewChart />
                     </div>
                 </div>

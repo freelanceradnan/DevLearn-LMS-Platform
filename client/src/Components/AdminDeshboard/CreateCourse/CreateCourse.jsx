@@ -41,11 +41,12 @@ const CreateCourse = ({ state, setEditMode, editData,editId}) => {
     price: "",
     estimatedPrice: "",
     categoryId:"",
+    owner:"",
     tags: "",
     level: "",
     demoUrl: "",
   });
-  // console.log(formData)
+  console.log(formData)
   const [courseContentData, setCourseContentData] = useState([
     {
       videoUrl: "",

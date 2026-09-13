@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { assets } from '../assets/assets';
 import CourseCard from './CourseCart';
 import { ArrowRight } from 'lucide-react';
+import { useAllCoursesQuery } from '../Features/ApiSlice';
 
 const PopularCourses = () => {
+  const {data}=useAllCoursesQuery()
+  const [courses,setCourses]=useState([])
+  useEffect(()=>{
+  const rawData=Array.isArray(data)?data:[]
+  if(rawData.length>0){
+  setCourses(rawData)
+  }
+  },[data])
+
     const cartData=[
         {_id:1,
         title:"Full Stack Web Devlopment",
@@ -48,7 +58,7 @@ const PopularCourses = () => {
              <button className='flex gap-1 justify-center items-center text-[#6D28D5] text-sm font-semibold'>See More <ArrowRight size={20}/></button>
            </div>
            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-        {cartData.map((cart) => (
+        {courses.map((cart) => (
           <CourseCard key={cart._id} cart={cart} assets={assets} />
         ))}
       </div>

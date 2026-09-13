@@ -43,21 +43,7 @@ const Invoices = () => {
         courseId: "CRS-UIX-101",
         createdAt: "2026-09-12 14:32",
         invoiceUrl: "/invoices/ORD-2026-9001.pdf"
-      },
-      {
-        orderId: "ORD-2026-9002",
-        user: "Alex Rivera",
-        courseId: "CRS-DEV-404",
-        createdAt: "2026-09-11 09:15",
-        invoiceUrl: "/invoices/ORD-2026-9002.pdf"
-      },
-      {
-        orderId: "ORD-2026-9003",
-        user: "Priya Patel",
-        courseId: "CRS-MKT-202",
-        createdAt: "2026-09-10 18:45",
-        invoiceUrl: "/invoices/ORD-2026-9003.pdf"
-      },
+      }
       
      
     ];

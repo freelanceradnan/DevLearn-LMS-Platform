@@ -18,7 +18,7 @@ const data = [
 const OverviewChart = () => {
   return (
     <BarChart
-      style={{ width: '100%', maxWidth: '700px', maxHeight: '70vh', aspectRatio: 1.618 }}
+      style={{ width: '100%', maxWidth: '700px', maxHeight: '70vh', aspectRatio: 1.618,height:'100%'}}
       responsive
       className='bg-[#FDFDFD] '
       data={data}

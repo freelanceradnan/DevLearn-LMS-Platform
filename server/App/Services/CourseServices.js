@@ -11,7 +11,7 @@ import Notification from "../Models/Notification.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 export const CourseService = async (data, res) => {
-   await redis.del("allcourses");
+  await redis.del("allcourses");
   const createcourse = await course.create(data);
   res.status(201).json({
     success: true,
@@ -29,10 +29,7 @@ export const UpdateMyCourse = async (courseId, data) => {
     const oldPublicId = myCourseInfo?.thumbnail?.public_id;
     const newPublicId = data?.thumbnail?.public_id;
 
-   
     if (newPublicId && oldPublicId && newPublicId !== oldPublicId) {
-      
-  
       await cloudinary.uploader.destroy(oldPublicId, {
         resource_type: "image",
         invalidate: true,
@@ -42,10 +39,10 @@ export const UpdateMyCourse = async (courseId, data) => {
     const courseInfo = await course.findByIdAndUpdate(
       courseId,
       { $set: data },
-      { returnDocument: "after", runValidators: true }
+      { returnDocument: "after", runValidators: true },
     );
 
-    await redis.del('allcourses');
+    await redis.del("allcourses");
 
     return { success: true, courseInfo };
   } catch (error) {
@@ -59,7 +56,7 @@ export const GetMySingleCourse = async (CourseId) => {
 
   if (isCaching) {
     const getCourse = JSON.parse(isCaching);
- 
+
     return { success: true, getCourse };
   } else {
     const getCourse = await course
@@ -67,7 +64,7 @@ export const GetMySingleCourse = async (CourseId) => {
       .select(
         "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links",
       );
-     
+
     const caching = await redis.set(
       CourseId,
       JSON.stringify(getCourse),
@@ -84,7 +81,6 @@ export const GetMyAllCourse = async () => {
   const caching = await redis.get("allcourses");
 
   if (caching) {
-    
     const allcourses = JSON.parse(caching);
 
     if (Array.isArray(allcourses) && allcourses.length > 0) {
@@ -95,7 +91,7 @@ export const GetMyAllCourse = async () => {
   const getCourse = await course
     .find()
     .select(
-      "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links",
+      "-description -benefits -demoUrl -prerequisites -courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links",
     );
 
   if (getCourse.length > 0) {

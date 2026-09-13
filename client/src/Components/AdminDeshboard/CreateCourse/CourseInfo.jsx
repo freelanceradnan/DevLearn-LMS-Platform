@@ -211,7 +211,28 @@ const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImag
             />
           </div>
         </div>
+        {/*Add Admin*/}
+        <div className="flex justify-between gap-4">
+          <div className="flex flex-col gap-1 w-full">
+            <label
+              htmlFor="level"
+              className="text-sm font-medium text-gray-700"
+            >
+              Course Owner
+            </label>
+              <input
+              type="text"
+              id="owner"
+              name="owner"
+              value={formData.owner}
+              onChange={handleChange}
+              placeholder="Enter Course Owner Name"
+              className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
+          
+        </div>
         {/* Thumbnail Image Upload */}
         <div className="md:col-span-2">
           <label className="block text-sm font-medium text-zinc-700 mb-2">

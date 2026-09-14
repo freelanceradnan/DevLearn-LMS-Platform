@@ -14,16 +14,17 @@ videoId:videoUrl
 })
 },[videoUrl])
 return (
-        <div className='w-full'>
-        {videoData?.otp && videoData?.playbackInfo!=="" &&(
-            <iframe
-  src={`https://player.vdocipher.com/v2/?otp=${videoData.otp}&playbackInfo=${videoData.playbackInfo}&player=n5kZLQsKT6mXju2p`}
-  className='border-0 w-[720px] h-[405px]'
-  allow="encrypted-media"
-  allowFullScreen
-></iframe>
-        )}
-            <h2>CoursePlayer</h2>
+          <div className='w-full'>
+            {videoData?.otp && videoData?.playbackInfo !== "" && (
+                <div className="relative w-full aspect-video overflow-hidden bg-black">
+                    <iframe
+                        src={`https://player.vdocipher.com/v2/?otp=${videoData.otp}&playbackInfo=${videoData.playbackInfo}&player=n5kZLQsKT6mXju2p`}
+                        className='absolute top-0 left-0 w-full h-full border-0'
+                        allow="encrypted-media"
+                        allowFullScreen
+                    ></iframe>
+                </div>
+            )}
         </div>
     );
 };

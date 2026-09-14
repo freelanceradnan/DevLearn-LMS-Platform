@@ -187,7 +187,7 @@ export const ApiSlice = createApi({
         method: "PUT",
         body: { data: categories },
       }),
-    invalidatesTags:['category']
+      invalidatesTags: ["category"],
     }),
     GetAllCategory: builder.query({
       query: () => ({
@@ -195,31 +195,43 @@ export const ApiSlice = createApi({
         method: "GET",
       }),
       transformResponse: (response) => response.data,
-      providesTags:['category']
+      providesTags: ["category"],
     }),
     CourseAnalytics: builder.query({
       query: () => ({
         url: "/courses-analytics",
         method: "GET",
       }),
-      transformResponse:(response)=>response.courseInfo.last12Months
-
+      transformResponse: (response) => response.courseInfo.last12Months,
     }),
-    UsersAnalytics:builder.query({
-      query:()=>({
-        url:'/users-analytics',
-        method:'GET'
+    UsersAnalytics: builder.query({
+      query: () => ({
+        url: "/users-analytics",
+        method: "GET",
       }),
-       transformResponse:(response)=>response.users.last12Months
+      transformResponse: (response) => response.users.last12Months,
     }),
-    OrderAnalytics:builder.query({
+    OrderAnalytics: builder.query({
+      query: () => ({
+        url: "/orders-analytics",
+        method: "GET",
+      }),
+      transformResponse: (response) => response.orders.last12Months,
+    }),
+    GetPubCourses: builder.query({
     query:()=>({
-    url:'/orders-analytics',
+       url: "/GetPubCourses",
+      method: "GET",
+    }),
+    transformResponse:(response)=>response.data
+    }),
+    GetPubCourseDetails:builder.query({
+    query:(id)=>({
+    url:`/GetPubCourseDetails/${id}`,
     method:'GET'
     }),
-    transformResponse:(response)=>response.orders.last12Months
+    transformResponse:(response)=>response.data
     })
-    
   }),
 });
 export const {
@@ -245,5 +257,7 @@ export const {
   useGetAllCategoryQuery,
   useCourseAnalyticsQuery,
   useUsersAnalyticsQuery,
-  useOrderAnalyticsQuery
+  useOrderAnalyticsQuery,
+  useGetPubCoursesQuery,
+  useGetPubCourseDetailsQuery
 } = ApiSlice;

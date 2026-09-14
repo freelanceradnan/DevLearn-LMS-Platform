@@ -12,6 +12,7 @@ import * as UploadController from '../App/Controller/UploadController.js'
 import * as HeroController from '../App/Controller/HeroController.js'
 import * as FaqController from '../App/Controller/FaqController.js'
 import * as CategoryController from '../App/Controller/CategoryController.js'
+import * as PublicController from '../App/Controller/PublicAllCourse.js'
 import multer from 'multer';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -56,7 +57,7 @@ router.post('/create-order',isAuthenticated,OrderController.CreateOrder)
 router.get('/all-notifications',isAuthenticated,AdminMiddlewares,NotificationController.getNotifications)
 router.put('/update-notification/:id',isAuthenticated,AdminMiddlewares,NotificationController.updateNotifications)
 router.get('/getAlluser',isAuthenticated,AdminMiddlewares,userController.GetAllUsers)
-router.get('/all-course',CourseController.GetAllCourse)
+router.get('/all-course',isAuthenticated,AdminMiddlewares,CourseController.GetAllCourse)
 router.put('/update-user',isAuthenticated,AdminMiddlewares,userController.UpdateUserRole)
 router.delete('/DeleteUser/:id',isAuthenticated,AdminMiddlewares,userController.DeleteUser)
 router.delete('/DeleteCourse/:id',isAuthenticated,AdminMiddlewares,CourseController.DeleteCourse)
@@ -66,4 +67,8 @@ router.get('/orders-analytics',isAuthenticated,AdminMiddlewares,AnalysisControll
 router.post('/create-layout',isAuthenticated,AdminMiddlewares,LayoutController.CreateLayout)
 router.put('/edit-layout',isAuthenticated,AdminMiddlewares,LayoutController.editLayout)
 router.get('/layout',isAuthenticated,AdminMiddlewares,LayoutController.GetLayoutByType)
+
+//public all routes
+router.get('/GetPubCourses',PublicController.PublicAllCourse)
+router.get('/GetPubCourseDetails/:id',PublicController.PublicSingleCourseDetails)
 export default router;

@@ -23,7 +23,7 @@ export const UsersAnalytics = () => {
   }
 
   return (
-    <div className="w-full h-[450px] p-6 rounded-2xl bg-white shadow-sm border border-slate-100">
+    <div className="w-full h-[420px] bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
       <div className="mb-6">
         <h2 className="text-xl font-bold text-slate-800">Users Analytics</h2>
         <p className="text-sm text-slate-400">Last 12 months analytics data</p>

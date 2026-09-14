@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check, Star, Eye, PlayCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function CourseCard({ cart}) {
   const {
@@ -18,7 +19,7 @@ export default function CourseCard({ cart}) {
   const lessonsCount = courseData?.length || 36;
 
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 font-['Plus_Jakarta_Sans'] max-w-sm border border-gray-100 group">
+    <Link to={`/course/${cart._id}`}className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 font-['Plus_Jakarta_Sans'] max-w-sm border border-gray-100 group">
       
       {/* Image  */}
       <div className="overflow-hidden rounded-xl mb-4 aspect-[4/3] relative bg-gray-100">
@@ -89,6 +90,6 @@ export default function CourseCard({ cart}) {
         </div>
 
       </div>
-    </div>
+    </Link>
   );
 }

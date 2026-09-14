@@ -78,27 +78,27 @@ export const GetMySingleCourse = async (CourseId) => {
   }
 };
 export const GetMyAllCourse = async () => {
-  const caching = await redis.get("allcourses");
+  // const caching = await redis.get("allcourses");
 
-  if (caching) {
-    const allcourses = JSON.parse(caching);
+  // if (caching) {
+  //   const allcourses = JSON.parse(caching);
 
-    if (Array.isArray(allcourses) && allcourses.length > 0) {
-      return { success: true, getCourse: allcourses };
-    }
-  }
+  //   if (Array.isArray(allcourses) && allcourses.length > 0) {
+  //     return { success: true, getCourse: allcourses };
+  //   }
+  // }
 
   const getCourse = await course
-    .find()
-    .select(
-      "-description -benefits -demoUrl -prerequisites -courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links",
-    );
+    .find({}).lean()
 
-  if (getCourse.length > 0) {
-    await redis.set("allcourses", JSON.stringify(getCourse));
-  } else {
-    await redis.del("allcourses");
-  }
+    // .select(
+    //   "-description -benefits -demoUrl -prerequisites -courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links",
+    // );
+  // if (getCourse.length > 0) {
+  //   await redis.set("allcourses", JSON.stringify(getCourse));
+  // } else {
+  //   await redis.del("allcourses");
+  // }
 
   return {
     success: true,

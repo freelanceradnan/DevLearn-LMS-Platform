@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { assets } from '../assets/assets';
 import CourseCard from './CourseCart';
 import { ArrowRight } from 'lucide-react';
-import { useAllCoursesQuery } from '../Features/ApiSlice';
+import { useAllCoursesQuery, useGetPubCoursesQuery } from '../Features/ApiSlice';
 
 const PopularCourses = () => {
-  const {data}=useAllCoursesQuery()
+  const {data}=useGetPubCoursesQuery()
+  console.log(data)
   const [courses,setCourses]=useState([])
   useEffect(()=>{
   const rawData=Array.isArray(data)?data:[]
@@ -14,40 +15,40 @@ const PopularCourses = () => {
   }
   },[data])
 
-    const cartData=[
-        {_id:1,
-        title:"Full Stack Web Devlopment",
-        para:"AI Made Easy - Best-Selling Author - AI LLM Chatbots, Images, Music",
-        rating:"4.6",
-        price: "$9.99",
-        originalPrice:"$19.99",
-        purchased:"99"
-        },
-        {_id:2,
-        title:"Full Stack Web Devlopment",
-        para:"AI Made Easy - Best-Selling Author - AI LLM Chatbots, Images, Music",
-        rating:"4.6",
-        price: "$9.99",
-        originalPrice:"$19.99",
-        purchased:"99"
-        },
-         {_id:3,
-        title:"Full Stack Web Devlopment",
-        para:"AI Made Easy - Best-Selling Author - AI LLM Chatbots, Images, Music",
-        rating:"4.6",
-        price: "$9.99",
-        originalPrice:"$19.99",
-        purchased:"99"
-        },
-         {_id:4,
-        title:"Full Stack Web Devlopment",
-        para:"AI Made Easy - Best-Selling Author - AI LLM Chatbots, Images, Music",
-        rating:"4.6",
-        price: "$9.99",
-        originalPrice:"$19.99",
-        purchased:"99"
-        }
-    ]
+    // const cartData=[
+    //     {_id:1,
+    //     title:"Full Stack Web Devlopment",
+    //     para:"AI Made Easy - Best-Selling Author - AI LLM Chatbots, Images, Music",
+    //     rating:"4.6",
+    //     price: "$9.99",
+    //     originalPrice:"$19.99",
+    //     purchased:"99"
+    //     },
+    //     {_id:2,
+    //     title:"Full Stack Web Devlopment",
+    //     para:"AI Made Easy - Best-Selling Author - AI LLM Chatbots, Images, Music",
+    //     rating:"4.6",
+    //     price: "$9.99",
+    //     originalPrice:"$19.99",
+    //     purchased:"99"
+    //     },
+    //      {_id:3,
+    //     title:"Full Stack Web Devlopment",
+    //     para:"AI Made Easy - Best-Selling Author - AI LLM Chatbots, Images, Music",
+    //     rating:"4.6",
+    //     price: "$9.99",
+    //     originalPrice:"$19.99",
+    //     purchased:"99"
+    //     },
+    //      {_id:4,
+    //     title:"Full Stack Web Devlopment",
+    //     para:"AI Made Easy - Best-Selling Author - AI LLM Chatbots, Images, Music",
+    //     rating:"4.6",
+    //     price: "$9.99",
+    //     originalPrice:"$19.99",
+    //     purchased:"99"
+    //     }
+    // ]
     return (
         <div className='w-full max-w-7xl mx-auto px-4 py-6 bg-[#EFEFF7]'>
            <div className='flex justify-between pb-12'>

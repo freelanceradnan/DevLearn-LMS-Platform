@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useGetFaqQuery, useUpdateFaqMutation } from "../../../Features/ApiSlice";
+import {
+  useGetFaqQuery,
+  useUpdateFaqMutation,
+} from "../../../Features/ApiSlice";
 import { toast } from "react-hot-toast";
 import { Plus, Trash2, HelpCircle, Save, Sparkles } from "lucide-react";
 
@@ -59,23 +62,20 @@ const FaqSection = () => {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
-
       <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-2xl font-bold tracking-tight text-slate-900">
               FAQ Manager
             </h2>
-            <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
-             
-            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700"></span>
           </div>
           <p className="mt-1 text-sm text-slate-500">
-            Manage your store's frequently asked questions and public support responses.
+            Manage your store's frequently asked questions and public support
+            responses.
           </p>
         </div>
 
-      
         <button
           type="button"
           disabled={isUpdating}
@@ -88,7 +88,6 @@ const FaqSection = () => {
       </div>
 
       <div className="grid gap-8">
-      
         <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-base font-semibold text-slate-900">
@@ -101,8 +100,12 @@ const FaqSection = () => {
               <div className="rounded-full bg-slate-50 p-3 text-slate-400">
                 <HelpCircle className="h-6 w-6" />
               </div>
-              <p className="mt-2 text-sm font-medium text-slate-600">No questions added yet</p>
-              <p className="text-xs text-slate-400">Fill out the form below to add your first FAQ.</p>
+              <p className="mt-2 text-sm font-medium text-slate-600">
+                No questions added yet
+              </p>
+              <p className="text-xs text-slate-400">
+                Fill out the form below to add your first FAQ.
+              </p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -115,7 +118,9 @@ const FaqSection = () => {
                     <span className="text-xs font-semibold uppercase tracking-wider text-indigo-600">
                       Q{index + 1}
                     </span>
-                    <h4 className="text-sm font-semibold text-slate-800">{item.question}</h4>
+                    <h4 className="text-sm font-semibold text-slate-800">
+                      {item.question}
+                    </h4>
                     <p className="text-sm text-slate-600">{item.answer}</p>
                   </div>
                   <button
@@ -132,12 +137,15 @@ const FaqSection = () => {
           )}
         </div>
 
-
         <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs">
-          <h3 className="mb-4 text-base font-semibold text-slate-900">Add New FAQ Item</h3>
+          <h3 className="mb-4 text-base font-semibold text-slate-900">
+            Add New FAQ Item
+          </h3>
           <form onSubmit={addNewItem} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-700">Question</label>
+              <label className="mb-1.5 block text-xs font-medium text-slate-700">
+                Question
+              </label>
               <input
                 type="text"
                 name="question"
@@ -149,7 +157,9 @@ const FaqSection = () => {
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-slate-700">Answer</label>
+              <label className="mb-1.5 block text-xs font-medium text-slate-700">
+                Answer
+              </label>
               <textarea
                 rows={3}
                 name="answer"

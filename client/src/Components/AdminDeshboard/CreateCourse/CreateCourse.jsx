@@ -46,7 +46,7 @@ const CreateCourse = ({ state, setEditMode, editData,editId}) => {
     level: "",
     demoUrl: "",
   });
-  console.log(formData)
+
   const [courseContentData, setCourseContentData] = useState([
     {
       videoUrl: "",

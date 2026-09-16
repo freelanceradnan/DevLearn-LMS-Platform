@@ -10,64 +10,67 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 export async function CreateMyOrder(user,course_id,payment_info){
 
-const fullUserData=await User.findById(user._id)
+const fullUserData = await User.findById(user?._id);
 
-if(!user){
-throw new Error("User not found!")
-}
+if (!fullUserData) {
+    throw new Error("User not found!");
+  }
 
 const hasCourse = fullUserData?.Courses?.some(
-  (course) => course?._id?.toString() === course_id
-) ?? false;
-if(hasCourse){
-    throw new Error("Your are already purchase this course!")
-}
-const fullCourse=await course.findById(course_id)
-if(!fullCourse){
-throw new Error("Course is not available at this moments!")
-}
-const data={
-    courseId:fullCourse._id,
-    user_id:user._id
-}
+    (course) => course?._id?.toString() === course_id
+  ) ?? false;
+if (hasCourse) {
+    throw new Error("You have already purchased this course!");
+  }
+const fullCourse = await course.findById(course_id);
+if (!fullCourse) {
+    throw new Error("Course is not available at this moment!");
+  }
+const data = {
+    courseId: fullCourse._id,
+    user_id: user._id,
+    paymentInfo: payment_info 
+  };
 
-const createOrder=await Orders.create(data)
+const createOrder = await Orders.create(data);
 
 const mailData = {
-  _id: fullCourse?._id?.toString().slice(0, 6) ?? 'N/A',
-  name: fullCourse?.name ?? 'Course Item',
-  date: new Date().toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  }),
-  price: fullCourse?.price ?? 0
-};
+    _id: fullCourse?._id?.toString().slice(0, 6) ?? 'N/A',
+    name: fullCourse?.name ?? 'Course Item',
+    date: new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    }),
+    price: fullCourse?.price ?? 0
+  };
 
- const html = await ejs.renderFile(
+ try {
+    const html = await ejs.renderFile(
       path.join(__dirname, "../Utils/Order-Notify.ejs"),
-      {order:mailData},
+      { order: mailData }
     );
-try {
-if (user?.email) {
-    await sendMail({
-      email: user.email,
-      subject: 'Order Confirmation!',
-      html
-    });
+
+    if (user?.email) {
+      await sendMail({
+        email: user.email,
+        subject: 'Order Confirmation!',
+        html
+      });
+    }
+  } catch (error) {
+    console.error("Email sending failed:", error.message);
+    
   }
-} catch (error) {
-    throw new Error(error.message)
-}
 
-fullUserData.Courses.push(course_id)
+fullUserData.Courses.push(course_id);
 
-await fullUserData.save()
-//notifications for admin
-const notification=await Notification.create({
-    user_id:user._id,
-    title:"New Order",
-    message:`Your have a new Order from ${course.name}`
-})
-return {success:true,createOrder}
+await fullUserData.save();
+
+await Notification.create({
+    user_id: user._id,
+    title: "New Order",
+    message: `You have a new order for ${fullCourse.name}`
+  });
+return { success: true, createOrder };
 }

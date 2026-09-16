@@ -34,7 +34,7 @@ export const PublicAllCourse=CatchAsyncError(async(req,res,next)=>{
 export const PublicSingleCourseDetails=CatchAsyncError(async(req,res,next)=>{
     try {
       const {id}=req.params
-      console.log(id)
+
       if(!id){
       return next(new ErrorHandler("Id messing !Failed to get Single Course!"))
       }

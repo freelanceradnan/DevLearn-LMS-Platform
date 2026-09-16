@@ -231,6 +231,13 @@ export const ApiSlice = createApi({
     method:'GET'
     }),
     transformResponse:(response)=>response.data
+    }),
+    CreatePaymentIntent:builder.mutation({
+    query:({productId,userId})=>({
+    url:'/create-paymentIntent',
+    method:'POST',
+    body:{productId,userId}
+    })
     })
   }),
 });
@@ -259,5 +266,6 @@ export const {
   useUsersAnalyticsQuery,
   useOrderAnalyticsQuery,
   useGetPubCoursesQuery,
-  useGetPubCourseDetailsQuery
+  useGetPubCourseDetailsQuery,
+  useCreatePaymentIntentMutation
 } = ApiSlice;

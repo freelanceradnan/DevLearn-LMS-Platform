@@ -40,6 +40,7 @@ const guestMenu=[
 const Navbar = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+  const [logoutcall]=useLogoutUserMutation()
   const dispatch = useDispatch();
   const dropdownRef = useRef(null);
   const [profileOn, setProfileOn] = useState(false);
@@ -85,7 +86,7 @@ useEffect(() => {
   }, [user, navigate]);
   const logout = async () => {
     try {
-      const result = await logoutuser().unwrap();
+      const result = await logoutcall().unwrap();
       toast.success("logout success!");
     } catch (error) {
       toast.error("logout failed!");

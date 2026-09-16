@@ -22,6 +22,8 @@ import OrdersAnalytics from "./Components/AdminDeshboard/OrderAnalytics/OrderAna
 import Overview from "./Components/AdminDeshboard/Overview/Overview";
 import Invoices from "./Components/AdminDeshboard/Invoices/Invoices";
 import CourseDetails from "./Pages/CourseDetails";
+import PaymentCheckout from "./Pages/PaymentCheckout";
+import UserProtected from "./Components/UserProtected";
 
 function App() {
   return (
@@ -30,9 +32,13 @@ function App() {
         <Route index element={<Home />} />
         <Route path="/auth/github/callback" element={<GitHubCallback />} />
         <Route path="/course/:id" element={<CourseDetails />} />
+       <Route path="" element={<UserProtected/>}>
+          <Route path="/PaymentCheckout/:id" element={<PaymentCheckout />} />
+       </Route>
         <Route path="/profile" element={<Profile />}>
           <Route path="info" index element={<ProfileInfo />} />
           <Route path="security" element={<UserSecurity />} />
+          
           <Route path="notification" element={<h2>this is info</h2>} />
           <Route path="closeaccount" element={<h2>this is info</h2>} />
         </Route>

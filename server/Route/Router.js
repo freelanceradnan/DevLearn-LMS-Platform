@@ -13,6 +13,7 @@ import * as HeroController from '../App/Controller/HeroController.js'
 import * as FaqController from '../App/Controller/FaqController.js'
 import * as CategoryController from '../App/Controller/CategoryController.js'
 import * as PublicController from '../App/Controller/PublicAllCourse.js'
+import * as PaymentController from '../App/Controller/PaymentController.js'
 import multer from 'multer';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -69,6 +70,7 @@ router.put('/edit-layout',isAuthenticated,AdminMiddlewares,LayoutController.edit
 router.get('/layout',isAuthenticated,AdminMiddlewares,LayoutController.GetLayoutByType)
 
 //public all routes
+router.post('/create-paymentIntent',PaymentController.PaymentIntent)
 router.get('/GetPubCourses',PublicController.PublicAllCourse)
 router.get('/GetPubCourseDetails/:id',PublicController.PublicSingleCourseDetails)
 export default router;

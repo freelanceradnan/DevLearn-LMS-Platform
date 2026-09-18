@@ -292,3 +292,16 @@ export async function DeleteMyCourse(id) {
 
   return { success: true };
 }
+export async function getUsersAllCourses(id) {
+   const userData = await User.findById(id);
+   
+   if (!userData || !userData.Courses) {
+     return [];
+   }
+
+   const courses = userData.Courses;
+   const purchaseCourses = await course.find({ _id: { $in: courses } });
+   
+ 
+   return purchaseCourses; 
+}

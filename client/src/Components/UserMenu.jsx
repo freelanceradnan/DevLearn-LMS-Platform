@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const UserMenu = ({logout}) => {
   const MenuOtions = [
-    { name: "My Learning", to: "/Courses",icons:<BookOpen size={16}/>},
+    { name: "My Learning", to: "/my-courses",icons:<BookOpen size={16}/>},
     { name: "My Cart", to: "/cart",icons:<ShoppingCart size={16}/>},
     { name: "My WishList", to: "/withlist",icons:<Heart size={16}/>},
     { name: "Purchase History", to: "/purchasehistory",icons:<FileClock size={16}/>},

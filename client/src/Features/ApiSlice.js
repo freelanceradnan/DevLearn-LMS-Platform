@@ -237,7 +237,22 @@ export const ApiSlice = createApi({
     url:'/create-paymentIntent',
     method:'POST',
     body:{productId,userId}
-    })
+    }),
+    invalidatesTags:['course']
+    }),
+    GetUserInfo:builder.query({
+    query:()=>({
+    url:'/getUserInfo',
+    method:'GET'
+    }),
+    transformResponse:(response)=>response.data
+    }),
+    GetUsersCourses:builder.query({
+    query:()=>({
+    url:'/user-courses',
+    method:'GET'
+    }),
+    providesTags:['course']
     })
   }),
 });
@@ -267,5 +282,7 @@ export const {
   useOrderAnalyticsQuery,
   useGetPubCoursesQuery,
   useGetPubCourseDetailsQuery,
-  useCreatePaymentIntentMutation
+  useCreatePaymentIntentMutation,
+  useGetUserInfoQuery,
+  useGetUsersCoursesQuery
 } = ApiSlice;

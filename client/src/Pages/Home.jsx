@@ -13,10 +13,11 @@ const Home = () => {
   const location = useLocation();
   const [modal, setModal] = useState(false);
   useEffect(() => {
-    if (location.state?.openAuthModal) {
-      setModal(true);
-    }
-  }, [location]);
+  if (location.state?.openAuthModal) {
+    setModal(true);
+    window.history.replaceState({}, document.title);
+  }
+}, [location]);
   return (
     <div>
       <Hero/>

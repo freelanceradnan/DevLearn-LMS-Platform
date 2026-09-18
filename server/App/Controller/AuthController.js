@@ -71,7 +71,7 @@ export const UserLogin = CatchAsyncError(async (req, res, next) => {
 });
 export const LogoutUser = CatchAsyncError(async (req, res, next) => {
   const refreshToken = req.cookies.refresh_token;
- console.log('logout api called')
+
   let userId = req?.user?._id;
 
   if (!userId && refreshToken) {

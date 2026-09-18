@@ -1,7 +1,7 @@
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
 import customCloudinary from "../Config/Cloudinary.js";
 import { v2 as cloudinary } from "cloudinary";
-import {  AddMyQuestion, AddMyReply, AddMyReview, AddReplyMyReview, CourseService, DeleteMyCourse, GetMyAllCourse, GetMySingleCourse, GetMyUserCourse, UpdateMyCourse } from "../Services/CourseServices.js";
+import {  AddMyQuestion, AddMyReply, AddMyReview, AddReplyMyReview, CourseService, DeleteMyCourse, GetMyAllCourse, GetMySingleCourse, GetMyUserCourse, getUsersAllCourses, UpdateMyCourse } from "../Services/CourseServices.js";
 import course from "../Models/Course.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 import axios from 'axios'
@@ -157,3 +157,15 @@ export const generateVideoUrl = CatchAsyncError(async (req, res, next) => {
 
   res.status(200).json(response.data);
 });
+export const GetUsersCourses=CatchAsyncError(async(req,res,next)=>{
+  const id=req.user._id
+  if(!id){
+    return next(new ErrorHandler('course id not found!'))
+  }
+  const result=await getUsersAllCourses(id)
+  res.status(200).json({
+    success:true,
+    message:'Getting Courses Success',
+    data:result
+  })
+})

@@ -13,6 +13,7 @@ videoId:videoUrl
     setVideoData(res.data)
 })
 },[videoUrl])
+
 return (
           <div className='w-full'>
             {videoData?.otp && videoData?.playbackInfo !== "" && (

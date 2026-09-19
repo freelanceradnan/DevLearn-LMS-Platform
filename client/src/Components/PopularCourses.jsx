@@ -6,7 +6,7 @@ import { useAllCoursesQuery, useGetPubCoursesQuery } from '../Features/ApiSlice'
 
 const PopularCourses = () => {
   const {data}=useGetPubCoursesQuery()
-  console.log(data)
+
   const [courses,setCourses]=useState([])
   useEffect(()=>{
   const rawData=Array.isArray(data)?data:[]

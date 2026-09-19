@@ -7,9 +7,8 @@ const MyCourses = () => {
     data: allcourses,
     isLoading,
     isFetching,
-  } = useGetUsersCoursesQuery(undefined, {
-    refetchOnMountOrArgChange: true
-  });
+    refetch
+  } = useGetUsersCoursesQuery();
 
   const [coursesData, setCoursesData] = useState([]);
 
@@ -18,7 +17,13 @@ const MyCourses = () => {
       setCoursesData(allcourses.data);
     }
   }, [allcourses]);
+useEffect(() => {
+  const timer = setTimeout(() => {
+    refetch();
+  }, 5000);
 
+  return () => clearTimeout(timer);
+}, [refetch]);
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
@@ -32,6 +37,7 @@ const MyCourses = () => {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8 border-b pb-4">
         <h2 className="text-2xl font-bold text-gray-800">My Enrolled Courses</h2>
+        
         {isFetching && <span className="text-xs text-indigo-500 animate-pulse">Syncing...</span>}
       </div>
 
@@ -64,7 +70,7 @@ const MyCourses = () => {
 
                 {/* Action Button */}
                 <Link 
-                  to={`/course-content/${item._id}`} 
+                  to={`/my-courses/${item._id}`} 
                   className="w-full block text-center bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200"
                 >
                   Continue Learning

@@ -245,7 +245,8 @@ export const ApiSlice = createApi({
     url:'/getUserInfo',
     method:'GET'
     }),
-    transformResponse:(response)=>response.data
+    transformResponse:(response)=>response.data.Courses
+
     }),
     GetUsersCourses:builder.query({
     query:()=>({
@@ -253,6 +254,13 @@ export const ApiSlice = createApi({
     method:'GET'
     }),
     providesTags:['course']
+    }),
+    GetUserSingleCourse:builder.query({
+    query:(id)=>({
+    url:`/myCourse/${id}`,
+    method:'GET'
+    }),
+    transformResponse:(response)=>response.data
     })
   }),
 });
@@ -284,5 +292,6 @@ export const {
   useGetPubCourseDetailsQuery,
   useCreatePaymentIntentMutation,
   useGetUserInfoQuery,
-  useGetUsersCoursesQuery
+  useGetUsersCoursesQuery,
+  useGetUserSingleCourseQuery
 } = ApiSlice;

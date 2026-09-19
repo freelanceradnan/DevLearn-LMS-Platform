@@ -113,7 +113,7 @@ export const GetMyUserCourse = async (courseList, courseId) => {
     throw new Error("You are not allowed to access this course!");
   }
   const fullcourse = await course.findById(courseId);
-  const coursedata = fullcourse.courseData;
+  const coursedata = fullcourse;
 
   return { success: true, coursedata };
 };

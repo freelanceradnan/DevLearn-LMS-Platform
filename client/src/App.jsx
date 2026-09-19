@@ -25,6 +25,7 @@ import CourseDetails from "./Pages/CourseDetails";
 import PaymentCheckout from "./Pages/PaymentCheckout";
 import UserProtected from "./Components/UserProtected";
 import MyCourses from "./Pages/MyCourses";
+import CourseContent from "./Pages/CourseContent";
 
 function App() {
   return (
@@ -45,7 +46,9 @@ function App() {
           <Route path="closeaccount" element={<h2>this is info</h2>} />
         </Route>
         <Route path="/my-courses" element={<MyCourses/>}/>
+       
       </Route>
+       <Route path="/my-courses/:id" element={<CourseContent/>}/>
       {/* adminroutes */}
       <Route element={<AdminProtected />}>
         <Route path="/admin" element={<AdminLayout />}>

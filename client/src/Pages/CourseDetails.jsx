@@ -12,8 +12,9 @@ import {
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  useCreatePaymentIntentMutation,
+
   useGetPubCourseDetailsQuery,
+  useGetUserInfoQuery,
 } from "../Features/ApiSlice";
 import { loadStripe } from "@stripe/stripe-js";
 import {
@@ -24,26 +25,38 @@ import {
 } from "@stripe/react-stripe-js";
 import { useSelector } from "react-redux";
 import CheckoutForm from "../Components/CheckoutFrom";
+import CoursePlayer from "../Components/AdminDeshboard/CreateCourse/CoursePlayer";
 
 
 
 const CourseDetails = () => {
   const navigate = useNavigate();
+ const {data:UsersCoursesId}=useGetUserInfoQuery()
 
   const { id } = useParams();
   const [courseDetails, setCourseDetails] = useState({});
   const [GroupOpen, setGroupOpen] = useState("");
-
+  const [isEnrolled,setIsEnrolled]=useState(false)
   const { data, isLoading } = useGetPubCourseDetailsQuery(id, {
     skip: !id,
   });
+
+  useEffect(() => {
+   
+    const userCourses = UsersCoursesId || []
+    
+    if (userCourses && Array.isArray(userCourses)) {
+      const enrolled = userCourses.some((item) => (item._id ? item._id == id : item == id));
+      setIsEnrolled(enrolled);
+    }
+  }, [UsersCoursesId, id]);
 
   useEffect(() => {
     if (data) {
       setCourseDetails(data);
     }
   }, [data]);
-
+  
   const groupedMap = {};
   data?.courseData?.forEach((item) => {
     const sectionName = item.videoSection?.trim();
@@ -109,7 +122,7 @@ const CourseDetails = () => {
       {/* Content Layout */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Course Details (Left Side) */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-6 flex-1 order-last md:order-first">
           <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
             <h3 className="text-xl font-bold text-slate-800 mb-4">
               What you'll learn
@@ -182,7 +195,8 @@ const CourseDetails = () => {
         <div className="lg:col-span-1">
           <div className="bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden sticky top-6">
             <div className="relative aspect-video bg-black flex items-center justify-center text-white">
-              <p className="text-sm">Course Preview / Video</p>
+              {/* <p className="text-sm">Course Preview / Video</p> */}
+              <CoursePlayer videoUrl={courseDetails?.demoUrl}/>
             </div>
 
             <div className="p-6 space-y-6">
@@ -215,12 +229,17 @@ const CourseDetails = () => {
                 </p>
               </div>
 
-              <button
+             {!isEnrolled?
+             <button
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-md disabled:opacity-50 cursor-pointer"
                 onClick={() => navigate(`/PaymentCheckout/${id}`)}
               >
                 Pay & Enroll
-              </button>
+              </button>:
+              <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-md disabled:opacity-50 cursor-pointer" onClick={()=>navigate(`/my-courses/${id}`)}>
+              View Course
+              </button> 
+            }
             </div>
           </div>
         </div>

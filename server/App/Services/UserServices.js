@@ -10,15 +10,9 @@ import { redis } from '../Config/Redis.js';
 import course from '../Models/Course.js';
 
 export async function getMyInfo(userId) {
-  const caching=await redis.get(userId)
-  let data={}
-  if(caching){
-   data=JSON.parse(caching)
-  }
-  else{
-    data=await User.findById(userId)
-    await redis.set(userId,JSON.stringify(data))
-  }
+  
+    const data=await User.findById(userId)
+
   
   return { success: true, info: data };
 }

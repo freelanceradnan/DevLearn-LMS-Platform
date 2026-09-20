@@ -28,6 +28,8 @@ import {
   UserPlus,
   X,
   GraduationCap,
+  SquarePlay,
+  StarCheck,
 } from "lucide-react";
 import { useRef } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
@@ -41,6 +43,7 @@ import ProfileMenu from "../Components/ProfileMenu";
 import UserMenu from "../Components/UserMenu";
 import CoursePlayer from "../Components/AdminDeshboard/CreateCourse/CoursePlayer";
 import UserQuestion from "../Components/UserQuestion";
+import UserReview from "../Components/UserReview";
 
 // every users visible otpions
 const guestMenu = [
@@ -53,6 +56,7 @@ const courseFeatures = [
   { btn: "Overview", icon: BookOpen },
   { btn: "Resources", icon: FileText },
   { btn: "QNA", icon: MessageSquare },
+  { btn: "Reviews", icon: StarCheck },
 ];
 const CourseContent = () => {
   const [courseData, setCourseData] = useState([]);
@@ -76,14 +80,30 @@ const CourseContent = () => {
     skip: !id,
   });
 
+useEffect(() => {
+  const mediaQuery = window.matchMedia("(min-width: 1024px)");
+
+  const handleScreenChange = (e) => {
+    if (e.matches) {
+      setActiveFeature("Overview");
+    }
+  };
+  if (mediaQuery.matches) {
+    setActiveFeature("Overview");
+  }
+
+  mediaQuery.addEventListener("change", handleScreenChange);
+
+
+  return () => mediaQuery.removeEventListener("change", handleScreenChange);
+}, []);
   useEffect(() => {
     if (data) {
       setCourseData([data]);
-      // Set default video if available
       if (data.courseData && data.courseData.length > 0) {
         setActiveUrl(data.courseData[0].videoUrl);
         setActiveVideoTitle(data.courseData[0].title);
-        setIsActiveVideo(data.courseData[0].videoSection); // Open the first section by default
+        setIsActiveVideo(data.courseData[0].videoSection); 
       }
     }
   }, [data]);
@@ -296,7 +316,8 @@ const ActiveContent=courseData[0]?.courseData?.find(c=>c.videoUrl==activeUrl)
             )}
 
             {/* Navigation Tabs */}
-            <div className="flex gap-8 border-b border-slate-200 mt-2">
+            <div className="flex gap-2 md:gap-5 border-b border-slate-200 mt-2">
+                <button className={`flex items-center gap-2 pb-3 text-sm font-semibold transition-all relative lg:hidden ${activeFeature==='content'?'text-indigo-600 border-b-2 border-indigo-600':''}`} onClick={() => setActiveFeature("content")}><SquarePlay />Content</button>
               {courseFeatures.map((item, index) => {
                 const Icon = item.icon;
                 const isActive = activeFeature === item.btn;
@@ -315,6 +336,7 @@ const ActiveContent=courseData[0]?.courseData?.find(c=>c.videoUrl==activeUrl)
                   </button>
                 );
               })}
+            
             </div>
 
             {/* Tab Content Box */}
@@ -412,21 +434,12 @@ const ActiveContent=courseData[0]?.courseData?.find(c=>c.videoUrl==activeUrl)
                  
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* Right Side*/}
-          <div className="w-full lg:w-[35%] bg-white rounded-2xl shadow-sm border border-slate-200/80 flex flex-col h-fit overflow-hidden">
-            <div className="p-5 border-b border-slate-100 bg-slate-50/50">
-              <h2 className="text-lg font-bold text-slate-900">
-                Course Content
-              </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                {formattedCourseSections.length} sections available
-              </p>
-            </div>
-
-            <div className="flex flex-col divide-y divide-slate-100 max-h-[600px] overflow-y-auto">
+              {activeFeature ==='Reviews' &&(
+                <UserReview courseId={courseData[0]?._id} courseData={courseData}/>
+              )}
+              <div className="lg:hidden">
+                {activeFeature ==='content' &&(
+               <div className="flex flex-col divide-y divide-slate-100 max-h-[600px] overflow-y-auto ">
               {formattedCourseSections.map((section, sIndex) => {
                 const isActiveSection = section.SectionTitle === isActiveVideo;
                 
@@ -489,6 +502,88 @@ const ActiveContent=courseData[0]?.courseData?.find(c=>c.videoUrl==activeUrl)
                   </div>
                 );
               })}
+              
+            </div>
+              )}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side*/}
+          <div className="w-full lg:w-[35%] bg-white rounded-2xl shadow-sm border border-slate-200/80 lg:flex flex-col h-fit overflow-hidden hidden">
+            <div className="p-5 border-b border-slate-100 bg-slate-50/50">
+              <h2 className="font-bold text-slate-900 text-xl">
+                Course Content
+              </h2>
+              <p className="text-sm text-slate-500 mt-0.5">
+                {formattedCourseSections.length} sections available
+              </p>
+            </div>
+
+            <div className="flex flex-col divide-y divide-slate-100 max-h-[600px] overflow-y-auto">
+              {formattedCourseSections.map((section, sIndex) => {
+                const isActiveSection = section.SectionTitle === isActiveVideo;
+                
+                return (
+                  <div key={sIndex} className="group">
+                    <button
+                      onClick={() => {
+                        const newActive = isActiveSection
+                          ? null
+                          : section.SectionTitle;
+                        setIsActiveVideo(newActive);
+
+                        if (
+                          !isActiveSection &&
+                          section.SectionContent?.length > 0
+                        ) {
+                          setActiveUrl(section.SectionContent[0].videoUrl);
+                          setActiveVideoTitle(section.SectionContent[0].title);
+                         
+                        }
+                      }}
+                      className="w-full flex items-center justify-between p-4 text-left font-semibold text-slate-800 hover:bg-slate-50/80 transition-colors"
+                    >
+                      <span className="text-xl pr-2">
+                        {section.SectionTitle}
+                      </span>
+                      <ChevronDown
+                        className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isActiveSection ? "rotate-180 text-indigo-600" : ""}`}
+                      />
+                    </button>
+
+                    {/* Videos List */}
+                    {isActiveSection && (
+                      <div className="flex flex-col bg-slate-50/50 pb-2">
+                        {section.SectionContent.map((video, vIndex) => {
+                          const isCurrentVideoPlaying =
+                            activeUrl === video.videoUrl;
+                          return (
+                            <button
+                              key={vIndex}
+                              onClick={() => {
+                                setActiveUrl(video.videoUrl);
+                                setActiveVideoTitle(video.title);
+                              }}
+                              className={`flex items-center gap-3 px-6 py-5 text-left text-sm transition-all ${
+                                isCurrentVideoPlaying
+                                  ? "bg-indigo-50/80 text-indigo-700 font-medium border-l-4 border-indigo-600"
+                                  : "text-slate-600 hover:bg-slate-100/60 hover:text-slate-900"
+                              }`}
+                            >
+                              <Play
+                                className={`w-3.5 h-3.5 flex-shrink-0 ${isCurrentVideoPlaying ? "text-indigo-600 fill-indigo-600" : "text-slate-400"}`}
+                              />
+                              <span className="truncate text-sm">{video.title}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+              
             </div>
           </div>
         </div>

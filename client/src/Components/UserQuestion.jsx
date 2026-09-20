@@ -36,7 +36,7 @@ const UserQuestion = ({ courseId, contentId, ActiveContent }) => {
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto p-4">
-      <h3 className="text-xl font-bold text-gray-800">Course Q&A Discussion</h3>
+    
 
       {/* Questions List */}
       <div className="space-y-4">

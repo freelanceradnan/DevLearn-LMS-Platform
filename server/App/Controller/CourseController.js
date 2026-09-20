@@ -100,6 +100,7 @@ export const AddReviews=CatchAsyncError(async(req,res,next)=>{
   const user = req?.user;
   const courseId=req.params.id
   const {review,rating}=req.body
+
   if(!user){
    return next(new ErrorHandler("please login user first")); 
   }

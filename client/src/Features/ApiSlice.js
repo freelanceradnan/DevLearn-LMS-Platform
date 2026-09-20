@@ -46,7 +46,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["users", "course", "orders", "faq", "category",'questions'],
+  tagTypes: ["users", "course", "orders", "faq", "category",'questions','reviews'],
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (userData) => ({
@@ -261,7 +261,7 @@ export const ApiSlice = createApi({
     method:'GET'
     }),
     transformResponse:(response)=>response.data,
-    providesTags:['questions']
+    providesTags:['questions','reviews']
     }),
    AddUsersQuestions: builder.mutation({
     query: ({ contentId, question, courseId }) => ({
@@ -271,7 +271,14 @@ export const ApiSlice = createApi({
     }),
     invalidatesTags:['questions']
     }),
-   
+   AddUserReview:builder.mutation({
+    query:({id,review,rating})=>({
+    url:`/add-review/${id}`,
+    method:'POST',
+    body:{review,rating}
+    }),
+    invalidatesTags:['reviews']
+   })
   }),
 });
 export const {
@@ -304,5 +311,6 @@ export const {
   useGetUserInfoQuery,
   useGetUsersCoursesQuery,
   useGetUserSingleCourseQuery,
-  useAddUsersQuestionsMutation
+  useAddUsersQuestionsMutation,
+  useAddUserReviewMutation
 } = ApiSlice;

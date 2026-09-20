@@ -12,8 +12,6 @@ import course from '../Models/Course.js';
 export async function getMyInfo(userId) {
   
     const data=await User.findById(userId)
-
-  
   return { success: true, info: data };
 }
 export async function updateMyInfo(name, email, userId) {

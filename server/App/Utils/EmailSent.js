@@ -6,6 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const sendMail = async (options) => {
+  
   try {
    
   
@@ -18,7 +19,7 @@ const sendMail = async (options) => {
     });
 
     const { email, subject, html } = options;
-
+   
     const mailOptions = {
       from: `"LMS Support" <${process.env.SMTP_MAIL}>`,
       to: email,
@@ -27,7 +28,7 @@ const sendMail = async (options) => {
     };
  
     const info = await transporter.sendMail(mailOptions);
-   
+
     return info;
   } catch (error) {
     console.error("Nodemailer Error Details:", error); 

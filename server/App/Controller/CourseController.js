@@ -71,7 +71,9 @@ export const GetUserCourse=CatchAsyncError(async(req,res,next)=>{
   res.status(200).json({success:true,message:'course access success',data:result.coursedata})
 })
 export const AddQuestions=CatchAsyncError(async(req,res,next)=>{
-  const {contentId,question,courseId}=req.body
+
+const { contentId, question, courseId } = req.body;
+
   const user=req?.user
   if(!contentId ||!question || !courseId){
     return next (new ErrorHandler("ContentId,question and courseId are Required!"))

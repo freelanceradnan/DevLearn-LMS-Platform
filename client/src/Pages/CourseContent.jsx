@@ -40,6 +40,7 @@ import { setUser, logoutUser } from "../Features/AuthSlice";
 import ProfileMenu from "../Components/ProfileMenu";
 import UserMenu from "../Components/UserMenu";
 import CoursePlayer from "../Components/AdminDeshboard/CreateCourse/CoursePlayer";
+import UserQuestion from "../Components/UserQuestion";
 
 // every users visible otpions
 const guestMenu = [
@@ -86,6 +87,7 @@ const CourseContent = () => {
       }
     }
   }, [data]);
+
   //automatic desable menu
   useEffect(() => {
     function handleClickOutside(event) {
@@ -113,6 +115,9 @@ const CourseContent = () => {
   });
 
   const formattedCourseSections = Object.values(groupMap);
+  const currentVideoContent = courseData.map((c) =>
+    c?.courseData.find((c) => c.videoUrl == activeUrl),
+  );
 
   const handleOpenAuth = (mode) => {
     setAuthMode(mode);
@@ -145,6 +150,7 @@ const CourseContent = () => {
       dispatch(ApiSlice.util.resetApiState());
     }
   };
+const ActiveContent=courseData[0]?.courseData?.find(c=>c.videoUrl==activeUrl)
 
   return (
     <div>
@@ -352,7 +358,8 @@ const CourseContent = () => {
                           Instructor
                         </h3>
                         <p className="text-slate-800 font-medium flex gap-1">
-                          <GraduationCap size={20} />{item.owner}
+                          <GraduationCap size={20} />
+                          {item.owner}
                         </p>
                       </div>
                     </div>
@@ -361,20 +368,48 @@ const CourseContent = () => {
               )}
 
               {activeFeature === "Resources" && (
-                <div className="text-center py-10 text-slate-500">
-                  <FileText className="w-10 h-10 mx-auto text-slate-300 mb-2" />
-                  <p>
-                    No downloadable resources available for this course yet.
-                  </p>
+                <div className="py-10">
+                  <FileText className=" text-slate-300 mb-2" />
+                  {currentVideoContent[0].links.length > 0 ? (
+                    currentVideoContent[0].links.map((item) => (
+                      <div>
+                        <p>
+                          {item.title === "N/A" || item.title == "" ? (
+                            <span>No Resource Available</span>
+                          ) : (
+                            <>
+                              Subject:{" "}
+                              <span className="text-blue-600">
+                                {item.title}
+                              </span>
+                            </>
+                          )}
+                        </p>
+                        {item.url === "N/A" || item.url == "" ? (
+                          <p>Please request Resorces from the admin</p>
+                        ) : (
+                          <a href={item.url} className="font-bold">
+                            Open Link
+                          </a>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <p>
+                      No downloadable resources available for this course yet.
+                    </p>
+                  )}
                 </div>
               )}
 
               {activeFeature === "QNA" && (
-                <div className="text-center py-10 text-slate-500">
-                  <MessageSquare className="w-10 h-10 mx-auto text-slate-300 mb-2" />
+                <div className="text-slate-500">
+                  {/* <MessageSquare className="w-10 h-10 mx-auto text-slate-300 mb-2" />
                   <p>
                     Have questions? The Q&A discussion board will appear here.
-                  </p>
+                  </p> */}
+                  <UserQuestion courseId={courseData[0]._id} contentId={ActiveContent?._id} ActiveContent={ActiveContent}/>
+                 
                 </div>
               )}
             </div>
@@ -394,6 +429,7 @@ const CourseContent = () => {
             <div className="flex flex-col divide-y divide-slate-100 max-h-[600px] overflow-y-auto">
               {formattedCourseSections.map((section, sIndex) => {
                 const isActiveSection = section.SectionTitle === isActiveVideo;
+                
                 return (
                   <div key={sIndex} className="group">
                     <button
@@ -409,6 +445,7 @@ const CourseContent = () => {
                         ) {
                           setActiveUrl(section.SectionContent[0].videoUrl);
                           setActiveVideoTitle(section.SectionContent[0].title);
+                         
                         }
                       }}
                       className="w-full flex items-center justify-between p-4 text-left font-semibold text-slate-800 hover:bg-slate-50/80 transition-colors"

@@ -10,7 +10,7 @@ import router from "./Route/Router.js";
 import { ConnectDB } from "./App/Config/ConnectDB.js";
 import ErrorMiddleware from "./App/Middleware/ErrorMiddleware.js";
 import Stripe from "stripe";
-import { Webhook } from "./App/Webhooks/webhooks.js";
+import { Webhook } from "./App/Webhooks/Webhooks.js";
 dotenv.config();
 const PORT = process.env.PORT || "5000";
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);

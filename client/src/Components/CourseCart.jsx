@@ -1,8 +1,11 @@
 import React from 'react';
-import { Check, Star, Eye, PlayCircle } from 'lucide-react';
+import { Check, Star, Eye, PlayCircle, LucideMove, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { AddToCart } from '../Features/CartSlice';
 
 export default function CourseCard({ cart}) {
+  const dispatch=useDispatch()
   const {
     thumbnail,
     name = 'Everything You Need to Know About Business',
@@ -19,7 +22,8 @@ export default function CourseCard({ cart}) {
   const lessonsCount = courseData?.length || 36;
 
   return (
-    <Link to={`/course/${cart._id}`}className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 font-['Plus_Jakarta_Sans'] max-w-sm border border-gray-100 group">
+    <div className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 font-['Plus_Jakarta_Sans'] max-w-sm border border-gray-100 group">
+    <Link to={`/course/${cart._id}`}>
       
       {/* Image  */}
       <div className="overflow-hidden rounded-xl mb-4 aspect-[4/3] relative bg-gray-100">
@@ -90,6 +94,22 @@ export default function CourseCard({ cart}) {
         </div>
 
       </div>
-    </Link>
+         </Link>
+      <div className="flex items-center gap-3">
+     
+  {/* Add to Cart Button */}
+  <button className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-medium text-sm rounded-lg shadow-sm transition-all duration-200" onClick={()=>dispatch(AddToCart(cart))}>
+    Add To Cart
+  </button>
+
+  {/* Wishlist Button */}
+  <button 
+    className="p-2 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 active:scale-95 text-gray-700 rounded-lg shadow-sm transition-all duration-200 flex items-center justify-center"
+    aria-label="Add to wishlist"
+  >
+    <Heart className="w-5 h-5 text-gray-600 hover:text-red-500 transition-colors" />
+  </button>
+</div>
+    </div>
   );
 }

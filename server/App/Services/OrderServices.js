@@ -33,7 +33,8 @@ const data = {
   };
 
 const createOrder = await Orders.create(data);
-
+fullCourse.purchased = (fullCourse.purchased || 0) + 1;
+await fullCourse.save();
 const mailData = {
     _id: fullCourse?._id?.toString().slice(0, 6) ?? 'N/A',
     name: fullCourse?.name ?? 'Course Item',

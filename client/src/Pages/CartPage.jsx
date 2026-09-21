@@ -2,12 +2,20 @@ import { Star, ArrowRight } from 'lucide-react';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RemoveToCart } from '../Features/CartSlice';
+import { useNavigate } from 'react-router-dom';
+import { useGetUserInfoQuery, useGetUsersCoursesQuery } from '../Features/ApiSlice';
+import toast from 'react-hot-toast';
 
 const CartPage = () => {
     const dispatch = useDispatch();
-    
+    const {data:Allcourse}=useGetUsersCoursesQuery()
+    const navigate=useNavigate()
     const cart = useSelector((state) => state.AddToCart || []);
-
+    const userid=useSelector((state)=>state.auth.user._id)
+    const {data}=useGetUserInfoQuery(userid,{
+        skip:!userid
+    })
+    
     const removeItem = (id) => {
         dispatch(RemoveToCart(id));
     };
@@ -15,7 +23,7 @@ const CartPage = () => {
     const totalEstimatedPrice = cart.reduce((sum, item) => sum + Number(item.estimatedPrice || 0), 0);
     const totalPrice = cart.reduce((sum, item) => sum + Number(item.price || 0), 0);
     const totalDiscount = totalEstimatedPrice - totalPrice;
-
+   
     if (cart.length === 0) {
         return (
             <div className="max-w-6xl mx-auto px-4 py-20 text-center">
@@ -24,6 +32,23 @@ const CartPage = () => {
             </div>
         );
     }
+const PaymentCheckout=()=>{
+    const matchedCourses = Allcourse.data?.filter((course) => 
+    cart.some((cartItem) => cartItem._id === course._id)
+);
+
+if(matchedCourses.length>0){
+    toast.error(`You are already puchase "${matchedCourses.map((item)=>item.name)}" please remove and checkout`)
+}else{
+    navigate('/paymentcheckout', { state: cart });
+}
+}
+
+  
+// }
+
+
+
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-10 font-sans">
@@ -115,7 +140,7 @@ const CartPage = () => {
                         </div>
                     </div>
 
-                    <button className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-semibold rounded-xl shadow transition-all duration-200 flex items-center justify-center gap-2">
+                    <button className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-semibold rounded-xl shadow transition-all duration-200 flex items-center justify-center gap-2" onClick={PaymentCheckout}>
                         Proceed to Checkout <ArrowRight className="w-4 h-4" />
                     </button>
                 </div> 

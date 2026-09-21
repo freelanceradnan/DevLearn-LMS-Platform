@@ -36,7 +36,7 @@ function App() {
         <Route path="/auth/github/callback" element={<GitHubCallback />} />
         <Route path="/course/:id" element={<CourseDetails />} />
          <Route path="" element={<UserProtected/>}>
-          <Route path="/PaymentCheckout/:id" element={<PaymentCheckout />} />
+          <Route path="/PaymentCheckout" element={<PaymentCheckout />} />
          </Route>
         <Route path="/profile" element={<Profile />}>
         
@@ -50,7 +50,9 @@ function App() {
         <Route path="/cart" element={<CartPage/>}/>
        
       </Route>
-       <Route path="/my-courses/:id" element={<CourseContent/>}/>
+      <Route element={<UserProtected/>}>
+ <Route path="/my-courses/:id" element={<CourseContent/>}/>
+      </Route>
       {/* adminroutes */}
       <Route element={<AdminProtected />}>
         <Route path="/admin" element={<AdminLayout />}>

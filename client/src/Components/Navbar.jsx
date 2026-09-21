@@ -40,6 +40,8 @@ const guestMenu=[
 const Navbar = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+  const cart = useSelector((state) => state.AddToCart);
+
   const [logoutcall]=useLogoutUserMutation()
   const dispatch = useDispatch();
   const dropdownRef = useRef(null);
@@ -157,6 +159,15 @@ useEffect(() => {
             className="hidden md:flex items-center gap-3 relative"
             ref={dropdownRef}
           >
+  <button className="relative inline-block" onClick={()=>navigate('/cart')}>
+  <ShoppingCart className="w-6 h-6 text-gray-700" />
+  
+  {cart?.length > 0 && (
+    <span className="absolute -top-2 -right-2 px-1.5 py-0.5 min-w-[20px] h-5 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
+      {cart.length}
+    </span>
+  )}
+</button>
             {user ? (
               <button
                 onClick={() => setProfileOn(!profileOn)}

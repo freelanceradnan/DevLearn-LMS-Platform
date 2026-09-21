@@ -10,7 +10,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import {
 
   useGetPubCourseDetailsQuery,
@@ -86,7 +86,9 @@ const CourseDetails = () => {
       </div>
     );
   }
-
+const NavigatePayment=()=>{
+ navigate('/paymentcheckout', { state: courseDetails });
+}
   return (
     <div className="bg-slate-50 min-h-screen pb-16">
       {/* Header */}
@@ -232,7 +234,7 @@ const CourseDetails = () => {
              {!isEnrolled?
              <button
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-md disabled:opacity-50 cursor-pointer"
-                onClick={() => navigate(`/PaymentCheckout/${id}`)}
+                onClick={()=>NavigatePayment()}
               >
                 Pay & Enroll
               </button>:

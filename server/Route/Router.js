@@ -37,6 +37,7 @@ router.put("/update-info", isAuthenticated,userController.updateUserInfo);
 router.patch("/change-password", isAuthenticated,userController.updatePassword);
 router.put("/update-avatar", isAuthenticated,userController.UpdateUserAvatar);
 router.get('/user-courses',isAuthenticated,CourseController.GetUsersCourses)
+router.get('/orderhistory',isAuthenticated,OrderController.getUserOrder)
 //course related router
 router.post('/upload',upload.single('image'),UploadController.uploader)
 router.put('/update-hero/:id',isAuthenticated,AdminMiddlewares,HeroController.UpdateHero)

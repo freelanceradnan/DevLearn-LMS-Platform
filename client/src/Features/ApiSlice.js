@@ -278,7 +278,14 @@ export const ApiSlice = createApi({
     body:{review,rating}
     }),
     invalidatesTags:['reviews']
-   })
+   }),
+   GetUserOrder:builder.query({
+    query:()=>({
+    url:'/orderhistory',
+    method:'GET'
+    }),
+    transformResponse:(response)=>response.data
+   }),
   }),
 });
 export const {
@@ -312,5 +319,6 @@ export const {
   useGetUsersCoursesQuery,
   useGetUserSingleCourseQuery,
   useAddUsersQuestionsMutation,
-  useAddUserReviewMutation
+  useAddUserReviewMutation,
+  useGetUserOrderQuery
 } = ApiSlice;

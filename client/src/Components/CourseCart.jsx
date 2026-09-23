@@ -1,11 +1,17 @@
 import React from 'react';
 import { Check, Star, Eye, PlayCircle, LucideMove, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AddToCart } from '../Features/CartSlice';
+import { AddToWishList } from '../Features/WishSlice';
 
 export default function CourseCard({ cart}) {
+  const cartItems=useSelector((state)=>state.AddToCart)
+  const wistItems=useSelector((state)=>state.AddToWish)
   const dispatch=useDispatch()
+  const IsAddedToCart=cartItems.some((item)=>item._id===cart._id)  
+  const IsAddedToWishList=wistItems.some((item)=>item._id===cart._id)  
+
   const {
     thumbnail,
     name = 'Everything You Need to Know About Business',
@@ -22,7 +28,7 @@ export default function CourseCard({ cart}) {
   const lessonsCount = courseData?.length || 36;
 
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 font-['Plus_Jakarta_Sans'] max-w-sm border border-gray-100 group">
+    <div className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 font-['Plus_Jakarta_Sans']  md:w-full border border-gray-100 group">
     <Link to={`/course/${cart._id}`}>
       
       {/* Image  */}
@@ -98,7 +104,8 @@ export default function CourseCard({ cart}) {
       <div className="flex items-center gap-3">
      
   {/* Add to Cart Button */}
-  <button className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-medium text-sm rounded-lg shadow-sm transition-all duration-200" onClick={()=>dispatch(AddToCart(cart))}>
+
+  <button className={`flex-1 px-4 py-2  active:scale-[0.98] text-white font-medium text-sm rounded-lg shadow-sm transition-all duration-200 ${IsAddedToCart?"bg-blue-200 ":"bg-blue-600 hover:bg-blue-700 "}`} onClick={()=>dispatch(AddToCart(cart))} disabled={IsAddedToCart}>
     Add To Cart
   </button>
 
@@ -106,8 +113,10 @@ export default function CourseCard({ cart}) {
   <button 
     className="p-2 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 active:scale-95 text-gray-700 rounded-lg shadow-sm transition-all duration-200 flex items-center justify-center"
     aria-label="Add to wishlist"
+    disabled={IsAddedToWishList}
+    onClick={()=>dispatch(AddToWishList(cart))}
   >
-    <Heart className="w-5 h-5 text-gray-600 hover:text-red-500 transition-colors" />
+    <Heart className={`w-5 h-5 text-gray-600  transition-colors ${IsAddedToWishList ?"text-red-500 ":"hover:text-red-500 text-blue-200 "}`} />
   </button>
 </div>
     </div>

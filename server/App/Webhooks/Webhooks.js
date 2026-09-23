@@ -47,7 +47,7 @@ export const Webhook = async (req, res) => {
         await CreateMyOrder(user, courseIdMeta, payment_info);
       }
       
-      console.log('Payment successful and db updated:', paymentIntent.id);
+   
     } catch (error) {
       console.error('Database Update Error:', error.message);
     }

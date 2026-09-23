@@ -27,7 +27,8 @@ import UserProtected from "./Components/UserProtected";
 import MyCourses from "./Pages/MyCourses";
 import CourseContent from "./Pages/CourseContent";
 import CartPage from "./Pages/CartPage";
-
+import WishList from "./Pages/WishList";
+import Purchasehistory from "./Pages/Purchasehistory";
 function App() {
   return (
     <Routes>
@@ -48,6 +49,8 @@ function App() {
         </Route>
         <Route path="/my-courses" element={<MyCourses/>}/>
         <Route path="/cart" element={<CartPage/>}/>
+        <Route path="/wishlist" element={<WishList/>}/>
+        <Route path="/purchasehistory" element={<Purchasehistory/>}/>
        
       </Route>
       <Route element={<UserProtected/>}>

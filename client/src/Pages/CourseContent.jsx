@@ -392,8 +392,8 @@ const ActiveContent=courseData[0]?.courseData?.find(c=>c.videoUrl==activeUrl)
               {activeFeature === "Resources" && (
                 <div className="py-10">
                   <FileText className=" text-slate-300 mb-2" />
-                  {currentVideoContent[0].links.length > 0 ? (
-                    currentVideoContent[0].links.map((item) => (
+                  {currentVideoContent[0]?.links?.length > 0 ? (
+                    currentVideoContent[0]?.links?.map((item) => (
                       <div>
                         <p>
                           {item.title === "N/A" || item.title == "" ? (
@@ -430,7 +430,7 @@ const ActiveContent=courseData[0]?.courseData?.find(c=>c.videoUrl==activeUrl)
                   <p>
                     Have questions? The Q&A discussion board will appear here.
                   </p> */}
-                  <UserQuestion courseId={courseData[0]._id} contentId={ActiveContent?._id} ActiveContent={ActiveContent}/>
+                  <UserQuestion courseId={courseData[0]?._id} contentId={ActiveContent?._id} ActiveContent={ActiveContent}/>
                  
                 </div>
               )}

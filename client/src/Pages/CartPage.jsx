@@ -5,13 +5,14 @@ import { RemoveToCart } from '../Features/CartSlice';
 import { useNavigate } from 'react-router-dom';
 import { useGetUserInfoQuery, useGetUsersCoursesQuery } from '../Features/ApiSlice';
 import toast from 'react-hot-toast';
+import { AddToWishList } from '../Features/WishSlice';
 
 const CartPage = () => {
     const dispatch = useDispatch();
     const {data:Allcourse}=useGetUsersCoursesQuery()
     const navigate=useNavigate()
     const cart = useSelector((state) => state.AddToCart || []);
-    const userid=useSelector((state)=>state.auth.user._id)
+    const userid=useSelector((state)=>state?.auth?.user?._id)
     const {data}=useGetUserInfoQuery(userid,{
         skip:!userid
     })
@@ -33,11 +34,11 @@ const CartPage = () => {
         );
     }
 const PaymentCheckout=()=>{
-    const matchedCourses = Allcourse.data?.filter((course) => 
-    cart.some((cartItem) => cartItem._id === course._id)
+    const matchedCourses = Allcourse?.data?.filter((course) => 
+    cart.some((cartItem) => cartItem?._id === course?._id)
 );
 
-if(matchedCourses.length>0){
+if(matchedCourses?.length>0){
     toast.error(`You are already puchase "${matchedCourses.map((item)=>item.name)}" please remove and checkout`)
 }else{
     navigate('/paymentcheckout', { state: cart });
@@ -112,7 +113,7 @@ if(matchedCourses.length>0){
                                     >
                                         Remove
                                     </button>
-                                    <button className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors">
+                                    <button className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors" onClick={()=>dispatch(AddToWishList(item))}>
                                         Wishlist
                                     </button>
                                 </div>

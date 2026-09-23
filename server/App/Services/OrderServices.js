@@ -75,3 +75,10 @@ await Notification.create({
   });
 return { success: true, createOrder };
 }
+export async function GetMyOrder(userid){
+  const allUserOrders=await Orders.find({user_id:userid})
+
+  if(allUserOrders){
+  return allUserOrders
+  }
+}

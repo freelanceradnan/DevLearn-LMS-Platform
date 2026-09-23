@@ -1,5 +1,5 @@
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
-import { CreateMyOrder } from "../Services/OrderServices.js";
+import { CreateMyOrder, GetMyOrder } from "../Services/OrderServices.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 
 export  const CreateOrder=CatchAsyncError(async(req,res,next)=>{
@@ -21,4 +21,18 @@ res.status(201).json({
     data:result.createOrder
 })
 
+})
+export const getUserOrder=CatchAsyncError(async(req,res,next)=>{
+   
+        const userid=req.user._id
+        if(!userid){
+        return next(new ErrorHandler("userid not found to get order!"))
+        }
+        const result=await GetMyOrder(userid)
+        res.status(200).json({
+        success:true,
+        message:"user order get success",
+        data:result
+        })
+    
 })

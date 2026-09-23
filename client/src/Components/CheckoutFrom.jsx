@@ -20,7 +20,7 @@ const CheckoutForm = () => {
         return_url: `${window.location.origin}/my-courses`,
       },
     });
-
+    
     if (error) {
       setErrorMessage(error.message);
       setIsProcessing(false);

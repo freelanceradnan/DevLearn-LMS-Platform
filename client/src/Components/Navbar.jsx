@@ -33,7 +33,7 @@ import UserMenu from "./UserMenu";
 // every users visible otpions
 const guestMenu=[
    { name: "My Cart", to: "/cart",icons:<ShoppingCart size={16}/>},
-    { name: "My WishList", to: "/withlist",icons:<Heart size={16}/>},
+    { name: "My WishList", to: "/wishlist",icons:<Heart size={16}/>},
      { name: "Help and Support", to: "/support",icons:<Headset size={16}/>},
 ]
 
@@ -41,7 +41,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
   const cart = useSelector((state) => state.AddToCart);
-
+  const wishlist=useSelector((state)=>state.AddToWish)
   const [logoutcall]=useLogoutUserMutation()
   const dispatch = useDispatch();
   const dropdownRef = useRef(null);
@@ -159,11 +159,20 @@ useEffect(() => {
             className="hidden md:flex items-center gap-3 relative"
             ref={dropdownRef}
           >
+              <button className="relative inline-block" onClick={()=>navigate('/wishlist')}>
+  <Heart  className="w-5 h-5 text-gray-500" />
+  
+  {wishlist?.length > 0 && (
+    <span className="absolute -top-2 -right-2 px-1 py-0.5 min-w-[20px] h-5 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
+      {wishlist.length}
+    </span>
+  )}
+</button>
   <button className="relative inline-block" onClick={()=>navigate('/cart')}>
-  <ShoppingCart className="w-6 h-6 text-gray-700" />
+  <ShoppingCart className="w-5 h-5 text-gray-500" />
   
   {cart?.length > 0 && (
-    <span className="absolute -top-2 -right-2 px-1.5 py-0.5 min-w-[20px] h-5 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
+     <span className="absolute -top-2 -right-2 px-1 py-0.5 min-w-[20px] h-5 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
       {cart.length}
     </span>
   )}
@@ -363,7 +372,7 @@ useEffect(() => {
 
                    <div className="flex flex-col gap-2.5 items-start">
                        {guestMenu.map((items,index) => (
-                         <Link key={index} className="hover:bg-[#f0f6ff] w-full py-1 text-sm px-1 flex gap-2 items-center text-[#676a83]">
+                         <Link key={index} className="hover:bg-[#f0f6ff] w-full py-1 text-sm px-1 flex gap-2 items-center text-[#676a83]" to={items.to}>
                             <span> {items.icons}</span>
                              {items.name}</Link>
                        ))}

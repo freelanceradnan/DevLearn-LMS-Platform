@@ -14,24 +14,23 @@ export async function getMyInfo(userId) {
     const data=await User.findById(userId)
   return { success: true, info: data };
 }
-export async function updateMyInfo(name, email, userId) {
-    const user=await User.findById(userId)
-    if(email && user){
-        const isEmailExists=await User.findOne({email})
-        if(isEmailExists){
-            throw new Error('email already exists!')
-        }
-        user.email=email
-    }
-    if(name && user){
-     user.name=name
-    }
-    await user?.save()
-    await redis.set(userId,JSON.stringify(user))
-   return {
-        success:true,
-        user
-    }
+export async function updateMyInfo(payload, userId) {
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { $set: payload },
+    { new: true, runValidators: true }
+  );
+  
+  if (!user) {
+    return { success: false, message: "User not found" };
+  }
+
+  await redis.set(userId, JSON.stringify(user));
+  
+  return {
+    success: true,
+    user
+  };
 }
 export async function updateMyPassword(userId,oldpassword,newpassword){
 

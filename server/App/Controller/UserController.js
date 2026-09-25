@@ -13,17 +13,26 @@ export const getInfo=CatchAsyncError(async(req,res,next)=>{
     }
     res.status(200).json({success:true,data:result.info})
 })
-export const updateUserInfo=CatchAsyncError(async(req,res,next)=>{
-    const {name,email}=req.body
-    const userId=req.user._id
-    if(!name || !email){
-    return next(new ErrorHandler("name and email not found!"))
-    }
-    const result=await updateMyInfo(name,email,userId)
-    if(result.success){
-    res.status(200).json({message:"user updated success!"})
-    }
-})
+export const updateUserInfo = CatchAsyncError(async (req, res, next) => {
+  const payload = req.body;
+  const userId = req.user?._id; 
+
+  if (!userId || !payload || Object.keys(payload).length === 0) {
+    return next(new ErrorHandler("User ID or update payload not found!", 400));
+  }
+
+  const result = await updateMyInfo(payload, userId);
+
+  if (!result.success) {
+    return next(new ErrorHandler(result.message || "Failed to update user", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "User updated successfully!",
+    user: result.user 
+  });
+});
 export const updatePassword=CatchAsyncError(async(req,res,next)=>{
     const userId=req.user._id
     const {oldpassword,newpassword}=req.body

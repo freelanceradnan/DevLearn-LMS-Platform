@@ -190,3 +190,41 @@ export async function socialMyAuth(credential, res, githubDetails) {
     return res.status(500).json({ success: false, message: error.message });
   }
 }
+export async function SendMyOtp(userId){
+const user=await User.findById(userId)
+if(!User){
+  throw new Error("User not found!")
+}
+const generatedOtp = Math.floor(100000 + Math.random() * 900000);
+user.otp=generatedOtp
+await user.save() 
+const options={
+  email:user.email,
+  subject:"Otp Verify",
+  html: `<h2>Your otp code is ${generatedOtp}</h2>`
+}
+const SentEmail=await sendMail(options)
+console.log(sendMail)
+if(SentEmail){
+  return {success:true}
+}
+}
+export async function VerifyMyOtp(otp, userId) {
+  
+    const user = await User.findById(userId);
+    console.log(userId)
+    if (!user) {
+        throw new Error("User not found!");
+    }
+
+    const isMatchOtp = String(user.otp) === String(otp);
+ 
+    if (!isMatchOtp) {
+        throw new Error("OTP is wrong!");
+    }
+
+    user.otp = undefined; 
+    await user.save();
+
+    return { success: true };
+}

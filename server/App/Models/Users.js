@@ -8,6 +8,8 @@ const userSchema=mongoose.Schema({
         public_id:String,
         url:String
     },
+    mobile:{type:String},
+    date:{type:String},
     role:{type:String,default:'user'},
     Courses:[
         {course_id:String}
@@ -20,6 +22,7 @@ const userSchema=mongoose.Schema({
       type: String,
       default: null,
     },
+    otp:{type:String,default:0},
     isVerified:{type:Boolean,default:false}
 },{timestamps:true,versionKey:false})
 export const User=mongoose.model('Users',userSchema)

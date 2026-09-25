@@ -108,7 +108,8 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
       if (result.data) {
         const userdata=result.data.data
         toast.success("login user success!");
-        dispatch(setUser());
+        
+        dispatch(setUser(userdata));
         
         setRegisterInfo({});
         setModal(false);

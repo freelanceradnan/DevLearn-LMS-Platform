@@ -5,7 +5,9 @@ import {
   ActiveMyUser,
   MyLogin,
   MyRegister,
+  SendMyOtp,
   socialMyAuth,
+  VerifyMyOtp,
 } from "../Services/AuthServices.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 import {
@@ -15,6 +17,8 @@ import {
 } from "../Utils/Jwt_auth.js";
 import jwt from "jsonwebtoken";
 import { redis } from "../Config/Redis.js";
+import { VerifyMyPassword } from "../Services/CourseServices.js";
+import { User } from "../Models/Users.js";
 dotenv.config({ path: path.resolve(process.cwd() + ".env") });
 export const Registration = CatchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -55,13 +59,13 @@ export const UserLogin = CatchAsyncError(async (req, res, next) => {
   if (!email || !password) {
     return next(new ErrorHandler("enter email password to login", 400));
   }
-  
+
   const result = await MyLogin(email, password, res);
-  
+
   if (!result.success) {
     return next(new ErrorHandler("failed to login", 400));
   }
-  
+
   res.status(200).json({
     success: true,
     message: "User login success!",
@@ -148,37 +152,38 @@ export const updateToken = CatchAsyncError(async (req, res, next) => {
 });
 export const socialAuth = CatchAsyncError(async (req, res, next) => {
   const { credential } = req.body;
-  const {githubDetails}=req.body
-  const result = await socialMyAuth(credential, res,githubDetails);
+  const { githubDetails } = req.body;
+  const result = await socialMyAuth(credential, res, githubDetails);
   if (!result.success) {
     return next(
       new ErrorHandler("cannot register user with social auth system!"),
     );
   }
-  res
-    .status(200)
-    .json({
-      success: true,
-      message: "social auth verification success!",
-      data: result.user,
-    });
+  res.status(200).json({
+    success: true,
+    message: "social auth verification success!",
+    data: result.user,
+  });
 });
 export const github = CatchAsyncError(async (req, res, next) => {
   const { code } = req.body;
 
   // 1. Exchange OAuth code for an Access Token
-  const tokenResponse = await fetch("https://github.com/login/oauth/access_token", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
+  const tokenResponse = await fetch(
+    "https://github.com/login/oauth/access_token",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_SECRET,
+        code,
+      }),
     },
-    body: JSON.stringify({
-      client_id: process.env.GITHUB_CLIENT_ID,
-      client_secret: process.env.GITHUB_SECRET,
-      code,
-    }),
-  });
+  );
 
   const tokenData = await tokenResponse.json();
   const accessToken = tokenData.access_token;
@@ -209,7 +214,9 @@ export const github = CatchAsyncError(async (req, res, next) => {
     if (emailsResponse.ok) {
       const emails = await emailsResponse.json();
       const primaryEmailObj = emails.find((e) => e.primary && e.verified);
-      email = primaryEmailObj ? primaryEmailObj.email : emails[0]?.email || null;
+      email = primaryEmailObj
+        ? primaryEmailObj.email
+        : emails[0]?.email || null;
     }
   }
 
@@ -224,5 +231,78 @@ export const github = CatchAsyncError(async (req, res, next) => {
     success: true,
     message: "GitHub authentication successful",
     user: userData,
+  });
+});
+export const VerifyPassword = CatchAsyncError(async(req, res, next) => {
+    const { password } = req.body;
+    const userId = req.user._id;
+
+    if (!userId || !password) {
+        return next(new ErrorHandler("User id or password not found!", 400));
+    }
+
+   
+    await VerifyMyPassword(userId, password);
+
+    res.status(200).json({
+        success: true,
+        message: "Your Password Verify Success!"
+    });
+});
+export const SendEmailOtp=CatchAsyncError(async(req,res,next)=>{
+  const userId=req.user._id
+  if(!userId){
+  return next(new ErrorHandler("Userid not found!"))
+  }
+  const result=await SendMyOtp(userId)
+  res.status(200).json({
+    success:true,
+    message:"otp sent success"
+  })
+})
+export const VerifyOtp = CatchAsyncError(async (req, res, next) => {
+    const { otp } = req.body;
+    const userId = req.user._id;
+    
+    if (!otp || !userId) {
+        return next(new ErrorHandler("User ID and OTP are required!", 400));
+    }
+
+   
+    await VerifyMyOtp(otp, userId);
+
+    res.status(200).json({
+        success: true,
+        message: "OTP verified successfully!"
+    });
+});
+export const DeleteUserAccount = CatchAsyncError(async (req, res, next) => {
+  const userId = req.user._id;
+
+  if (!userId) {
+    return next(new ErrorHandler("User not found!", 404));
+  }
+
+  await User.findByIdAndDelete(userId);
+
+ if (userId) {
+    await redis.del(userId);
+  }
+
+  res.clearCookie("access_token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+  });
+
+  res.clearCookie("refresh_token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "User deleted successfully!"
   });
 });

@@ -12,6 +12,7 @@ export const authSlice=createSlice({
    reducers:{
     setUser:(state,action)=>{
     state.user=action.payload
+    console.log(state.user)
     state.isAuthenticate=true
     localStorage.setItem('user',JSON.stringify(state.user))
     localStorage.setItem('isAuthenticate',JSON.stringify(state.isAuthenticate))

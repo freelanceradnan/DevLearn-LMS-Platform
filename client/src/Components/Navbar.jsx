@@ -184,8 +184,8 @@ useEffect(() => {
                 title="Account Settings"
               >
                 <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-semibold flex items-center justify-center text-sm">
-                  {user.name ? (
-                    user.name.charAt(0).toUpperCase()
+                  {user.avatar ? (
+                    <img src={user?.avatar?.url} className="w-full rounded-full"/>
                   ) : (
                     <User size={18} />
                   )}
@@ -218,9 +218,9 @@ useEffect(() => {
                   }}
                 >
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-purple-200 bg-purple-100 font-semibold text-purple-700 shadow-xs">
-                    {user?.name ? (
+                    {user?.avatar ? (
                       <span className="text-lg font-bold">
-                        {user.name.charAt(0).toUpperCase()}
+                          <img src={user?.avatar?.url} className="w-full rounded-full"/>
                       </span>
                     ) : (
                       <User size={20} className="text-purple-600" />
@@ -328,8 +328,8 @@ useEffect(() => {
                   >
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 bg-purple-100 text-purple-700 font-semibold rounded-full flex items-center justify-center border border-purple-200">
-                        {user.name ? (
-                          user.name.charAt(0).toUpperCase()
+                        {user.avatar ? (
+                           <img src={user?.avatar?.url} className="w-full rounded-full"/>
                         ) : (
                           <User size={20} />
                         )}

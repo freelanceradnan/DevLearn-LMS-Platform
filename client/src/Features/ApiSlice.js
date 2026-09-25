@@ -245,7 +245,7 @@ export const ApiSlice = createApi({
     url:'/getUserInfo',
     method:'GET'
     }),
-    transformResponse:(response)=>response.data.Courses
+    transformResponse:(response)=>response.data
 
     }),
     GetUsersCourses:builder.query({
@@ -286,6 +286,39 @@ export const ApiSlice = createApi({
     }),
     transformResponse:(response)=>response.data
    }),
+   UpdateUserInfo:builder.mutation({
+   query:(payload)=>({
+   url:'/update-info',
+   method:'PUT',
+   body:payload
+   })
+   }),
+   VerifyPassword:builder.mutation({
+  query:(passwordData)=>({
+  url:'/verify-password',
+  method:'POST',
+  body:passwordData
+  })
+   }),
+   SentEmailOtp:builder.mutation({
+    query:()=>({
+    url:'/SendEmailOtp',
+    method:'POST',
+    })
+   }),
+   VerifyOtp:builder.mutation({
+    query:(otp)=>({
+    url:'/VerifyOtp',
+    method:'POST',
+    body:otp
+    })
+   }),
+   DeleteUserAccount: builder.mutation({
+  query: () => ({
+    url: '/DeleteUserAccount',
+    method: 'DELETE'
+  })
+})
   }),
 });
 export const {
@@ -320,5 +353,10 @@ export const {
   useGetUserSingleCourseQuery,
   useAddUsersQuestionsMutation,
   useAddUserReviewMutation,
-  useGetUserOrderQuery
+  useGetUserOrderQuery,
+  useUpdateUserInfoMutation,
+  useVerifyPasswordMutation,
+  useSentEmailOtpMutation,
+  useVerifyOtpMutation,
+  useDeleteUserAccountMutation
 } = ApiSlice;

@@ -5,6 +5,7 @@ import slider_2 from '../assets/slider2.png'
 import slider_3 from '../assets/slider3.png'
 import newHeroimg from '../assets/heropng.png'
 import adminLogo from '../assets/devlearnBOx.png'
+import guestUser from '../assets/guest.png'
 export const assets={
     main_logo,
     hero_png,
@@ -12,5 +13,6 @@ export const assets={
     slider_2,
     slider_3,
     newHeroimg,
-    adminLogo
+    adminLogo,
+    guestUser
 }

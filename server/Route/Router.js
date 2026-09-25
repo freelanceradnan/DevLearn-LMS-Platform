@@ -20,10 +20,11 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 
 const router = express();
-
+console.log("Auth Controller Object:", authController);
 router.get("/", function (req, res) {
   res.send("this router is on!");
 });
+
 //auth related router
 router.post("/register", authController.Registration);
 router.post("/activation", authController.ActiveUser);
@@ -38,6 +39,10 @@ router.patch("/change-password", isAuthenticated,userController.updatePassword);
 router.put("/update-avatar", isAuthenticated,userController.UpdateUserAvatar);
 router.get('/user-courses',isAuthenticated,CourseController.GetUsersCourses)
 router.get('/orderhistory',isAuthenticated,OrderController.getUserOrder)
+router.post('/verify-password',isAuthenticated,authController.VerifyPassword)
+router.post('/SendEmailOtp',isAuthenticated,authController.SendEmailOtp)
+router.post('/VerifyOtp',isAuthenticated,authController.VerifyOtp)
+router.delete('/DeleteUserAccount',isAuthenticated,authController.DeleteUserAccount)
 //course related router
 router.post('/upload',upload.single('image'),UploadController.uploader)
 router.put('/update-hero/:id',isAuthenticated,AdminMiddlewares,HeroController.UpdateHero)

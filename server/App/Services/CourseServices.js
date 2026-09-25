@@ -8,6 +8,7 @@ import ejs from "ejs";
 import sendMail from "../Utils/EmailSent.js";
 import { User } from "../Models/Users.js";
 import Notification from "../Models/Notification.js";
+import bcrypt from "bcryptjs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 export const CourseService = async (data, res) => {
@@ -304,4 +305,19 @@ export async function getUsersAllCourses(id) {
    
  
    return purchaseCourses; 
+}
+export async function VerifyMyPassword(userId, password) {
+    const IsExistingUser = await User.findById(userId).select("+password");
+    
+    if (!IsExistingUser) {
+        throw new Error("User not valid!");
+    }
+
+    const MatchPassword = await bcrypt.compare(password, IsExistingUser.password);
+    
+    if (!MatchPassword) {
+        throw new Error("Incorrect password"); 
+    }
+
+    return { success: true }; 
 }

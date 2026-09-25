@@ -43,11 +43,12 @@ const CourseDetails = () => {
 
   useEffect(() => {
    
-    const userCourses = UsersCoursesId || []
-    
+    const userCourses = UsersCoursesId?.Courses || []
+
     if (userCourses && Array.isArray(userCourses)) {
-      const enrolled = userCourses.some((item) => (item._id ? item._id == id : item == id));
+      const enrolled = userCourses?.some((item) => (item._id ? item._id == id : item == id));
       setIsEnrolled(enrolled);
+     
     }
   }, [UsersCoursesId, id]);
 

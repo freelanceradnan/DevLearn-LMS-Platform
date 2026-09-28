@@ -1,13 +1,18 @@
 import { Bell, CreditCard, Heart, LogOut, MessageSquareHeart, Settings, ShieldX, User } from 'lucide-react';
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../Features/AuthSlice';
+import { ApiSlice, useLogoutUserMutation } from '../Features/ApiSlice';
 const ProfileMenu = () => {
   const dispatch=useDispatch()
+  const user=useSelector((state)=>state.auth.user)
+  const [logoutuser]=useLogoutUserMutation()
   const navigate=useNavigate()
   const location = useLocation();
   const [ActiveMenu,setActiveMenu]=useState()
+  const IsSocialLogin=Boolean(user?.googleId||user?.githubId)
+  
   const ProfileMenuOptions=[
     {name:"Profile Info",link:'/profile/info',icon:<User size={16}/>},
     {name:"User Security",link:'/profile/security',icon:<Settings size={16}/>},
@@ -38,15 +43,26 @@ const ProfileMenu = () => {
                     Alerts
                   </p> */}
                   <div className="space-y-1 flex flex-col items-start">
-                    {ProfileMenuOptions.map((item,index)=>{
-                      const isActive = location.pathname === item.link;
-                      return (<Link className={`w-full flex items-center gap-3 p-2 text-sm text-gray-700 hover:bg-purple-50 ${isActive?"text-purple-700 bg-purple-200":""} rounded-md transition-colors` }key={index} onClick={()=>setActiveMenu(item.name)} to={item.link}>
-                        <span >{item.icon}</span>
-                        {item.name}
-                      </Link>)
-                    }
-                      
-                    )}
+                    {ProfileMenuOptions.map((item, index) => {
+  const isActive = location.pathname === item.link;
+  const isMatch = IsSocialLogin && item.name === "User Security";
+
+  // Hide the "User Security" option entirely for social login users
+  if (isMatch) return null;
+
+  return (
+    <Link 
+      className={`w-full flex items-center gap-3 p-2 text-sm text-gray-700 hover:bg-purple-50 ${isActive ? "text-purple-700 bg-purple-200" : ""} rounded-md transition-colors`} 
+      key={index} 
+      onClick={() => setActiveMenu(item.name)} 
+      to={item.link}
+    >
+      <span>{item.icon}</span>
+      {item.name}
+    </Link>
+  );
+})}
+                    
                     <button className='w-full flex items-center gap-3 p-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-md transition-colors' onClick={()=>logout()}><LogOut size={16}/>Logout</button>
                     {/* <button className="" onClick={()=>navigate('/profile/info')}>
                       <User size={16} /> Profile Info

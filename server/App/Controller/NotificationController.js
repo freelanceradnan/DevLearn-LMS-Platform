@@ -17,4 +17,20 @@ export const updateNotifications=CatchAsyncError(async(req,res,next)=>{
     return next (new ErrorHandler("failed to update notification status!"))
     }
     res.status(200).json({success:true,message:"Notification update successfully!",data:result.notifications})
-}) 
+})
+
+export const GetUsersNotification=CatchAsyncError(async(req,res,next)=>{
+    const userId=req.user._id
+   if(!userId){
+    return next (new ErrorHandler("User id not found!"))
+   }
+   const getMyNotifications=await Notification.find({user_id:userId})
+   if(!getMyNotifications){
+    return next (new ErrorHandler("Notification not found!"))
+   }
+   res.status(200).json({
+    success:true,
+    message:'Notification Gets Success',
+    getMyNotifications
+   })
+})

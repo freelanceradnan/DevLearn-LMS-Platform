@@ -15,6 +15,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { OAuth2Client } from 'google-auth-library';
 import { userInfo } from "os";
+import Notification from "../Models/Notification.js";
+import { sendRealTimeNotification } from "../../index.js";
 export async function MyRegister(name, email, password) {
   const normalizedEmail = email.toLowerCase();
 
@@ -77,6 +79,7 @@ export async function ActiveMyUser(activation_code, activation_token) {
     activation_token,
     process.env.Activation_Secret,
   );
+  // console.log(newUser.activationCode)
 
   if (String(newUser.activationCode) !== String(activation_code)) {
     throw new Error("Activation code is wrong!");
@@ -93,6 +96,12 @@ export async function ActiveMyUser(activation_code, activation_token) {
     email,
     password: passHash,
   });
+  const createNotification=await Notification.create({
+    user_id:newUserCreate._id,
+    title:`Welcome Message`,
+    message:`Welcome to Devlearn Academy!`,
+    status:'unread'
+  })
   return { success: true };
 }
 
@@ -212,7 +221,7 @@ if(SentEmail){
 export async function VerifyMyOtp(otp, userId) {
   
     const user = await User.findById(userId);
-    console.log(userId)
+  
     if (!user) {
         throw new Error("User not found!");
     }
@@ -227,4 +236,25 @@ export async function VerifyMyOtp(otp, userId) {
     await user.save();
 
     return { success: true };
+}
+export async function ChangeMyPassword(userId, newPassword, OldPassword) {
+  const userData = await User.findById(userId);
+  if (!userData) {
+    throw new Error("User not found!");
+  }
+
+  const isMatchPassword = await bcrypt.compare(OldPassword, userData.password);
+
+  if (!isMatchPassword) {
+    throw new Error("Old Password Not Matched!");
+  }
+
+  ;
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  await User.findByIdAndUpdate(userId, { $set: { password: hashedPassword } });
+
+  return {
+    success: true
+  };
 }

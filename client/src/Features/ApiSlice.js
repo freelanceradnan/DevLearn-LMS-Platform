@@ -318,6 +318,19 @@ export const ApiSlice = createApi({
     url: '/DeleteUserAccount',
     method: 'DELETE'
   })
+}),
+ChangePassword:builder.mutation({
+  query:({newPassword,OldPassword})=>({
+  url:'/ChangeUserPassword',
+  method:'PUT',
+  body:{newPassword,OldPassword}
+  })
+}),
+GetUsersNotification:builder.query({
+  query:()=>({
+    url:'/getUsersNotification',
+    method:'GET'
+  })
 })
   }),
 });
@@ -358,5 +371,7 @@ export const {
   useVerifyPasswordMutation,
   useSentEmailOtpMutation,
   useVerifyOtpMutation,
-  useDeleteUserAccountMutation
+  useDeleteUserAccountMutation,
+  useChangePasswordMutation,
+  useGetUsersNotificationQuery
 } = ApiSlice;

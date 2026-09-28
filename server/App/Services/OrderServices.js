@@ -6,6 +6,7 @@ import Orders from "../Models/Orders.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import ejs from 'ejs';
+import { sendRealTimeNotification } from "../../index.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 export async function CreateMyOrder(user,course_id,payment_info){
@@ -68,11 +69,15 @@ fullUserData.Courses.push(course_id);
 
 await fullUserData.save();
 
-await Notification.create({
+const notification=await Notification.create({
     user_id: user._id,
     title: "New Order",
     message: `You have a new order for ${fullCourse.name}`
   });
+
+  setTimeout(() => {
+  sendRealTimeNotification(user._id, notification);
+}, 300);
 return { success: true, createOrder };
 }
 export async function GetMyOrder(userid){

@@ -43,6 +43,8 @@ router.post('/verify-password',isAuthenticated,authController.VerifyPassword)
 router.post('/SendEmailOtp',isAuthenticated,authController.SendEmailOtp)
 router.post('/VerifyOtp',isAuthenticated,authController.VerifyOtp)
 router.delete('/DeleteUserAccount',isAuthenticated,authController.DeleteUserAccount)
+router.put('/ChangeUserPassword',isAuthenticated,authController.ChangeUserPassword)
+router.get('/getUsersNotification',isAuthenticated,NotificationController.GetUsersNotification)
 //course related router
 router.post('/upload',upload.single('image'),UploadController.uploader)
 router.put('/update-hero/:id',isAuthenticated,AdminMiddlewares,HeroController.UpdateHero)

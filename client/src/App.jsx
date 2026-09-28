@@ -30,6 +30,7 @@ import CartPage from "./Pages/CartPage";
 import WishList from "./Pages/WishList";
 import Purchasehistory from "./Pages/Purchasehistory";
 import CloseAccount from "./Components/CloseAccount";
+import UserNotificationSection from "./Components/UserNotificationSection";
 function App() {
   return (
     <Routes>
@@ -45,7 +46,7 @@ function App() {
           <Route path="info" index element={<ProfileInfo />} />
           <Route path="security" element={<UserSecurity />} />
           
-          <Route path="notification" element={<h2>this is info</h2>} />
+          <Route path="notification" element={<UserNotificationSection/>} />
           <Route path="closeaccount" element={<CloseAccount/>} />
         </Route>
         <Route path="/my-courses" element={<MyCourses/>}/>

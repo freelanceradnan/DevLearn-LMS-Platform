@@ -24,25 +24,34 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import AuthModel from "./AuthModel";
 import { useDispatch, useSelector } from "react-redux";
-import { ApiSlice, useLogoutUserMutation } from "../Features/ApiSlice";
+import { ApiSlice, useGetUsersNotificationQuery, useLogoutUserMutation } from "../Features/ApiSlice";
 import toast from "react-hot-toast";
-import { setUser,logoutUser} from "../Features/AuthSlice";
+import { setUser, logoutUser } from "../Features/AuthSlice";
 import ProfileMenu from "./ProfileMenu";
 import UserMenu from "./UserMenu";
+import { socket } from "../WebSocket";
+
 
 // every users visible otpions
-const guestMenu=[
-   { name: "My Cart", to: "/cart",icons:<ShoppingCart size={16}/>},
-    { name: "My WishList", to: "/wishlist",icons:<Heart size={16}/>},
-     { name: "Help and Support", to: "/support",icons:<Headset size={16}/>},
-]
-
+const guestMenu = [
+  { name: "My Cart", to: "/cart", icons: <ShoppingCart size={16} /> },
+  { name: "My WishList", to: "/wishlist", icons: <Heart size={16} /> },
+  { name: "Help and Support", to: "/support", icons: <Headset size={16} /> },
+];
+// const Notifications = [
+//   { sub: "Welcome to Devlearn Academy!", time: "1 min ago" },
+//   { sub: "Missing Payment info to purchase course", time: "11 min ago" },
+//   { sub: "New Course Added Explore Now", time: "30 min ago" },
+// ];
 const Navbar = () => {
+  const {data:AllNotifications}=useGetUsersNotificationQuery()
   const navigate = useNavigate();
+  const [Notifications,SetNotifications]=useState([])
   const user = useSelector((state) => state.auth.user);
+  const [bellOn, setBellOn] = useState(false);
   const cart = useSelector((state) => state.AddToCart);
-  const wishlist=useSelector((state)=>state.AddToWish)
-  const [logoutcall]=useLogoutUserMutation()
+  const wishlist = useSelector((state) => state.AddToWish);
+  const [logoutcall] = useLogoutUserMutation();
   const dispatch = useDispatch();
   const dropdownRef = useRef(null);
   const [profileOn, setProfileOn] = useState(false);
@@ -51,7 +60,6 @@ const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
 
   // automatic disabled menu for pc
   useEffect(() => {
@@ -67,6 +75,31 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [profileOn]);
+//getlivenotification 
+useEffect(() => {
+  if (!user?._id) return;
+
+  const handleConnect = () => {
+    socket.emit('register_user', user._id);
+  };
+
+  if (socket.connected) {
+    handleConnect();
+  }
+
+  socket.on('connect', handleConnect);
+
+  socket.on('new_notification', (data) => {
+    SetNotifications((prev) => [data, ...prev]);
+  });
+  if(AllNotifications){
+    SetNotifications(AllNotifications.getMyNotifications)
+  }
+  return () => {
+    socket.off('connect', handleConnect);
+    socket.off('new_notification');
+  };
+}, [user?._id,AllNotifications]);
 
   const handleOpenAuth = (mode) => {
     setAuthMode(mode);
@@ -81,9 +114,9 @@ const Navbar = () => {
     }
   };
   //checking isadmin login
-useEffect(() => {
-    if (user?.role === 'admin') {
-      navigate('/admin/dashboard', { replace: true });
+  useEffect(() => {
+    if (user?.role === "admin") {
+      navigate("/admin/dashboard", { replace: true });
     }
   }, [user, navigate]);
   const logout = async () => {
@@ -94,9 +127,8 @@ useEffect(() => {
       toast.error("logout failed!");
     } finally {
       dispatch(logoutUser());
-      setProfileOn(false)
+      setProfileOn(false);
       dispatch(ApiSlice.util.resetApiState());
-      
     }
   };
   return (
@@ -105,15 +137,17 @@ useEffect(() => {
       <nav className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 gap-4">
           {/* Left: Mobile Hamburger & Logo */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 justify-between w-full md:w-auto">
+            {/* Mobile Menu Toggle Button */}
             <button
-              onClick={() => setOpenMenu(!profileOn)}
+              onClick={() => setOpenMenu(!openMenu)}
               className="md:hidden p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-600 transition-colors"
               aria-label="Open menu"
             >
               <Menu className="w-5 h-5" />
             </button>
 
+            {/* Main Logo */}
             <Link to="/" className="flex-shrink-0 flex items-center">
               <img
                 src={assets?.main_logo}
@@ -121,10 +155,28 @@ useEffect(() => {
                 className="h-10 w-auto object-contain"
               />
             </Link>
+
+            {/* Action Icons (Search & Cart) */}
+            <div className="flex items-center gap-2 md:hidden">
+              
+              <Search className="w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-900" />
+              <button
+                className="relative inline-block"
+                onClick={() => navigate("/cart")}
+              >
+                <ShoppingCart className="w-5 h-5 text-gray-500" />
+
+                {cart?.length > 0 && (
+                  <span className="absolute -top-2 -right-2 px-1 py-0.5 min-w-[20px] h-5 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
+                    {cart.length}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Center: Search Bar */}
-          <div className="flex-1 max-w-md mx-2 hidden sm:block">
+          <div className="flex-1 max-w-md mx-2 hidden md:block">
             <form onSubmit={handleSearchSubmit} className="relative w-full">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                 <Search className="h-4 w-4" />
@@ -159,24 +211,111 @@ useEffect(() => {
             className="hidden md:flex items-center gap-3 relative"
             ref={dropdownRef}
           >
-              <button className="relative inline-block" onClick={()=>navigate('/wishlist')}>
-  <Heart  className="w-5 h-5 text-gray-500" />
-  
-  {wishlist?.length > 0 && (
-    <span className="absolute -top-2 -right-2 px-1 py-0.5 min-w-[20px] h-5 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
-      {wishlist.length}
-    </span>
-  )}
-</button>
-  <button className="relative inline-block" onClick={()=>navigate('/cart')}>
-  <ShoppingCart className="w-5 h-5 text-gray-500" />
-  
-  {cart?.length > 0 && (
-     <span className="absolute -top-2 -right-2 px-1 py-0.5 min-w-[20px] h-5 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
-      {cart.length}
-    </span>
-  )}
-</button>
+            {user && (
+              <>
+                <button
+                  className="relative inline-block"
+                  onClick={() => navigate("/wishlist")}
+                >
+                  <Heart className="w-5 h-5 text-gray-500" />
+
+                  {wishlist?.length > 0 && (
+                    <span className="absolute -top-2 -right-2 px-1 py-0.5 min-w-[20px] h-5 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
+                      {wishlist.length}
+                    </span>
+                  )}
+                </button>
+                <button
+                  className="relative inline-block"
+                  onClick={() => navigate("/cart")}
+                >
+                  <ShoppingCart className="w-5 h-5 text-gray-500" />
+
+                  {cart?.length > 0 && (
+                    <span className="absolute -top-2 -right-2 px-1 py-0.5 min-w-[20px] h-5 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
+                      {cart.length}
+                    </span>
+                  )}
+                </button>
+                <div className="relative inline-block">
+                  {/* Bell Button */}
+                  <button
+                    className="p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer relative inline-block"
+                    onClick={() => setBellOn(!bellOn)}
+                    aria-label="Notifications"
+                  >
+                    <Bell className="w-5 h-5 text-gray-600" />
+                    {cart?.length > 0 && (
+                      <span className="absolute top-2 right-2 px-1 py-0.5 min-w-[5px] h-2 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm"></span>
+                    )}
+                  </button>
+
+                  {/* Backdrop to close when clicking outside */}
+                  {bellOn && (
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setBellOn(false)}
+                    />
+                  )}
+
+                  {/* Dropdown Menu */}
+                  {bellOn && (
+                    <div
+                      className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {/* Header */}
+                      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50">
+                        <h2 className="font-semibold text-gray-800 text-sm">
+                          Notifications
+                        </h2>
+                        <button
+                          className="text-xs text-blue-600 hover:underline font-medium cursor-pointer"
+                          onClick={() => navigate("/profile/notification")}
+                        >
+                          Settings
+                        </button>
+                      </div>
+                      {/* <div className="flex items-center justify-between px-4 py-1 border-b border-gray-100 bg-gray-50">
+                        <button className="text-sm">Unread(3)</button>
+                        <button className="text-sm bg-blue-50 py-1 px-1 rounded-xs font-semibold">
+                          Mark All
+                        </button>
+                      </div> */}
+                      {/* Body / Content */}
+                      <div className="p-2 text-sm text-gray-500 flex flex-col gap-2">
+                        {Notifications.length === 0 ? (
+                          <p className="text-center">No notifications available!</p>
+                        ) : (
+                          Notifications.map((item, index) => (
+                            <Link
+                              key={item.id || index}
+                              className="flex gap-2 hover:bg-[#f1ecec] items-center"
+                            >
+                              <img
+                                src={assets.main_logo}
+                                alt=""
+                                className="w-4 h-4"
+                              />
+                              <div>
+                                <p className="font-semibold">{item.message}</p>
+                                <h2 className="text-xs text-gray-400 flex gap-2">
+                                  {item.
+updatedAt}.<p>Full Stack Dev</p>
+                                </h2>
+                              </div>
+                            </Link>
+                          ))
+                        )}
+                        {/* <button className="py-2 bg-[#D0D5DD] font-semibold">
+                          View All
+                        </button> */}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
             {user ? (
               <button
                 onClick={() => setProfileOn(!profileOn)}
@@ -185,7 +324,10 @@ useEffect(() => {
               >
                 <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-semibold flex items-center justify-center text-sm">
                   {user.avatar ? (
-                    <img src={user?.avatar?.url} className="w-full rounded-full"/>
+                    <img
+                      src={user?.avatar?.url}
+                      className="w-full rounded-full"
+                    />
                   ) : (
                     <User size={18} />
                   )}
@@ -212,15 +354,18 @@ useEffect(() => {
                 {/* Header Section */}
                 <button
                   className="flex items-center gap-3 border-b border-slate-100 p-4"
-                  onClick={() =>{
-                     navigate("/profile/info")
-                     setProfileOn(false)
+                  onClick={() => {
+                    navigate("/profile/info");
+                    setProfileOn(false);
                   }}
                 >
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-purple-200 bg-purple-100 font-semibold text-purple-700 shadow-xs">
                     {user?.avatar ? (
                       <span className="text-lg font-bold">
-                          <img src={user?.avatar?.url} className="w-full rounded-full"/>
+                        <img
+                          src={user?.avatar?.url}
+                          className="w-full rounded-full"
+                        />
                       </span>
                     ) : (
                       <User size={20} className="text-purple-600" />
@@ -241,23 +386,25 @@ useEffect(() => {
 
                 {/* Menu Options */}
                 <div className="py-2 px-6">
-             {user?(
-<>
- <UserMenu logout={logout}/>
-</>
-                ):(
-<>
-
-                   <div className="flex flex-col gap-2.5 items-start">
-                       {guestMenu.map((items,index) => (
-                         <Link key={index} className="hover:bg-[#f0f6ff] w-full py-1 text-sm px-1 flex gap-2 items-center text-[#676a83]">
+                  {user ? (
+                    <>
+                      <UserMenu logout={logout} />
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex flex-col gap-2.5 items-start">
+                        {guestMenu.map((items, index) => (
+                          <Link
+                            key={index}
+                            className="hover:bg-[#f0f6ff] w-full py-1 text-sm px-1 flex gap-2 items-center text-[#676a83]"
+                          >
                             <span> {items.icons}</span>
-                             {items.name}</Link>
-                       ))}
-                       
-                     </div>
-</>
-                )}
+                            {items.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             )}
@@ -321,15 +468,18 @@ useEffect(() => {
                 {user ? (
                   <button
                     className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-purple-50 transition-colors text-left"
-                    onClick={() =>{
-                       navigate('/profile')
-                       setOpenMenu(false)
+                    onClick={() => {
+                      navigate("/profile");
+                      setOpenMenu(false);
                     }}
                   >
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 bg-purple-100 text-purple-700 font-semibold rounded-full flex items-center justify-center border border-purple-200">
                         {user.avatar ? (
-                           <img src={user?.avatar?.url} className="w-full rounded-full"/>
+                          <img
+                            src={user?.avatar?.url}
+                            className="w-full rounded-full"
+                          />
                         ) : (
                           <User size={20} />
                         )}
@@ -363,22 +513,25 @@ useEffect(() => {
 
               {/* Primary Mobile Menu Items */}
               <div className="p-3 space-y-1">
-                {user?(
-<>
- <UserMenu logout={logout}/>
-</>
-                ):(
-<>
-
-                   <div className="flex flex-col gap-2.5 items-start">
-                       {guestMenu.map((items,index) => (
-                         <Link key={index} className="hover:bg-[#f0f6ff] w-full py-1 text-sm px-1 flex gap-2 items-center text-[#676a83]" to={items.to}>
-                            <span> {items.icons}</span>
-                             {items.name}</Link>
-                       ))}
-                       
-                     </div>
-</>
+                {user ? (
+                  <>
+                    <UserMenu logout={logout} />
+                  </>
+                ) : (
+                  <>
+                    <div className="flex flex-col gap-2.5 items-start">
+                      {guestMenu.map((items, index) => (
+                        <Link
+                          key={index}
+                          className="hover:bg-[#f0f6ff] w-full py-1 text-sm px-1 flex gap-2 items-center text-[#676a83]"
+                          to={items.to}
+                        >
+                          <span> {items.icons}</span>
+                          {items.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
             </div>
@@ -396,14 +549,11 @@ useEffect(() => {
               onClick={(e) => e.stopPropagation()}
             >
               {/* Back Header */}
-              <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-              
-               
-              </div>
+              <div className="p-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between"></div>
 
               {/* Account Navigation */}
               <div className="p-4 space-y-6 flex-1 overflow-y-auto">
-              <Navigate to="/profile"/>
+                <Navigate to="/profile" />
               </div>
             </div>
           )}

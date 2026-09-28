@@ -22,6 +22,20 @@ const userSchema=mongoose.Schema({
       type: String,
       default: null,
     },
+    notificationPreferences:{
+    email:{
+    Purchasing:{type:Boolean,default:true},
+    Comments:{type:Boolean,default:true},
+    Review:{type:Boolean,default:true},
+    Marketing:{type:Boolean,default:true}
+    },
+    push:{
+    Purchasing:{type:Boolean,default:true},
+    Comments:{type:Boolean,default:true},
+    Review:{type:Boolean,default:true},
+    Marketing:{type:Boolean,default:true}
+    }
+    },
     otp:{type:String,default:0},
     isVerified:{type:Boolean,default:false}
 },{timestamps:true,versionKey:false})

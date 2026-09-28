@@ -3,6 +3,7 @@ import path from "path";
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
 import {
   ActiveMyUser,
+  ChangeMyPassword,
   MyLogin,
   MyRegister,
   SendMyOtp,
@@ -304,5 +305,23 @@ export const DeleteUserAccount = CatchAsyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "User deleted successfully!"
+  });
+});
+export const ChangeUserPassword = CatchAsyncError(async (req, res, next) => {
+  const userId = req.user._id;
+  const { newPassword, OldPassword } = req.body;
+  
+  if (!userId) {
+    return next(new ErrorHandler("UserId not found!"));
+  }
+  if (!newPassword || !OldPassword) {
+    return next(new ErrorHandler("New Password and Old password not found!"));
+  }
+  
+  await ChangeMyPassword(userId, newPassword, OldPassword);
+  
+  res.status(200).json({
+    success: true,
+    message: "Password Update Success!"
   });
 });

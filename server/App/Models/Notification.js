@@ -7,6 +7,11 @@ const NoficationSchema = mongoose.Schema({
     required: true,
   },
   status: { type: String, default: "unread", required: true },
+  data:{
+    taskId:{type: mongoose.Schema.Types.ObjectId,required:true},
+    redirectUrl:{type:String}
+  },
+  subject:{type:String,required:true},
   message:{type:String,required:true}
 },{timestamps:true});
 const Notification = mongoose.model("Notification", NoficationSchema);

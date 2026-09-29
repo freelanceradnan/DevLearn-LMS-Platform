@@ -50,7 +50,7 @@ const PopularCourses = () => {
     //     }
     // ]
     return (
-        <div className='w-full max-w-7xl mx-auto px-4 py-6 bg-[#EFEFF7]'>
+        <div className='w-full max-w-7xl mx-auto px-4 py-6 bg-[#FAFAFA]'>
            <div className='flex justify-between pb-12'>
              <div className='w-1/2'>
                 <h2 className='text-2xl text-[#000000] section-title'>Get choice of your course</h2>

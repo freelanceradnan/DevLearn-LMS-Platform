@@ -213,7 +213,7 @@ const options={
   html: `<h2>Your otp code is ${generatedOtp}</h2>`
 }
 const SentEmail=await sendMail(options)
-console.log(sendMail)
+// console.log(sendMail)
 if(SentEmail){
   return {success:true}
 }

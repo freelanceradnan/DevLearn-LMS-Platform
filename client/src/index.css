@@ -1,35 +1,33 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap');
 
-body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 500;
+@theme {
+  --font-sans: 'Geist', sans-serif;
 }
 .footer-h2{
   font-weight:600;
   font-size: 1rem;
 }
 .hero-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 600; 
+  font-family: 'Geist', sans-serif;
+  font-weight: 800; 
   line-height: 1.15;
   letter-spacing: -0.02em;
 }
 
 .hero-subtitle {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Geist', sans-serif;
   font-weight: 500; 
   line-height: 1.6;
-  color: #dde3ee;
+
 }
 
 .hero-button {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family:'Geist', sans-serif;
   font-weight: 700;
   font-size: 1rem;
 }
 .section-title {
-  font-family: 'Plus Jakarta Sans', sans-serif; 
+  font-family: 'Geist', sans-serif; 
   font-weight: 500; 
   font-size: 1.8rem;
   line-height: 1.25;

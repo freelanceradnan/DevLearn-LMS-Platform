@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { useGetHeroInfoQuery } from "../Features/ApiSlice";
+import { ArrowRight, BookOpen, Play, Star, UsersRound } from "lucide-react";
 
 export default function Hero() {
   const { data, isLoading } = useGetHeroInfoQuery();
@@ -31,56 +32,84 @@ export default function Hero() {
   }
 
   return (
-    <section className="bg-[#33333D] max-w-7xl mx-auto rounded-3xl my-5 p-6 md:p-12 lg:p-16 text-white font-['Plus_Jakarta_Sans']">
-      <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-8 lg:gap-12 max-w-6xl mx-auto">
+   <section className="bg-gradient-to-br from-emerald-50 via-white to-green-50/50 py-12 ">
+<div className="flex flex-col md:flex-row justify-between items-center gap-8 lg:gap-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className="w-full md:w-1/2 flex flex-col gap-6">
-          <h1 className="hero-title text-2xl sm:text-3xl md:text-5xl lg:text-5xl font-extrabold tracking-tight leading-tight flex flex-col gap-1 sm:gap-2">
-            {heroData.title}
-          </h1>
+  {/* Left Text Column - order-2 on mobile, order-1 on desktop */}
+  <div className="w-full md:w-2/3 flex flex-col gap-6 order-1 md:order-2">
+    <div className="w-full py-3 px-4 bg-[#E5F9E8] text-[#09C93E] text-sm font-semibold rounded-full shadow-sm text-center max-w-60 flex gap-2 items-center justify-center border-[#08AA25] border">
+      <div className="h-2 w-2 rounded-full bg-[#09C93E]"></div>
+      New Courses Available
+    </div>
+    
+    <h1 className="hero-title text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight leading-tight flex flex-col gap-1 sm:gap-2 text-[#162018]">
+      {heroData.title}
+    </h1>
 
-          <p className="hero-subtitle text-gray-300 text-sm sm:text-base md:text-lg font-normal leading-relaxed max-w-md">
-            {heroData.subTitle}
-          </p>
+    <p className="hero-subtitle text-sm sm:text-base md:text-lg font-normal leading-relaxed max-w-md text-gray-600">
+      {heroData.subTitle}
+    </p>
 
-          <div className="relative flex items-center w-full max-w-md mt-2">
-            <input
-              type="text"
-              placeholder="Search your favourite course"
-              className="w-full py-3.5 pl-4 pr-14 text-sm sm:text-base text-gray-900 bg-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
-            />
-            <button
-              type="button"
-              className="absolute right-1.5 p-2.5 bg-[#FF6B6B] hover:bg-[#ff5252] text-white rounded-lg transition-colors flex items-center justify-center cursor-pointer"
-              aria-label="Search"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </button>
-          </div>
+    <div className="flex gap-2">
+      <button className="w-full py-3 px-4 bg-[#09C82C] hover:bg-[#08AA25] text-white text-sm font-semibold rounded-full shadow-sm transition-colors text-center max-w-50 flex gap-2 items-center justify-center">
+        Start Learning <ArrowRight size={18}/>
+      </button>
+      <button className="w-full py-3 px-4 bg-[#E9F3EB] text-[#3f3a36] hover:bg-gray-200 text-sm font-semibold rounded-full shadow-sm transition-colors text-center max-w-50 flex gap-2 items-center justify-center">
+        <Play size={16} color="red"/> Youtube Channel
+      </button>
+    </div>
+
+    <div className="flex gap-4 text-sm pt-2 justify-between md:justify-start">
+      <p className="md:flex gap-2 items-center"><UsersRound color="#08AA25" size={20}/><span className="font-bold">50K+</span> Students</p>
+      <p className="md:flex gap-2 items-center"><BookOpen color="#08AA25" size={20}/><span className="font-bold">200+</span> Courses</p>
+      {/* Fixed typo: md;flex changed to md:flex */}
+      <p className="md:flex gap-2 items-center"><Star color="#08AA25" size={20}/><span className="font-bold">4.9</span> Ratings</p>
+    </div>
+  </div>
+
+  {/* Right Column (Video/Image) - order-1 on mobile, order-2 on desktop */}
+  <div className="w-full md:w-1/2 flex justify-center order-1 md:order-2 mt-8 md:mt-0">
+    <div className="relative w-full max-w-md bg-gray-100 p-3 rounded-3xl shadow-xl border border-gray-100">
+      
+      {/* Main Image / Video Thumbnail */}
+      <img
+        src={heroData.image || assets?.newHeroimg || undefined}
+        alt="Student using laptop"
+        className="w-full h-[360px] object-cover rounded-2xl"
+      />
+      
+      {/* Centered Play Button Overlay */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <button className="pointer-events-auto bg-[#09C82C] hover:bg-[#08AA25] text-white w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition transform hover:scale-105">
+          <Play size={24} className="translate-x-0.5 fill-white text-white" />
+        </button>
+      </div>
+
+      {/* Floating Top-Right Student Badge */}
+      <div className="absolute -top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-md flex items-center gap-3 border border-gray-100">
+        <div className="flex -space-x-2">
+          <img className="w-7 h-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User" />
+          <img className="w-7 h-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="User" />
+          <img className="w-7 h-7 rounded-full border-2 border-white object-cover" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="User" />
         </div>
+        <span className="text-xs font-semibold text-gray-800">Join 50k+ Students</span>
+      </div>
 
-        {/* Right Image Column */}
-        <div className="w-full md:w-1/2 flex justify-center md:justify-end">
-        
-          <img
-            src={heroData.image || assets?.newHeroimg || undefined}
-            alt="Student using laptop"
-            className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg object-contain"
-          />
+      {/* Floating Bottom-Left Course Badge */}
+      <div className="absolute -bottom-5 left-4 bg-white px-4 py-3 rounded-2xl shadow-lg flex items-center gap-3 border border-gray-100">
+        <div className="bg-emerald-50 text-[#09C93E] p-2.5 rounded-xl">
+          <BookOpen size={20} />
+        </div>
+        <div>
+          <h4 className="text-xs font-bold text-gray-900">200+ Courses</h4>
+          <p className="text-[11px] text-gray-500">Available Now</p>
         </div>
       </div>
-    </section>
+
+    </div>
+  </div>
+
+</div>
+</section>
   );
 }

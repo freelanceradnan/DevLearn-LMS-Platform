@@ -24,7 +24,7 @@ export const GetUsersNotification=CatchAsyncError(async(req,res,next)=>{
    if(!userId){
     return next (new ErrorHandler("User id not found!"))
    }
-   const getMyNotifications=await Notification.find({user_id:userId})
+   const getMyNotifications = await Notification.find({ user_id: userId }).sort({ createdAt: -1 });
    if(!getMyNotifications){
     return next (new ErrorHandler("Notification not found!"))
    }

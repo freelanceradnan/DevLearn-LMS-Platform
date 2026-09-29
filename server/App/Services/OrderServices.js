@@ -3,10 +3,12 @@ import { User } from "../Models/Users.js";
 import sendMail from "../Utils/EmailSent.js";
 import Notification from "../Models/Notification.js";
 import Orders from "../Models/Orders.js";
+import crypto from 'crypto'
 import path from 'path';
 import { fileURLToPath } from 'url';
 import ejs from 'ejs';
 import { sendRealTimeNotification } from "../../index.js";
+import mongoose from "mongoose";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 export async function CreateMyOrder(user,course_id,payment_info){
@@ -72,12 +74,18 @@ await fullUserData.save();
 const notification=await Notification.create({
     user_id: user._id,
     title: "New Order",
-    message: `You have a new order for ${fullCourse.name}`
+    message: `Congratulations! Your ${fullCourse.name} Course Ready!`,
+    data:{
+      taskId:new mongoose.Types.ObjectId(),
+      redirectUrl:`/my-courses/${course_id}`
+    },
+    subject:`${fullCourse.name}`
   });
 
   setTimeout(() => {
   sendRealTimeNotification(user._id, notification);
 }, 300);
+console.log(notification)
 return { success: true, createOrder };
 }
 export async function GetMyOrder(userid){

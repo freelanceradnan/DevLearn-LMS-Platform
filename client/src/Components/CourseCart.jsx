@@ -28,7 +28,7 @@ export default function CourseCard({ cart}) {
   const lessonsCount = courseData?.length || 36;
 
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 font-['Plus_Jakarta_Sans']  md:w-full border border-gray-100 group">
+    <div className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300   md:w-full border border-gray-100 group">
     <Link to={`/course/${cart._id}`}>
       
       {/* Image  */}

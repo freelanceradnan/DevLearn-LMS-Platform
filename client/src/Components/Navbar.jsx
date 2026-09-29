@@ -13,6 +13,7 @@ import {
   MessageSquare,
   Search,
   Settings,
+  Settings2,
   ShoppingBag,
   ShoppingCart,
   User,
@@ -20,7 +21,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import AuthModel from "./AuthModel";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,6 +31,8 @@ import { setUser, logoutUser } from "../Features/AuthSlice";
 import ProfileMenu from "./ProfileMenu";
 import UserMenu from "./UserMenu";
 import { socket } from "../WebSocket";
+import { UsersNotification } from "./UsersNotification";
+
 
 
 // every users visible otpions
@@ -44,10 +47,15 @@ const guestMenu = [
 //   { sub: "New Course Added Explore Now", time: "30 min ago" },
 // ];
 const Navbar = () => {
-  const {data:AllNotifications}=useGetUsersNotificationQuery()
   const navigate = useNavigate();
-  const [Notifications,SetNotifications]=useState([])
   const user = useSelector((state) => state.auth.user);
+  const [Notifications, SetNotifications] = useState([]);
+   const {
+  data: AllNotifications,
+  refetch: refetchNotifications,
+} = useGetUsersNotificationQuery();
+    const location=useLocation()
+  
   const [bellOn, setBellOn] = useState(false);
   const cart = useSelector((state) => state.AddToCart);
   const wishlist = useSelector((state) => state.AddToWish);
@@ -75,32 +83,68 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [profileOn]);
-//getlivenotification 
-useEffect(() => {
+//getting notification
+  useEffect(() => {
   if (!user?._id) return;
 
   const handleConnect = () => {
-    socket.emit('register_user', user._id);
+    console.log("Socket connected");
+
+    socket.emit("register_user", user._id);
   };
 
   if (socket.connected) {
     handleConnect();
   }
 
-  socket.on('connect', handleConnect);
+  socket.on("connect", handleConnect);
 
-  socket.on('new_notification', (data) => {
-    SetNotifications((prev) => [data, ...prev]);
-  });
-  if(AllNotifications){
-    SetNotifications(AllNotifications.getMyNotifications)
-  }
   return () => {
-    socket.off('connect', handleConnect);
-    socket.off('new_notification');
+    socket.off("connect", handleConnect);
   };
-}, [user?._id,AllNotifications]);
+}, [user?._id]);
 
+useEffect(() => {
+  if (!user?._id) return;
+
+  refetchNotifications();
+}, [location.pathname, user?._id,bellOn]);
+// ==============================
+// 2. Listen for new notification
+// ==============================
+useEffect(() => {
+  if (!user?._id) return;
+
+  const handleNewNotification = (data) => {
+
+
+    SetNotifications((prev) => {
+      const exists = prev.some(
+        (item) => item._id === data._id
+      );
+
+      if (exists) return prev;
+
+      return [data, ...prev];
+    });
+  };
+
+  socket.on("new_notification", handleNewNotification);
+
+  return () => {
+    socket.off("new_notification", handleNewNotification);
+  };
+}, [user?._id]);
+
+
+// ==============================
+// 3. Load notifications from API
+// ==============================
+useEffect(() => {
+  if (!AllNotifications?.getMyNotifications) return;
+
+  SetNotifications(AllNotifications.getMyNotifications);
+}, [AllNotifications]);
   const handleOpenAuth = (mode) => {
     setAuthMode(mode);
     setModal(true);
@@ -131,11 +175,13 @@ useEffect(() => {
       dispatch(ApiSlice.util.resetApiState());
     }
   };
+  const hasUnread = Notifications.some((item) => item.status === 'unread');
+
   return (
     <>
       {/* Primary Navigation Bar */}
-      <nav className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 gap-4">
+      <nav className="sticky top-0 z-40 bg-[#FFFFFF] border-b border-gray-200 shadow-sm transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14 gap-4">
           {/* Left: Mobile Hamburger & Logo */}
           <div className="flex items-center gap-3 justify-between w-full md:w-auto">
             {/* Mobile Menu Toggle Button */}
@@ -192,7 +238,7 @@ useEffect(() => {
           </div>
 
           {/* Right Desktop Nav Links & User Actions */}
-          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
+          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-[#3f3939]">
             <Link to="/" className="hover:text-purple-700 transition-colors">
               Home
             </Link>
@@ -245,8 +291,12 @@ useEffect(() => {
                     aria-label="Notifications"
                   >
                     <Bell className="w-5 h-5 text-gray-600" />
-                    {cart?.length > 0 && (
-                      <span className="absolute top-2 right-2 px-1 py-0.5 min-w-[5px] h-2 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm"></span>
+                    {hasUnread && (
+                      <span className="absolute top-2 right-2 px-1 py-0.5 min-w-[5px] h-2 rounded-full text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
+                        <div className="h-2 w-2 bg-red-500 rounded-full">
+
+                        </div>
+                      </span>
                     )}
                   </button>
 
@@ -261,56 +311,28 @@ useEffect(() => {
                   {/* Dropdown Menu */}
                   {bellOn && (
                     <div
-                      className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden"
+                      className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-y-auto h-100"
                       onClick={(e) => e.stopPropagation()}
                     >
                       {/* Header */}
-                      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50">
-                        <h2 className="font-semibold text-gray-800 text-sm">
+                      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50 sticky top-0">
+                        <h2 className="font-semibold text-gray-800 text-[16px]">
                           Notifications
                         </h2>
                         <button
                           className="text-xs text-blue-600 hover:underline font-medium cursor-pointer"
                           onClick={() => navigate("/profile/notification")}
                         >
-                          Settings
+                         <Settings />
                         </button>
                       </div>
-                      {/* <div className="flex items-center justify-between px-4 py-1 border-b border-gray-100 bg-gray-50">
-                        <button className="text-sm">Unread(3)</button>
-                        <button className="text-sm bg-blue-50 py-1 px-1 rounded-xs font-semibold">
-                          Mark All
-                        </button>
-                      </div> */}
+                   
                       {/* Body / Content */}
                       <div className="p-2 text-sm text-gray-500 flex flex-col gap-2">
-                        {Notifications.length === 0 ? (
-                          <p className="text-center">No notifications available!</p>
-                        ) : (
-                          Notifications.map((item, index) => (
-                            <Link
-                              key={item.id || index}
-                              className="flex gap-2 hover:bg-[#f1ecec] items-center"
-                            >
-                              <img
-                                src={assets.main_logo}
-                                alt=""
-                                className="w-4 h-4"
-                              />
-                              <div>
-                                <p className="font-semibold">{item.message}</p>
-                                <h2 className="text-xs text-gray-400 flex gap-2">
-                                  {item.
-updatedAt}.<p>Full Stack Dev</p>
-                                </h2>
-                              </div>
-                            </Link>
-                          ))
-                        )}
-                        {/* <button className="py-2 bg-[#D0D5DD] font-semibold">
-                          View All
-                        </button> */}
+                        <UsersNotification state={"Navbar"} Notifications={Notifications}/>
+                     
                       </div>
+                      
                     </div>
                   )}
                 </div>
@@ -342,7 +364,7 @@ updatedAt}.<p>Full Stack Dev</p>
                   Log in
                 </button>
                 <button
-                  className="text-sm font-semibold bg-purple-900 text-white px-4 py-2 rounded-full hover:bg-purple-950 shadow-sm transition-all duration-200"
+                  className="text-sm font-semibold bg-[#09C82C] text-white px-4 py-2 rounded-full hover:bg-[#08AA25] shadow-sm transition-all duration-200"
                   onClick={() => handleOpenAuth("signup")}
                 >
                   Join for Free
@@ -497,7 +519,7 @@ updatedAt}.<p>Full Stack Dev</p>
                   <div className="flex flex-col gap-2">
                     <button
                       onClick={() => handleOpenAuth("signup")}
-                      className="w-full py-2 px-4 bg-purple-900 hover:bg-purple-950 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors text-center"
+                      className="w-full py-2 px-4 bg-[#09C82C] hover:bg-[#08AA25] text-white text-sm font-semibold rounded-lg shadow-sm transition-colors text-center"
                     >
                       Sign up
                     </button>

@@ -50,7 +50,7 @@ export default function PartnersSlider() {
   const doublePartners = [...PARTNERS, ...PARTNERS];
 
   return (
-    <section className="bg-[#EFEFF7] py-12 max-w-7xl mx-auto font-['Plus_Jakarta_Sans'] overflow-hidden mb-10">
+    <section className="bg-[#faf6f6] py-12 max-w-7xl mx-auto font-['Plus_Jakarta_Sans'] overflow-hidden mb-10">
       <div className="max-w-6xl mx-auto">
         
         {/* Header */}

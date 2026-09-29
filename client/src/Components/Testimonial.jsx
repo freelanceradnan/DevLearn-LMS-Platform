@@ -34,7 +34,7 @@ const dummyData = [
 
 const Testimonial = () => {
   return (
-    <section className="max-w-7xl bg-[#EFEFF7] px-4 sm:px-6 lg:px-8 py-10 mx-auto">
+    <section className="max-w-7xl bg-[#FAFAFA] px-4 sm:px-6 lg:px-8 py-10 mx-auto">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="mx-auto pb-10">

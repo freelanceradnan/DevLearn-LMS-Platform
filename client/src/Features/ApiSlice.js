@@ -46,7 +46,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["users", "course", "orders", "faq", "category",'questions','reviews'],
+  tagTypes: ["users", "course", "orders", "faq", "category",'questions','reviews','Notifications'],
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (userData) => ({
@@ -330,7 +330,23 @@ GetUsersNotification:builder.query({
   query:()=>({
     url:'/getUsersNotification',
     method:'GET'
-  })
+  }),
+  providesTags:['Notifications']
+}),
+UpdateNotificationStatus:builder.mutation({
+  query:(notificationId)=>({
+    url:`/update-notification`,
+    method:'PUT',
+    body:{notificationId}
+  }),
+  invalidatesTags:['Notifications']
+}),
+UpdateAllNotificationStatus:builder.mutation({
+  query:()=>({
+    url:`/update-all-notifications`,
+    method:'PUT'
+  }),
+  invalidatesTags:['Notifications']
 })
   }),
 });
@@ -373,5 +389,7 @@ export const {
   useVerifyOtpMutation,
   useDeleteUserAccountMutation,
   useChangePasswordMutation,
-  useGetUsersNotificationQuery
+  useGetUsersNotificationQuery,
+  useUpdateNotificationStatusMutation,
+  useUpdateAllNotificationStatusMutation
 } = ApiSlice;

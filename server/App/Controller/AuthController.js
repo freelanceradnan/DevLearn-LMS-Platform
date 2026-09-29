@@ -28,7 +28,7 @@ export const Registration = CatchAsyncError(async (req, res, next) => {
   }
 
   const result = await MyRegister(name, email, password);
-
+  
   if (!result.success) {
     return next(new ErrorHandler(result.message, 500));
   }

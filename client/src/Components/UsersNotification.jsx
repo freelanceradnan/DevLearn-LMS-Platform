@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useGetUsersNotificationQuery } from "../Features/ApiSlice";
+import { useGetUsersNotificationQuery, useUpdateAllNotificationStatusMutation, useUpdateNotificationStatusMutation } from "../Features/ApiSlice";
 import { useSelector } from "react-redux";
 import { socket } from "../WebSocket";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime)
 export const UsersNotification = ({state}) => {
+  const [ChangeStatus]=useUpdateNotificationStatusMutation()
+  const [ChangeAllStatus]=useUpdateAllNotificationStatusMutation()
   const navigate=useNavigate()
   const location=useLocation()
   const [Notifications, SetNotifications] = useState([]);
@@ -38,14 +40,33 @@ export const UsersNotification = ({state}) => {
       socket.off("new_notification");
     };
   }, [user?._id, AllNotifications,location.pathname]);
+  const UpdateNotificationStatus=async(itemId)=>{
+  try {
+    const res=await ChangeStatus(itemId).unwrap()
+    console.log(res)
+  } catch (error) {
+    
+  }
+  }
+  const UpdateAllStatus=async()=>{
+ try {
+  const res=await ChangeAllStatus().unwrap()
+  console.log(res)
+ } catch (error) {
   
+ }
+  }
  const unRead = Notifications?.reduce((sum, item) => sum + (item?.status === 'unread' ? 1 : 0), 0);
 
   return (
     <div className={` ${!state && `w-full max-w-6xl mx-auto px-4 py-6`}`}>
         <div className="flex gap-2 justify-between py-1 border-b-1 border-t-1 border-[#b3afaf] items-center">
-        <h2 className="font-semibold">Unread ({unRead})</h2>
-        <button className="uppercase font-semibold text-[#1b1a1a] hover:bg-[#f8f8fa] p-1">Mark All Read</button>
+       {Notifications.length>0 &&(
+        <>
+         <h2 className="font-semibold">Unread ({unRead})</h2>
+        <button className="uppercase font-semibold text-[#1b1a1a] hover:bg-[#f8f8fa] p-1" onClick={UpdateAllStatus}>Mark All Read</button>
+        </>
+       )}
         </div>
         {state? <div>
         {Notifications.length === 0 ? (
@@ -57,6 +78,7 @@ export const UsersNotification = ({state}) => {
     key={item._id || index}
     to={item?.data?.redirectUrl}
     className="flex gap-2 hover:bg-[#f1ecec] items-center max-h-30 p-2"
+    onClick={()=>UpdateNotificationStatus(item._id)}
   >
     <img src={assets.main_logo} alt="" className="w-4 h-4" />
     <div className="flex-1">
@@ -82,7 +104,7 @@ export const UsersNotification = ({state}) => {
         <p className="text-center">No notifications available!</p>
       ) : (
         Notifications.map((item, index) => (
-         <Link
+         <Link onClick={()=>UpdateNotificationStatus(item._id)}
     key={item._id || index}
     to={item?.data?.redirectUrl}
     className="flex gap-2 hover:bg-[#f1ecec] items-center max-h-30 p-2"

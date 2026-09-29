@@ -65,6 +65,7 @@ app.all(/(.*)/, (req, res, next) => {
 app.use(ErrorMiddleware);
 
 const activeUsers = new Map();
+
 io.on('connection', (socket) => {
   socket.on('register_user', (userId) => {
     if (userId) {

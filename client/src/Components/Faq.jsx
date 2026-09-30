@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowRight, ChevronDown, ChevronUp, Plus, X } from 'lucide-react';
 import { useGetFaqQuery } from '../Features/ApiSlice';
 
 
@@ -18,12 +18,14 @@ if(data){
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-12">
-      <h2 className="text-2xl text-[#000000] section-title mb-6">
-        Frequently asked questions
-      </h2>
+    <div className="w-full max-w-7xl mx-auto px-4 py-10">
+      <div className='flex flex-col gap-2 items-center'>
+                <h1 className=' text-[#09C82C] text-center text-[14px] uppercase font-bold'>FAQ</h1>
+                <h2 className='text-[31px] font-semibold text-[#171717]'>Explore Popular Questions<span className='text-[#09C82C]'></span></h2>
+                <p className='text-[#7d7e83] max-w-[600px] text-center text-[16px]'>Find from hundreds of questions answered by industry experts to help you achieve your goals.</p>
+             </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 py-15">
         {faqData?.map((item,index) => {
           const isOpen = openId === item._id;
 
@@ -38,17 +40,17 @@ if(data){
                 className="w-full flex items-center justify-between p-5 text-left bg-white hover:bg-slate-50 transition-colors focus:outline-none"
                 aria-expanded={isOpen}
               >
-                <span className="font-semibold text-slate-800 text-lg pr-4">
+                <span className="font-semibold text-slate-800 text-[18px] pr-4">
                   {item.question}
                 </span>
                 <span className="text-slate-500 shrink-0">
-                  {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                  {!isOpen ? <Plus className="w-5 h-5" /> : <X className="w-5 h-5" />}
                 </span>
               </button>
 
               {/* Accordion Body */}
               {isOpen && (
-                <div className="px-5 pb-5 pt-1 text-slate-600 border-t border-slate-100 bg-white leading-relaxed">
+                <div className="px-5 pb-5 pt-1 text-slate-600 border-t border-slate-100 bg-white leading-relaxed text-[14px]">
                   {item.answer}
                 </div>
               )}

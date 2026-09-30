@@ -50,20 +50,23 @@ const PopularCourses = () => {
     //     }
     // ]
     return (
-        <div className='w-full max-w-7xl mx-auto px-4 py-6 bg-[#FAFAFA]'>
-           <div className='flex justify-between pb-12'>
-             <div className='w-1/2'>
-                <h2 className='text-2xl text-[#000000] section-title'>Get choice of your course</h2>
-               
+        <div className='w-full max-w-7xl mx-auto px-4 py-10 bg-[#FFFFFF]'>
+           <div className=''>
+             <div className='flex flex-col gap-2 items-center'>
+                <h1 className=' text-[#09C82C] text-center text-[14px] uppercase font-bold'>Course</h1>
+                <h2 className='text-[31px] font-semibold text-[#171717]'>Explore Our Popular <span className='text-[#09C82C]'>Courses</span></h2>
+                <p className='text-[#7d7e83] max-w-[600px] text-center text-[16px]'>Choose from hundreds of courses designed by industry experts to help you achieve your goals.</p>
              </div>
-             <button className='flex gap-1 justify-center items-center text-[#6D28D5] text-sm font-semibold'>See More <ArrowRight size={20}/></button>
+            
            </div>
-           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 py-15">
         {courses.map((cart) => (
           <CourseCard key={cart._id} cart={cart} assets={assets} />
         ))}
       </div>
-    
+   <div className='flex items-center justify-center'>
+     <button className='border rounded-full flex py-1 px-3 text-[16px] items-center justify-center gap-1 hover:bg-[#171717] hover:text-white'>View All Courses <ArrowRight size={16}/></button>
+   </div>
         </div>
     );
 };

@@ -29,6 +29,20 @@ const dummyData = [
     role: "Full Stack Developer",
     rating: 5,
     comment: "DevLearn's reputation for high-quality content, paired with its flexible structure, made it possible for me to dive into data analytics while managing family, health, and everyday life."
+  },
+  {
+    id: "3",
+    name: "Mahim D.",
+    role: "UX Designer",
+    rating: 5,
+    comment: "DevLearn's reputation for high-quality content, paired with its flexible structure, made it possible for me to dive into data analytics while managing family, health, and everyday life."
+  },
+  {
+    id: "4",
+    name: "Developer D.",
+    role: "Full Stack Developer",
+    rating: 5,
+    comment: "DevLearn's reputation for high-quality content, paired with its flexible structure, made it possible for me to dive into data analytics while managing family, health, and everyday life."
   }
 ];
 
@@ -37,15 +51,15 @@ const Testimonial = () => {
     <section className="max-w-7xl bg-[#FAFAFA] px-4 sm:px-6 lg:px-8 py-10 mx-auto">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className="mx-auto pb-10">
-          <h2 className="text-2xl text-[#000000] section-title">
-            Why people choose DevLearn Academy
-          </h2>
-          
-        </div>
+        <div className='flex flex-col gap-2 items-center'>
+                <h1 className=' text-[#09C82C] text-center text-[14px] uppercase font-bold'>Testimonials</h1>
+                <h2 className='text-[31px] font-semibold text-[#171717]'>What Our Students Say
+ <span className='text-[#09C82C]'></span></h2>
+                <p className='text-[#7d7e83] max-w-[600px] text-center text-[16px]'>Join thousands of successful students who have transformed their careers with LearnHub.</p>
+             </div>
 
         {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-15">
           {dummyData.map((item) => (
             <div
               key={item.id}
@@ -66,13 +80,13 @@ const Testimonial = () => {
                 </div>
 
                 {/* Comment */}
-                <p className="text-slate-600 text-sm leading-relaxed mb-6 italic">
+                <p className="text-slate-800 text-sm leading-relaxed mb-6 font-semibold">
                   "{item.comment}"
                 </p>
               </div>
 
               {/* User Profile Footer */}
-              <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
+              <div className="flex items-center gap-3 pt-4 border-t border-slate-200">
                 <img
                   src={assets.slider_1}
                   alt={item.name}

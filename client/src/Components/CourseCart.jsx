@@ -28,15 +28,15 @@ export default function CourseCard({ cart}) {
   const lessonsCount = courseData?.length || 36;
 
   return (
-    <div className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300   md:w-full border border-gray-100 group">
+    <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300  md:w-full border border-gray-100 group">
     <Link to={`/course/${cart._id}`}>
       
       {/* Image  */}
-      <div className="overflow-hidden rounded-xl mb-4 aspect-[4/3] relative bg-gray-100">
+      <div className="overflow-hidden rounded-xl mb-4 relative ">
         <img
           src={thumbnail?.url || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=60'}
           alt={name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className=" group-hover:scale-105 transition-transform duration-500"
         />
         {/*  Level Badge */}
         {level && (
@@ -47,8 +47,9 @@ export default function CourseCard({ cart}) {
         )}
       </div>
 
-      {/*Rating, Views, Lessons */}
-      <div className="flex items-center justify-between text-xs text-gray-500 mb-3 font-medium">
+      <div className="flex flex-col gap-4 p-2">
+        {/*Rating, Views, Lessons */}
+      <div className="flex items-center justify-between text-xs text-gray-500 font-medium">
         
         {/* Rating */}
         <div className="flex items-center gap-1 text-[#FF9F43]">
@@ -73,12 +74,12 @@ export default function CourseCard({ cart}) {
       </div>
 
       {/* Course Title */}
-      <h3 className="text-lg font-bold text-[#2B2B36] line-clamp-2 leading-snug mb-4 group-hover:text-indigo-600 transition-colors">
+      <h3 className="text-[16px] font-bold text-[#2B2B36] line-clamp-2 leading-snug group-hover:text-indigo-600 transition-colors">
         {name}
       </h3>
 
       {/* Instructor & Price */}
-      <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+      <div className="flex items-center justify-between border-t border-gray-100">
         
         {/* Instructor */}
         <div className="flex items-center gap-2">
@@ -100,12 +101,13 @@ export default function CourseCard({ cart}) {
         </div>
 
       </div>
+      </div>
          </Link>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 p-2">
      
   {/* Add to Cart Button */}
 
-  <button className={`flex-1 px-4 py-2  active:scale-[0.98] text-white font-medium text-sm rounded-lg shadow-sm transition-all duration-200 ${IsAddedToCart?"bg-blue-200 ":"bg-blue-600 hover:bg-blue-700 "}`} onClick={()=>dispatch(AddToCart(cart))} disabled={IsAddedToCart}>
+  <button className={`flex-1 px-4 py-2  active:scale-[0.98] text-white font-medium text-sm rounded-lg shadow-sm transition-all duration-200 ${IsAddedToCart?"bg-blue-200 ":"bg-[#09C82C] hover:bg-[#08AA25] "}`} onClick={()=>dispatch(AddToCart(cart))} disabled={IsAddedToCart}>
     Add To Cart
   </button>
 
@@ -116,7 +118,7 @@ export default function CourseCard({ cart}) {
     disabled={IsAddedToWishList}
     onClick={()=>dispatch(AddToWishList(cart))}
   >
-    <Heart className={`w-5 h-5 text-gray-600  transition-colors ${IsAddedToWishList ?"text-red-500 ":"hover:text-red-500 text-blue-200 "}`} />
+    <Heart className={`w-5 h-5  transition-colors ${IsAddedToWishList ?"text-[#09C82C] ":"hover:text-red-500 text-gray-600  "}`} />
   </button>
 </div>
     </div>

@@ -266,7 +266,7 @@ useEffect(() => {
                   <Heart className="w-5 h-5 text-gray-500" />
 
                   {wishlist?.length > 0 && (
-                    <span className="absolute -top-2 -right-2 px-1 py-0.5 min-w-[20px] h-5 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
+                    <span className="absolute -top-2 -right-2 px-1 py-0.5 min-w-[20px] h-5 rounded-full bg-[#09C82C] text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
                       {wishlist.length}
                     </span>
                   )}
@@ -278,7 +278,7 @@ useEffect(() => {
                   <ShoppingCart className="w-5 h-5 text-gray-500" />
 
                   {cart?.length > 0 && (
-                    <span className="absolute -top-2 -right-2 px-1 py-0.5 min-w-[20px] h-5 rounded-full bg-blue-600 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
+                    <span className="absolute -top-2 -right-2 px-1 py-0.5 min-w-[20px] h-5 rounded-full bg-[#09C82C] text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
                       {cart.length}
                     </span>
                   )}

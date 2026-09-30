@@ -22,7 +22,7 @@ const Home = () => {
     <div>
       <Hero/>
       <PopularCourses/>
-      <CategoriesCard/>
+      {/* <CategoriesCard/> */}
       <Testimonial/>
     
       <Faq/>

@@ -47,7 +47,7 @@ export default function CourseCard({ cart}) {
         )}
       </div>
 
-      <div className="flex flex-col gap-4 p-2">
+      <div className="flex flex-col gap-4 p-2.5">
         {/*Rating, Views, Lessons */}
       <div className="flex items-center justify-between text-xs text-gray-500 font-medium">
         

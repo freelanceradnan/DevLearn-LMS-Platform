@@ -8,6 +8,7 @@ import Faq from '../Components/Faq';
 import AuthModel from '../Components/AuthModel';
 import PartnersSection from '../Components/TrustedParners';
 import { useLocation } from 'react-router-dom';
+import MentorSection from '../Components/MentorSection';
 
 const Home = () => {
   const location = useLocation();
@@ -22,6 +23,7 @@ const Home = () => {
     <div>
       <Hero/>
       <PopularCourses/>
+      <MentorSection/>
       {/* <CategoriesCard/> */}
       <Testimonial/>
     

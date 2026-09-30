@@ -65,7 +65,7 @@ const PopularCourses = () => {
         ))}
       </div>
    <div className='flex items-center justify-center'>
-     <button className='border rounded-full flex py-1 px-3 text-[16px] items-center justify-center gap-1 hover:bg-[#171717] hover:text-white'>View All Courses <ArrowRight size={16}/></button>
+     <button className='border rounded-full flex py-1 px-3 text-[15px] items-center justify-center gap-1 hover:bg-[#171717] hover:text-white font-semibold'>View All Courses <ArrowRight size={16}/></button>
    </div>
         </div>
     );

@@ -107,7 +107,7 @@ export default function CourseCard({ cart}) {
      
   {/* Add to Cart Button */}
 
-  <button className={`flex-1 px-4 py-2  active:scale-[0.98] text-white font-medium text-sm rounded-lg shadow-sm transition-all duration-200 ${IsAddedToCart?"bg-blue-200 ":"bg-[#09C82C] hover:bg-[#08AA25] "}`} onClick={()=>dispatch(AddToCart(cart))} disabled={IsAddedToCart}>
+  <button className={`flex-1 px-4 py-2  active:scale-[0.98] text-white font-medium text-sm rounded-lg shadow-sm transition-all duration-200 ${IsAddedToCart?"bg-[#d4d4d4] ":"bg-[#09C82C] hover:bg-[#08AA25] "}`} onClick={()=>dispatch(AddToCart(cart))} disabled={IsAddedToCart}>
     Add To Cart
   </button>
 

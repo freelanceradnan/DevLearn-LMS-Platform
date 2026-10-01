@@ -65,7 +65,7 @@ const MentorSection = () => {
                 <h2 className='text-[31px] font-semibold text-[#171717]'>Learn From Industry <span className='text-[#09C82C]'>Experts</span></h2>
                 <p className='text-[#7d7e83] max-w-[600px] text-center text-[16px]'>Our mentors are industry leaders with years of experience in their respective fields.</p>
              </div>
-        <div className='py-15 grid grid-cols-4 gap-4'>
+        <div className='py-15 grid  gap-4 md:grid-cols-2 lg:grid-cols-4'>
         {CardData.map((item,index)=>(
             <Link 
       key={index} 

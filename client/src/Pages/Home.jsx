@@ -9,6 +9,7 @@ import AuthModel from '../Components/AuthModel';
 import PartnersSection from '../Components/TrustedParners';
 import { useLocation } from 'react-router-dom';
 import MentorSection from '../Components/MentorSection';
+import Community from '../Components/Community';
 
 const Home = () => {
   const location = useLocation();
@@ -24,6 +25,7 @@ const Home = () => {
       <Hero/>
       <PopularCourses/>
       <MentorSection/>
+      <Community/>
       {/* <CategoriesCard/> */}
       <Testimonial/>
     

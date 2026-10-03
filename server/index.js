@@ -35,8 +35,8 @@ app.use(hpp());
 app.use(
   cors({
     origin: [
-      "https://dev-learn-lms-platform-xnox.vercel.app",
-      "https://dev-learn-lms-platform.vercel.app",
+      "https://dev-learn-lms-platform-xnox-dglpjr3ma.vercel.app",
+      "https://dev-learn-lms-platform-git-0927e1-reactorbro722-7825s-projects.vercel.app",
       "http://localhost:5173"
     ],
     credentials: true,

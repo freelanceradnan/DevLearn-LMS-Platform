@@ -10,7 +10,7 @@ import {
   User 
 } from 'lucide-react';
 
-const AdminNav = ({ 
+const AdminNavbar = ({ 
   setShowMobileMenu, 
   showMobileMenu, 
   showDesktop, 
@@ -144,4 +144,4 @@ const AdminNav = ({
   );
 };
 
-export default AdminNav;
+export default AdminNavbar;

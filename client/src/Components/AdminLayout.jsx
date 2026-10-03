@@ -16,8 +16,9 @@ import {
   Users,
   Video,
 } from "lucide-react";
-import AdminNav from "./AdminNav";
 import { LogoutModal } from "./LogoutModel";
+import AdminNavbar from "./AdminNavbar";
+
 
 export default function AdminLayout() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -68,7 +69,7 @@ export default function AdminLayout() {
         </div>
 
         <div className="flex-1 md:pl-64 flex flex-col min-h-screen">
-         <AdminNav setShowMobileMenu={setShowMobileMenu} showMobileMenu={showMobileMenu}/>
+         <AdminNavbar setShowMobileMenu={setShowMobileMenu} showMobileMenu={showMobileMenu}/>
            <main className="flex-1 p-6">
             <Outlet />
           </main>

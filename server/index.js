@@ -34,9 +34,13 @@ export const io = new Server(server, {
 app.use(hpp());
 app.use(
   cors({
-    origin: "https://dev-learn-lms-platform-xnox.vercel.app/",
+    origin: [
+      "https://dev-learn-lms-platform-xnox.vercel.app",
+      "https://dev-learn-lms-platform.vercel.app",
+      "http://localhost:5173"
+    ],
     credentials: true,
-  }),
+  })
 );
 app.use(helmet());
 app.use(cookieParser());

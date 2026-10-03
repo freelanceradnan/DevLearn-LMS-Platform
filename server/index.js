@@ -34,7 +34,7 @@ export const io = new Server(server, {
 app.use(hpp());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://dev-learn-lms-platform-xnox.vercel.app/",
     credentials: true,
   }),
 );

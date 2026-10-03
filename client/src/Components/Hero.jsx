@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { useGetHeroInfoQuery } from "../Features/ApiSlice";
 import { ArrowRight, BookOpen, Play, Star, UsersRound } from "lucide-react";
+import { motion } from "motion/react";
 
 export default function Hero() {
   const { data, isLoading } = useGetHeroInfoQuery();
@@ -36,7 +37,11 @@ export default function Hero() {
 <div className="flex flex-col md:flex-row justify-between items-center gap-8 lg:gap-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
   {/* Left Text Column - order-2 on mobile, order-1 on desktop */}
-  <div className="w-full md:w-2/3 flex flex-col gap-6 order-1 md:order-2">
+  <motion.div className="w-full md:w-2/3 flex flex-col gap-6 order-1 md:order-2"
+  initial={{ opacity: 0, x: -50 }}
+  whileInView={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.6, ease: "easeOut" }}
+  >
     <div className="w-full py-3 px-4 bg-[#E5F9E8] text-[#09C93E] text-sm font-semibold rounded-full shadow-sm text-center max-w-60 flex gap-2 items-center justify-center border-[#08AA25] border">
       <div className="h-2 w-2 rounded-full bg-[#09C93E]"></div>
       New Courses Available
@@ -65,17 +70,22 @@ export default function Hero() {
       {/* Fixed typo: md;flex changed to md:flex */}
       <p className="md:flex gap-2 items-center"><Star color="#08AA25" size={20}/><span className="font-bold">4.9</span> Ratings</p>
     </div>
-  </div>
+  </motion.div>
 
   {/* Right Column (Video/Image) - order-1 on mobile, order-2 on desktop */}
-  <div className="w-full md:w-1/2 flex justify-center order-1 md:order-2 mt-8 md:mt-0">
+  <motion.div className="w-full md:w-1/2 flex justify-center order-1 md:order-2 mt-8 md:mt-0"
+  initial={{ opacity: 0, scale: 0.8, y: 30 }}
+  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+  transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+  >
     <div className="relative w-full max-w-md bg-gray-100 p-3 rounded-3xl shadow-xl border border-gray-100">
       
       {/* Main Image / Video Thumbnail */}
-      <img
+      <motion.img
         src={heroData.image || assets?.newHeroimg || undefined}
         alt="Student using laptop"
         className="w-full h-[360px] object-cover rounded-2xl"
+        
       />
       
       {/* Centered Play Button Overlay */}
@@ -107,7 +117,7 @@ export default function Hero() {
       </div>
 
     </div>
-  </div>
+  </motion.div>
 
 </div>
 </section>

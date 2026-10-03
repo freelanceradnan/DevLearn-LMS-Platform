@@ -60,8 +60,8 @@ const PopularCourses = () => {
             
            </div>
            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 py-15">
-        {courses.map((cart) => (
-          <CourseCard key={cart._id} cart={cart} assets={assets} />
+        {courses.map((cart,index) => (
+          <CourseCard key={cart._id} cart={cart} assets={assets} index={index}/>
         ))}
       </div>
    <div className='flex items-center justify-center'>

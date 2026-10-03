@@ -1,5 +1,6 @@
 import React from 'react';
 import { assets } from '../assets/assets';
+import { motion } from 'motion/react';
 
 const dummyData = [
   {
@@ -59,10 +60,19 @@ const Testimonial = () => {
              </div>
 
         {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-15">
-          {dummyData.map((item) => (
+        <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-15"
+         initial={{ y: 50, opacity: 0 }} 
+  whileInView={{ y: 0, opacity: 1 }}
+  transition={{ 
+    duration: 3, 
+    delay:  0.15, 
+    ease: "easeOut" 
+  }}
+        >
+          {dummyData.map((item,index) => (
             <div
               key={item.id}
+             
               className="flex flex-col justify-between bg-white rounded-2xl p-6 shadow-sm hover:shadow-md border border-slate-200/80 transition-all duration-300 hover:-translate-y-1"
             >
               <div>
@@ -101,7 +111,7 @@ const Testimonial = () => {
               </div>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

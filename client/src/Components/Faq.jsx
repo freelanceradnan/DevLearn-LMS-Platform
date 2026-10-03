@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, ChevronDown, ChevronUp, Plus, X } from 'lucide-react';
 import { useGetFaqQuery } from '../Features/ApiSlice';
+import { motion } from 'motion/react';
 
 
 const Faq = () => {
@@ -30,8 +31,12 @@ if(data){
           const isOpen = openId === item._id;
 
           return (
-            <div
+            <motion.div
               key={item._id}
+               initial={{ opacity: 0, y: -30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        // viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
               className="border border-slate-200 rounded-lg overflow-hidden transition-colors"
             >
               
@@ -39,6 +44,7 @@ if(data){
                 onClick={() => toggleAccordion( item._id)}
                 className="w-full flex items-center justify-between p-5 text-left bg-white hover:bg-slate-50 transition-colors focus:outline-none"
                 aria-expanded={isOpen}
+               
               >
                 <span className="font-semibold text-slate-800 text-[18px] pr-4">
                   {item.question}
@@ -54,7 +60,7 @@ if(data){
                   {item.answer}
                 </div>
               )}
-            </div>
+            </motion.div>
           );
         })}
       </div>

@@ -1,7 +1,7 @@
 import { Globe, MessageCircle, User, Users, Video, Globe2, MessageSquare, HeartHandshake, FolderGit2 } from 'lucide-react';
 import React from 'react';
 import { assets } from '../assets/assets';
-
+import {motion} from 'motion/react'
 const Community = () => {
     const Images = [
         { url: assets.c1, bg: "#C1F1CA" },
@@ -29,7 +29,11 @@ const Community = () => {
             <div className='max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16'>
                 
                 {/* Left Content Section */}
-                <div className='w-full lg:w-[55%] flex flex-col gap-8'>
+                <motion.div className='w-full lg:w-[55%] flex flex-col gap-8'
+                initial={{ opacity: 0, x: -50 }}
+  whileInView={{ opacity: 1, x: 0 }}
+  transition={{ duration: 1, ease: "easeOut" }}
+                >
                     <div className='flex flex-col gap-3'>
                         <span className='inline-block w-fit px-3 py-1 bg-emerald-100 text-[#09C82C] text-xs font-bold uppercase tracking-wider rounded-full'>
                             Community
@@ -63,10 +67,14 @@ const Community = () => {
                             Join Community
                         </button>
                     </div>
-                </div>
+                </motion.div>
 
-                {/* Right Visual/Avatars Section */}
-                <div className='w-full lg:w-[45%] flex justify-center items-center py-8'>
+                {/*Avatars Section */}
+                <motion.div className='w-full lg:w-[45%] flex justify-center items-center py-8'
+                initial={{ opacity: 0, scale: 0.8, y: 30 }}
+  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+  transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                >
                     <div className='bg-white w-full max-w-md border border-gray-100 rounded-3xl shadow-2xl p-6 sm:p-8 relative'>
                         
                         {/* Top Floating Badge */}
@@ -109,7 +117,7 @@ const Community = () => {
                         </div>
 
                     </div>
-                </div>
+                </motion.div>
 
             </div>
         </section>

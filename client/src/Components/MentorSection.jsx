@@ -3,6 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Star } from 'lucide-react';
 import { FaGithub, FaTwitter, FaFacebook } from 'react-icons/fa';
+import { motion } from 'motion/react';
+
 const MentorSection = () => {
     const CardData=[
         {id:1,
@@ -67,7 +69,15 @@ const MentorSection = () => {
              </div>
         <div className='py-15 grid  gap-4 md:grid-cols-2 lg:grid-cols-4'>
         {CardData.map((item,index)=>(
-            <Link 
+            <motion.Link
+            initial={{ y: 40, opacity: 0 }} 
+  whileInView={{ y: 0, opacity: 1 }}
+  viewport={{ once: true, margin: "-50px" }}
+  transition={{ 
+    duration: 0.4, 
+    delay: index * 0.1, // Stagger effect per card
+    ease: "easeOut" 
+  }} 
       key={index} 
       to={item.href || '#'} 
       className='border p-6 rounded-2xl border-[#cac2c2] bg-[#FFFFFF] hover:shadow-lg transition-all duration-300 py-10 flex flex-col gap-4 items-center group'
@@ -133,7 +143,7 @@ const MentorSection = () => {
           <FaFacebook size={16} />
         </a>
       </div>
-    </Link>
+    </motion.Link>
         ))}
         </div>
         </div>

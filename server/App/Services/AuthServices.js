@@ -19,7 +19,7 @@ import Notification from "../Models/Notification.js";
 import { sendRealTimeNotification } from "../../index.js";
 export async function MyRegister(name, email, password) {
   const normalizedEmail = email.toLowerCase();
-
+  console.log('d')
   const isExists = await User.findOne({ email: normalizedEmail });
   if (isExists) {
     throw new Error("User already exists!");
@@ -33,6 +33,7 @@ export async function MyRegister(name, email, password) {
     user: { name: user.name },
     ActiveCode,
   };
+
 
   // Render HTML template using EJS
   const html = await ejs.renderFile(

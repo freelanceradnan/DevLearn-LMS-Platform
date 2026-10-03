@@ -45,6 +45,8 @@ export const SendToken = (user, statusCode,res) => {
 
   if (process.env.NODE_ENV === "production") {
     accesstokenOptions.secure = true;
+    accesstokenOptions.sameSite="none",
+    refreshtokenOptions.sameSite="none";
     refreshtokenOptions.secure = true;
   }
 

@@ -32,9 +32,13 @@ import Purchasehistory from "./Pages/Purchasehistory";
 import CloseAccount from "./Components/CloseAccount";
 import UserNotificationSection from "./Components/UserNotificationSection";
 import { UsersNotification } from "./Components/UsersNotification";
+import Mentors from "./Components/AdminDeshboard/Mentors/Mentors";
+import AddMentor from './Components/AdminDeshboard/Mentors/AddMentor';
+import SmoothScroll from "./Components/SmoothScrool";
 function App() {
   return (
-    <Routes>
+    <SmoothScroll>
+      <Routes>
       <Route path="/" element={<Rootlayout />}>
         <Route index element={<Home />} />
         <Route path="/auth/github/callback" element={<GitHubCallback />} />
@@ -71,6 +75,8 @@ function App() {
           <Route path="faqSection" element={<FaqSection />} />
           <Route path="Manageteam" element={<ManageTeam />} />
           <Route path="categoriesSection" element={<Categories />} />
+          <Route path="mentors" element={<Mentors />} />
+         <Route path="mentors/addMentor" element={<AddMentor />} />
           <Route path="coursesAnalytics" element={<CoursesAnalytices />} />
           <Route path="usersAnalytics" element={<UsersAnalytics />} />
           <Route path="ordersAnalytics" element={<OrdersAnalytics />} />
@@ -83,6 +89,7 @@ function App() {
       {/* errorpage */}
       <Route path="*" element={<h2>this is a errorpage</h2>}/>
     </Routes>
+    </SmoothScroll>
   );
 }
 

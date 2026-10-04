@@ -13,6 +13,7 @@ import {
   PlusSquare,
   TrendingUp,
   UserCheck,
+  UserRoundPen,
   Users,
   Video,
 } from "lucide-react";
@@ -40,6 +41,7 @@ export default function AdminLayout() {
         { label: "Hero", icon: Image,link:"/heroSection"},
         { label: "FAQ", icon: HelpCircle,link:"/faqSection"},
         { label: "Categories", icon: Grid,link:"/categoriesSection"},
+        { label: "Mentors", icon: UserRoundPen,link:"/mentors"},
       ],
     },
     {

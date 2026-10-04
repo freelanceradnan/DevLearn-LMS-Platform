@@ -14,6 +14,7 @@ import * as FaqController from '../App/Controller/FaqController.js'
 import * as CategoryController from '../App/Controller/CategoryController.js'
 import * as PublicController from '../App/Controller/PublicAllCourse.js'
 import * as PaymentController from '../App/Controller/PaymentController.js'
+import *as MentorController from '../App/Controller/MentorsController.js'
 import multer from 'multer';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -47,6 +48,8 @@ router.put('/ChangeUserPassword',isAuthenticated,authController.ChangeUserPasswo
 router.get('/getUsersNotification',isAuthenticated,NotificationController.GetUsersNotification)
 router.put('/update-notification',isAuthenticated,NotificationController.UpdateNotificationStatus)
 router.put('/update-all-notifications',isAuthenticated,NotificationController.UpdateAllNotificationStatus)
+router.get('/GetMentor',isAuthenticated,AdminMiddlewares,MentorController.GetMentor)
+router.delete('/DeleteMentor/:mentorId',isAuthenticated,AdminMiddlewares,MentorController.DeleteMentor)
 //course related router
 router.post('/upload',upload.single('image'),UploadController.uploader)
 router.put('/update-hero/:id',isAuthenticated,AdminMiddlewares,HeroController.UpdateHero)
@@ -79,7 +82,7 @@ router.get('/orders-analytics',isAuthenticated,AdminMiddlewares,AnalysisControll
 router.post('/create-layout',isAuthenticated,AdminMiddlewares,LayoutController.CreateLayout)
 router.put('/edit-layout',isAuthenticated,AdminMiddlewares,LayoutController.editLayout)
 router.get('/layout',isAuthenticated,AdminMiddlewares,LayoutController.GetLayoutByType)
-
+router.post('/createMentor',isAuthenticated,AdminMiddlewares,MentorController.CreateMentor)
 //public all routes
 router.post('/create-paymentIntent',PaymentController.PaymentIntent)
 router.get('/GetPubCourses',PublicController.PublicAllCourse)

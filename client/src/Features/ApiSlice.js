@@ -46,7 +46,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["users", "course", "orders", "faq", "category",'questions','reviews','Notifications'],
+  tagTypes: ["users", "course", "orders", "faq", "category",'questions','reviews','Notifications','mentor'],
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (userData) => ({
@@ -347,6 +347,27 @@ UpdateAllNotificationStatus:builder.mutation({
     method:'PUT'
   }),
   invalidatesTags:['Notifications']
+}),
+CreateMentor:builder.mutation({
+  query:(payload)=>({
+  url:'/createMentor',
+  method:'POST',
+  body:payload
+  })
+}),
+GetMentor:builder.query({
+query:()=>({
+  url:'/GetMentor',
+  method:'GET',
+}),
+providesTags:['mentor']
+}),
+DeleteMentor: builder.mutation({
+  query: (mentorId) => ({
+    url: `/DeleteMentor/${mentorId}`,
+    method: 'DELETE',
+  }),
+  invalidatesTags:['mentor']
 })
   }),
 });
@@ -391,5 +412,8 @@ export const {
   useChangePasswordMutation,
   useGetUsersNotificationQuery,
   useUpdateNotificationStatusMutation,
-  useUpdateAllNotificationStatusMutation
+  useUpdateAllNotificationStatusMutation,
+  useCreateMentorMutation,
+  useGetMentorQuery,
+  useDeleteMentorMutation
 } = ApiSlice;

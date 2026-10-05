@@ -353,7 +353,8 @@ CreateMentor:builder.mutation({
   url:'/createMentor',
   method:'POST',
   body:payload
-  })
+  }),
+  invalidatesTags:['mentor']
 }),
 GetMentor:builder.query({
 query:()=>({
@@ -366,6 +367,14 @@ DeleteMentor: builder.mutation({
   query: (mentorId) => ({
     url: `/DeleteMentor/${mentorId}`,
     method: 'DELETE',
+  }),
+  invalidatesTags:['mentor']
+}),
+UpdateMentor: builder.mutation({
+  query: ({ mentorId, payload }) => ({
+    url: `/UpdateMentor/${mentorId}`,
+    method: 'PUT',
+    body: payload,
   }),
   invalidatesTags:['mentor']
 })
@@ -415,5 +424,6 @@ export const {
   useUpdateAllNotificationStatusMutation,
   useCreateMentorMutation,
   useGetMentorQuery,
-  useDeleteMentorMutation
+  useDeleteMentorMutation,
+  useUpdateMentorMutation
 } = ApiSlice;

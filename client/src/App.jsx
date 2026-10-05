@@ -76,7 +76,8 @@ function App() {
           <Route path="Manageteam" element={<ManageTeam />} />
           <Route path="categoriesSection" element={<Categories />} />
           <Route path="mentors" element={<Mentors />} />
-         <Route path="mentors/addMentor" element={<AddMentor />} />
+          <Route path="mentors/addMentor" element={<AddMentor />} />
+          <Route path="mentors/:id" element={<AddMentor />} />
           <Route path="coursesAnalytics" element={<CoursesAnalytices />} />
           <Route path="usersAnalytics" element={<UsersAnalytics />} />
           <Route path="ordersAnalytics" element={<OrdersAnalytics />} />

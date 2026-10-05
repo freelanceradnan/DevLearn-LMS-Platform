@@ -34,19 +34,19 @@ export const GetMentor = CatchAsyncError(async (req, res, next) => {
   });
 });
 export const UpdateMentor = CatchAsyncError(async (req, res, next) => {
-  const mentorId = req.params;
-  const { body } = req.body;
+ const {mentorId}=req.params
+const payload = req.body;
+
   if (
-    !data.name ||
-    !data.category ||
-    !data.description ||
-    !data.enroll ||
-    !data.course ||
-    !data.links
-  ) {
+    !payload.name ||
+    !payload.category ||
+    !payload.description||
+    !payload.students||
+    !payload.courses
+  ){
     return next(new ErrorHandler("Please provides all data"));
   }
-  const result=await UpdateMentorService(mentorId,data)
+  const result=await UpdateMentorService(mentorId,payload)
    res.status(200).json({
     success: true,
     message: "updated  Mentor Success!",
@@ -63,3 +63,4 @@ export const DeleteMentor = CatchAsyncError(async (req, res, next) => {
         message:"delete mentors success!"
     })
 });
+

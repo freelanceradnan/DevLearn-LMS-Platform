@@ -48,7 +48,7 @@ router.put('/ChangeUserPassword',isAuthenticated,authController.ChangeUserPasswo
 router.get('/getUsersNotification',isAuthenticated,NotificationController.GetUsersNotification)
 router.put('/update-notification',isAuthenticated,NotificationController.UpdateNotificationStatus)
 router.put('/update-all-notifications',isAuthenticated,NotificationController.UpdateAllNotificationStatus)
-router.get('/GetMentor',isAuthenticated,AdminMiddlewares,MentorController.GetMentor)
+router.get('/GetMentor',MentorController.GetMentor)
 router.delete('/DeleteMentor/:mentorId',isAuthenticated,AdminMiddlewares,MentorController.DeleteMentor)
 //course related router
 router.post('/upload',upload.single('image'),UploadController.uploader)
@@ -83,6 +83,7 @@ router.post('/create-layout',isAuthenticated,AdminMiddlewares,LayoutController.C
 router.put('/edit-layout',isAuthenticated,AdminMiddlewares,LayoutController.editLayout)
 router.get('/layout',isAuthenticated,AdminMiddlewares,LayoutController.GetLayoutByType)
 router.post('/createMentor',isAuthenticated,AdminMiddlewares,MentorController.CreateMentor)
+router.put('/UpdateMentor/:mentorId',isAuthenticated,AdminMiddlewares,MentorController.UpdateMentor)
 //public all routes
 router.post('/create-paymentIntent',PaymentController.PaymentIntent)
 router.get('/GetPubCourses',PublicController.PublicAllCourse)

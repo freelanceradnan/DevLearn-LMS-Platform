@@ -13,14 +13,18 @@ export const GetMentorService=async()=>{
 const data=await Mentors.find({}).lean()
 return {success:true,data}
 }
-export const UpdateMentorService=async(mentorId,data)=>{
-const isExists=await Mentors.findById(mentorId)
-if(!isExists){
-throw new Error("Mentors not found!")
+export const UpdateMentorService=async(mentorId,payload)=>{
+const isExists = await Mentors.findById(mentorId);
+if (!isExists) {
+  throw new Error("Mentor not found!");
 }
-const updatedMentors=await Mentors.findByIdAndUpdate(mentorId,{
-    $set:{data}
-})
+
+const updatedMentors = await Mentors.findByIdAndUpdate(
+  mentorId,
+  { $set: payload }, 
+  { new: true }   
+);
+
 if(!updatedMentors){
     throw new Error("Updated Mentors Failed")
 }

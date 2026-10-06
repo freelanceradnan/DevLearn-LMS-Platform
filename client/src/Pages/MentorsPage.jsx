@@ -11,7 +11,7 @@ const MentorPage = () => {
     const [filteredMentors, setFilteredMentors] = useState([]);
     const [activeBtn, setActiveBtn] = useState("All");
     const [categories, setCategories] = useState([]);
-    console.log(filteredMentors)
+
     useEffect(() => {
         if (allCategory) {
             setCategories(allCategory[0]?.categories || []);
@@ -102,7 +102,7 @@ const MentorPage = () => {
                                 onClick={() => setActiveBtn("All")} 
                                 className='bg-[#21CE3F] text-white font-medium px-5 py-2 rounded-lg text-sm shadow-sm hover:bg-green-600 transition-colors'
                             >
-                                View All Courses
+                                View All Mentor
                             </button>
                         </div>
                     )}

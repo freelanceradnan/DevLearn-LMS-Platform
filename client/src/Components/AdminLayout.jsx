@@ -9,6 +9,7 @@ import {
   Image,
   LayoutDashboard,
   Menu,
+  PenLine,
   PieChart,
   PlusSquare,
   TrendingUp,
@@ -42,6 +43,7 @@ export default function AdminLayout() {
         { label: "FAQ", icon: HelpCircle,link:"/faqSection"},
         { label: "Categories", icon: Grid,link:"/categoriesSection"},
         { label: "Mentors", icon: UserRoundPen,link:"/mentors"},
+        { label: "Policy", icon: PenLine,link:"/policy"},
       ],
     },
     {

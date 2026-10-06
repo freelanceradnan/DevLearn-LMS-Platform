@@ -55,7 +55,7 @@ const Navbar = () => {
   refetch: refetchNotifications,
 } = useGetUsersNotificationQuery();
     const location=useLocation()
-  
+
   const [bellOn, setBellOn] = useState(false);
   const cart = useSelector((state) => state.AddToCart);
   const wishlist = useSelector((state) => state.AddToWish);
@@ -171,7 +171,7 @@ useEffect(() => {
     }
   };
   const hasUnread = Notifications.some((item) => item.status === 'unread');
-
+  
   return (
     <>
       {/* Primary Navigation Bar */}
@@ -234,25 +234,41 @@ useEffect(() => {
 
           {/* Right Desktop Nav Links & User Actions */}
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-[#3f3939]">
-            <Link to="/" className="hover:text-purple-700 transition-colors">
-              Home
-            </Link>
-            <Link
-              to="/courses"
-              className="hover:text-purple-700 transition-colors"
-            >
-              Courses
-            </Link>
-            <Link to="/mentors" className="hover:text-purple-700 transition-colors">
-              Mentors
-            </Link>
-             <Link to="/faq" className="hover:text-purple-700 transition-colors">
-              Reviews
-            </Link>
-           <Link to="/faq" className="hover:text-purple-700 transition-colors">
-              Policy
-            </Link>
-          </div>
+  <Link 
+    to="/" 
+    className={`pb-1 transition-colors ${location.pathname === "/" ? "text-purple-700 font-bold border-b-2 border-purple-700" : "hover:text-purple-700 text-gray-700"}`}
+  >
+    Home
+  </Link>
+
+  <Link 
+    to="/courses" 
+    className={`pb-1 transition-colors ${location.pathname === "/courses" ? "text-purple-700 font-bold border-b-2 border-purple-700" : "hover:text-purple-700 text-gray-700"}`}
+  >
+    Courses
+  </Link>
+
+  <Link 
+    to="/mentors" 
+    className={`pb-1 transition-colors ${location.pathname === "/mentors" ? "text-purple-700 font-bold border-b-2 border-purple-700" : "hover:text-purple-700 text-gray-700"}`}
+  >
+    Mentors
+  </Link>
+
+  <Link 
+    to="/faq" 
+    className={`pb-1 transition-colors ${location.pathname === "/faq" ? "text-purple-700 font-bold border-b-2 border-purple-700" : "hover:text-purple-700 text-gray-700"}`}
+  >
+    Reviews
+  </Link>
+
+  <Link 
+    to="/policy" 
+    className={`pb-1 transition-colors ${location.pathname === "/policy" ? "text-purple-700 font-bold border-b-2 border-purple-700" : "hover:text-purple-700 text-gray-700"}`}
+  >
+    Policy
+  </Link>
+</div>
 
           <div
             className="hidden md:flex items-center gap-3 relative"

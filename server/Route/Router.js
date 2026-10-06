@@ -15,6 +15,7 @@ import * as CategoryController from '../App/Controller/CategoryController.js'
 import * as PublicController from '../App/Controller/PublicAllCourse.js'
 import * as PaymentController from '../App/Controller/PaymentController.js'
 import *as MentorController from '../App/Controller/MentorsController.js'
+import *as PolicyController from '../App/Controller/PolicyController.js'
 import multer from 'multer';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -55,7 +56,9 @@ router.post('/upload',upload.single('image'),UploadController.uploader)
 router.put('/update-hero/:id',isAuthenticated,AdminMiddlewares,HeroController.UpdateHero)
 router.get('/hero-info',HeroController.GetHeroInfo)
 router.post('/update-faq',isAuthenticated,AdminMiddlewares,FaqController.UpdateFaq)
+router.post('/update-policy',isAuthenticated,AdminMiddlewares,PolicyController.UpdatePolicy)
 router.get('/get-faq',FaqController.GetFaq)
+router.get('/get-policy',PolicyController.GetAllPolicy)
 router.put('/updateCategory',isAuthenticated,AdminMiddlewares,CategoryController.updateCategory)
 router.get('/getAllCategory',CategoryController.getAllCategories)
 router.post('/create-course',isAuthenticated,AdminMiddlewares,CourseController.CreateCourse)

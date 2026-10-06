@@ -37,6 +37,8 @@ import AddMentor from './Components/AdminDeshboard/Mentors/AddMentor';
 import SmoothScroll from "./Components/SmoothScrool";
 import CoursesPage from "./Pages/CoursesPage";
 import MentorPage from "./Pages/MentorsPage";
+import PolicyPage from "./Pages/PolicyPage";
+import Policy from "./Components/AdminDeshboard/Policy/Policy";
 function App() {
   return (
     <SmoothScroll>
@@ -50,6 +52,7 @@ function App() {
          </Route>
             <Route path="/courses" element={<CoursesPage/>}/>
             <Route path="/mentors" element={<MentorPage/>}/>
+            <Route path="/policy" element={<PolicyPage/>}/>
         <Route path="/profile" element={<Profile />}>
      
           <Route path="info" index element={<ProfileInfo />} />
@@ -79,6 +82,7 @@ function App() {
           <Route path="faqSection" element={<FaqSection />} />
           <Route path="Manageteam" element={<ManageTeam />} />
           <Route path="categoriesSection" element={<Categories />} />
+          <Route path="policy" element={<Policy />} />
           <Route path="mentors" element={<Mentors />} />
           <Route path="mentors/addMentor" element={<AddMentor />} />
           <Route path="mentors/:id" element={<AddMentor />} />

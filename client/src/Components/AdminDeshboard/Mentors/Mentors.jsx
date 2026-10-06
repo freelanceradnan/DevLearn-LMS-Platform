@@ -38,7 +38,7 @@ const Mentors = () => {
           <div className="flex items-center gap-2">
             <h2 className="text-2xl font-bold tracking-tight text-slate-900">
               Mentors
-            </h2>
+            </h2> 
             <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">
               {AllMentors?.data?.length || 0} Total
             </span>

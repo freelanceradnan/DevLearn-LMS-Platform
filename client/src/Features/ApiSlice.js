@@ -29,7 +29,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
         if (refreshResult?.data) {
           result = await BaseQuery(args, api, extraOptions);
         } else {
-          handleLogout();
+          // handleLogout();
         }
       } finally {
         release();

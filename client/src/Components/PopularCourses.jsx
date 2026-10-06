@@ -3,10 +3,11 @@ import { assets } from '../assets/assets';
 import CourseCard from './CourseCart';
 import { ArrowRight } from 'lucide-react';
 import { useAllCoursesQuery, useGetPubCoursesQuery } from '../Features/ApiSlice';
+import { useNavigate } from 'react-router-dom';
 
 const PopularCourses = () => {
   const {data}=useGetPubCoursesQuery()
-
+  const navigate=useNavigate( )
   const [courses,setCourses]=useState([])
   useEffect(()=>{
   const rawData=Array.isArray(data)?data:[]
@@ -65,7 +66,7 @@ const PopularCourses = () => {
         ))}
       </div>
    <div className='flex items-center justify-center'>
-     <button className='border rounded-full flex py-1 px-3 text-[15px] items-center justify-center gap-1 hover:bg-[#171717] hover:text-white font-semibold'>View All Courses <ArrowRight size={16}/></button>
+     <button className='border rounded-full flex py-1 px-3 text-[15px] items-center justify-center gap-1 hover:bg-[#171717] hover:text-white font-semibold' onClick={()=>navigate('/courses')}>View All Courses <ArrowRight size={16}/></button>
    </div>
         </div>
     );

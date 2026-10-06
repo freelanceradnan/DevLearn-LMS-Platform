@@ -35,6 +35,7 @@ import { UsersNotification } from "./Components/UsersNotification";
 import Mentors from "./Components/AdminDeshboard/Mentors/Mentors";
 import AddMentor from './Components/AdminDeshboard/Mentors/AddMentor';
 import SmoothScroll from "./Components/SmoothScrool";
+import CoursesPage from "./Pages/CoursesPage";
 function App() {
   return (
     <SmoothScroll>
@@ -46,8 +47,9 @@ function App() {
          <Route path="" element={<UserProtected/>}>
           <Route path="/PaymentCheckout" element={<PaymentCheckout />} />
          </Route>
+            <Route path="/courses" element={<CoursesPage/>}/>
         <Route path="/profile" element={<Profile />}>
-        
+     
           <Route path="info" index element={<ProfileInfo />} />
           <Route path="security" element={<UserSecurity />} />
           

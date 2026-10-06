@@ -1,51 +1,53 @@
 import React, { useEffect, useState } from 'react';
-import { useGetAllCategoryQuery, useGetPubCoursesQuery } from '../Features/ApiSlice';
+import { useGetAllCategoryQuery, useGetMentorQuery, useGetPubCoursesQuery } from '../Features/ApiSlice';
 import CourseCard from '../Components/CourseCart';
 import { assets } from '../assets/assets';
+import MentorsCart from '../Components/MentorsCart';
 
-const CoursesPage = () => {
+const MentorPage = () => {
     const { data: allCategory, isLoading: categoryLoading } = useGetAllCategoryQuery();
-    const { data: allCourses, isLoading: coursesLoading } = useGetPubCoursesQuery();
-    
-    const [filteredCourses, setFilteredCourses] = useState([]);
+    const { data: allMentors, isLoading: coursesLoading } = useGetMentorQuery();
+    console.log(allMentors)
+    const [filteredMentors, setFilteredMentors] = useState([]);
     const [activeBtn, setActiveBtn] = useState("All");
     const [categories, setCategories] = useState([]);
-
+    console.log(filteredMentors)
     useEffect(() => {
         if (allCategory) {
             setCategories(allCategory[0]?.categories || []);
         }
     }, [allCategory]);
 
-    useEffect(() => {
-        if (allCourses?.length > 0) {
-            const filteredData = (!activeBtn || activeBtn === "All")
-                ? allCourses 
-                : allCourses.filter((item) => {
-                    const courseCatId = typeof item.categoryId === 'object' 
-                        ? item.categoryId?._id 
-                        : item.categoryId;
-                        
-                    return courseCatId === activeBtn;
-                });
-
-            setFilteredCourses(filteredData);
-        } else {
-            setFilteredCourses([]);
-        }
-    }, [allCourses, activeBtn]); 
+   useEffect(() => {
+           if (allMentors?.data?.length > 0) {
+               const filteredData = (!activeBtn || activeBtn === "All")
+                   ? allMentors.data
+                   : allMentors.data.filter((item) => {
+                
+                       const courseCatId = typeof item.category === 'object' 
+                           ? item.category
+                           : item.category;
+                           
+                       return courseCatId === activeBtn;
+                   });
+   
+               setFilteredMentors(filteredData);
+           } else {
+               setFilteredMentors([]);
+           }
+       }, [allMentors, activeBtn]); 
 
     return (
-        <div className='w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white min-h-screen'>
+        <div className='w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-white min-h-screen'>
             
             {/* Header Section */}
-            <div className='text-center max-w-2xl mx-auto mb-10'>
+           <div className='text-center max-w-2xl mx-auto mb-10'>
                
                 <h1 className=' text-[31px] font-bold text-gray-900 mt-2'>
-                    All Available Courses
+                    All Available Mentors
                 </h1>
                 <p className='text-gray-500 mt-2 text-[16px]'>
-                    Discover expert-led live courses designed to accelerate your career.
+                    Discover mentors with best courses for your career.
                 </p>
             </div>
 
@@ -59,7 +61,7 @@ const CoursesPage = () => {
                     }`}
                     onClick={() => setActiveBtn("All")}
                 >
-                    All Courses
+                    All Mentors
                 </button>
 
                 {categories?.map((item) => (
@@ -87,9 +89,9 @@ const CoursesPage = () => {
             {/* Empty  */}
             {!categoryLoading && !coursesLoading && (
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
-                    {filteredCourses.length > 0 ? (
-                        filteredCourses.map((cart, index) => (
-                            <CourseCard key={cart._id} cart={cart} assets={assets} index={index}/>
+                    {filteredMentors.length > 0 ? (
+                        filteredMentors.map((item, index) => (
+                           <MentorsCart item={item} index={index}/>
                         ))
                     ) : (
                         <div className='col-span-full py-16 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200 flex flex-col items-center justify-center gap-4'>
@@ -110,4 +112,4 @@ const CoursesPage = () => {
     );
 };
 
-export default CoursesPage;
+export default MentorPage;

@@ -109,9 +109,7 @@ useEffect(() => {
 
   refetchNotifications();
 }, [location.pathname, user?._id,bellOn]);
-// ==============================
-// 2. Listen for new notification
-// ==============================
+
 useEffect(() => {
   if (!user?._id) return;
 
@@ -137,9 +135,6 @@ useEffect(() => {
 }, [user?._id]);
 
 
-// ==============================
-// 3. Load notifications from API
-// ==============================
 useEffect(() => {
   if (!AllNotifications?.getMyNotifications) return;
 
@@ -248,8 +243,14 @@ useEffect(() => {
             >
               Courses
             </Link>
-            <Link to="/faq" className="hover:text-purple-700 transition-colors">
-              FAQ
+            <Link to="/mentors" className="hover:text-purple-700 transition-colors">
+              Mentors
+            </Link>
+             <Link to="/faq" className="hover:text-purple-700 transition-colors">
+              Reviews
+            </Link>
+           <Link to="/faq" className="hover:text-purple-700 transition-colors">
+              Policy
             </Link>
           </div>
 

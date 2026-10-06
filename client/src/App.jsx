@@ -36,6 +36,7 @@ import Mentors from "./Components/AdminDeshboard/Mentors/Mentors";
 import AddMentor from './Components/AdminDeshboard/Mentors/AddMentor';
 import SmoothScroll from "./Components/SmoothScrool";
 import CoursesPage from "./Pages/CoursesPage";
+import MentorPage from "./Pages/MentorsPage";
 function App() {
   return (
     <SmoothScroll>
@@ -48,6 +49,7 @@ function App() {
           <Route path="/PaymentCheckout" element={<PaymentCheckout />} />
          </Route>
             <Route path="/courses" element={<CoursesPage/>}/>
+            <Route path="/mentors" element={<MentorPage/>}/>
         <Route path="/profile" element={<Profile />}>
      
           <Route path="info" index element={<ProfileInfo />} />

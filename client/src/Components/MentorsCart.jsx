@@ -3,7 +3,14 @@ import { motion } from 'motion/react';
 import React from 'react';
 import { FaFacebook, FaGithub, FaLinkedin } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { useGetAllCategoryQuery } from '../Features/ApiSlice';
 const MentorsCart = ({item,index}) => {
+  const {data:allCategory}=useGetAllCategoryQuery()
+
+const mentorName = allCategory?.[0]?.categories.find((c) => c._id === item.category)?.name || "Not Found";
+
+  
+
     return (
          <motion.Link
             initial={{ y: 40, opacity: 0 }} 
@@ -35,6 +42,8 @@ const MentorsCart = ({item,index}) => {
       {/* Name & Subheading */}
       <div className='text-center mt-2'>
         <h1 className='text-base font-semibold text-gray-900'>{item.name}</h1>
+       
+        <p className='text-xs text-gray-500 font-medium'>{mentorName}</p>
         <p className='text-xs text-gray-500 font-medium'>{item.sub}</p>
       </div>
 

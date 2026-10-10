@@ -5,14 +5,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AddToCart } from '../Features/CartSlice';
 import { AddToWishList } from '../Features/WishSlice';
 import { motion } from 'motion/react';
+import { useGetAllCategoryQuery, useGetMentorQuery } from '../Features/ApiSlice';
 
 export default function CourseCard({ cart,index}) {
   const cartItems=useSelector((state)=>state.AddToCart)
+  const {data:AllMentors}=useGetMentorQuery()
+
   const wistItems=useSelector((state)=>state.AddToWish)
   const dispatch=useDispatch()
   const IsAddedToCart=cartItems.some((item)=>item._id===cart._id)  
   const IsAddedToWishList=wistItems.some((item)=>item._id===cart._id)  
-
+ const mentorName = AllMentors?.data?.find((item)=>item._id===cart.owner)?.name||"NotFound"
+ 
   const {
     thumbnail,
     name = 'Everything You Need to Know About Business',
@@ -90,7 +94,7 @@ export default function CourseCard({ cart,index}) {
       <div className="flex items-center justify-between pt-3 border-t border-gray-100 mt-auto">
         <div className="flex items-center gap-2">
           <span className="text-xs font-medium text-gray-500">
-            Mentor: <strong className="text-gray-700">{owner}</strong>
+            Mentor: <strong className="text-gray-700">{mentorName}</strong>
           </span>
         </div>
 

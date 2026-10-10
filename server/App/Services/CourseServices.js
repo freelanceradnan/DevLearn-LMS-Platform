@@ -236,6 +236,7 @@ export async function AddMyReview(user, courseId, review, rating) {
     user,
     rating: rating,
     comment: review,
+    courseId:courseId
   };
   fullcourse?.reviews?.push(reviewData);
   const reviews = fullcourse?.reviews;

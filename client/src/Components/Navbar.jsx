@@ -149,7 +149,7 @@ useEffect(() => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/courses?search=${encodeURIComponent(searchQuery.trim())}`);
+      navigate(`search?q=${searchQuery.trim()}`);
     }
   };
   //checking isadmin login
@@ -200,7 +200,7 @@ useEffect(() => {
             {/* Action Icons (Search & Cart) */}
             <div className="flex items-center gap-2 md:hidden">
               
-              <Search className="w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-900" />
+              {/* <Search className="w-5 h-5 text-gray-600 cursor-pointer hover:text-gray-900" /> */}
               <button
                 className="relative inline-block"
                 onClick={() => navigate("/cart")}
@@ -220,7 +220,7 @@ useEffect(() => {
           <div className="flex-1 max-w-md mx-2 hidden md:block">
             <form onSubmit={handleSearchSubmit} className="relative w-full">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <Search className="h-4 w-4" />
+                {/* <Search className="h-4 w-4" /> */}
               </div>
               <input
                 type="text"
@@ -255,12 +255,12 @@ useEffect(() => {
     Mentors
   </Link>
 
-  <Link 
-    to="/faq" 
+  {/* <Link 
+    to="/reviews" 
     className={`pb-1 transition-colors ${location.pathname === "/faq" ? "text-purple-700 font-bold border-b-2 border-purple-700" : "hover:text-purple-700 text-gray-700"}`}
   >
     Reviews
-  </Link>
+  </Link> */}
 
   <Link 
     to="/policy" 

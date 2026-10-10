@@ -13,6 +13,7 @@ import React, { useState, useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import {
 
+  useGetMentorQuery,
   useGetPubCourseDetailsQuery,
   useGetUserInfoQuery,
 } from "../Features/ApiSlice";
@@ -32,7 +33,7 @@ import CoursePlayer from "../Components/AdminDeshboard/CreateCourse/CoursePlayer
 const CourseDetails = () => {
   const navigate = useNavigate();
  const {data:UsersCoursesId}=useGetUserInfoQuery()
-
+ const {data:allMentors}=useGetMentorQuery()
   const { id } = useParams();
   const [courseDetails, setCourseDetails] = useState({});
   const [GroupOpen, setGroupOpen] = useState("");
@@ -90,6 +91,7 @@ const CourseDetails = () => {
 const NavigatePayment=()=>{
  navigate('/paymentcheckout', { state: courseDetails });
 }
+ const mentorName = allMentors?.data?.find((item)=>item._id===courseDetails?.owner)?.name||"NotFound"
   return (
     <div className="bg-slate-50 min-h-screen pb-16">
       {/* Header */}
@@ -116,7 +118,7 @@ const NavigatePayment=()=>{
             </span>
             <span>
               Created by{" "}
-              <strong className="text-white">{courseDetails?.owner}</strong>
+              <strong className="text-white">{mentorName}</strong>
             </span>
           </div>
         </div>

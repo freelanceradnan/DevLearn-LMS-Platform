@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
 const reviewSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "Users", required: true },
-
   rating: { type: Number, default: "0", min: 0, max: 5 },
   comment: { type: String },
+  courseId:{type:String}
+},{
+  timestamps:true
 });
 reviewSchema.add({
   commentReplies: [reviewSchema],

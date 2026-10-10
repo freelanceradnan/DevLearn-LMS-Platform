@@ -46,7 +46,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["users", "course", "orders", "faq", "category",'questions','reviews','Notifications','mentor',['policy']],
+  tagTypes: ["users", "course", "orders", "faq", "category",'questions','reviews','Notifications','mentor','policy'],
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (userData) => ({
@@ -393,6 +393,22 @@ GetAllPolicy:builder.query({
   }),
   providesTags:['policy'],
   transformResponse:(response)=>response?.data
+}),
+GetAllReviews:builder.query({
+  query:()=>({
+  url:'/getallReviews',
+  method:'GET'
+  }),
+  transformResponse:(response)=>response.data,
+  providesTags:['reviews']
+}),
+AddReplyReviews:builder.mutation({
+  query:({comment,courseId,reviewId})=>({
+   url:'/add-review-reply',
+   method:'POST',
+   body:{comment,courseId,reviewId}
+  }),
+  invalidatesTags:['reviews']
 })
   }),
 });
@@ -443,5 +459,7 @@ export const {
   useDeleteMentorMutation,
   useUpdateMentorMutation,
   useUpdatePolicyMutation,
-  useGetAllPolicyQuery
+  useGetAllPolicyQuery,
+  useGetAllReviewsQuery,
+  useAddReplyReviewsMutation
 } = ApiSlice;

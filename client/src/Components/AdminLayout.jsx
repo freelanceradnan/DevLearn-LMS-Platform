@@ -9,9 +9,11 @@ import {
   Image,
   LayoutDashboard,
   Menu,
+  MessageSquare,
   PenLine,
   PieChart,
   PlusSquare,
+  StarCheck,
   TrendingUp,
   UserCheck,
   UserRoundPen,
@@ -44,6 +46,14 @@ export default function AdminLayout() {
         { label: "Categories", icon: Grid,link:"/categoriesSection"},
         { label: "Mentors", icon: UserRoundPen,link:"/mentors"},
         { label: "Policy", icon: PenLine,link:"/policy"},
+      ],
+    },
+    {
+      group: "Replies",
+      items: [
+        { label: "Course Reviews", icon: StarCheck, link:"/courseReviews"},
+        { label: "Course Comments", icon: MessageSquare,link:"/courseComments"}
+        
       ],
     },
     {

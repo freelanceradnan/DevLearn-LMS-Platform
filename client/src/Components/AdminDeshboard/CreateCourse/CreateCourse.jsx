@@ -69,6 +69,7 @@ const CreateCourse = ({ state, setEditMode, editData,editId}) => {
       tags: editData?.description,
       level: editData?.level,
       demoUrl: editData?.demoUrl,
+      owner:editData?.owner
     });
     setImageFile(editData.thumbnail.url)
     setBenefits(editData?.benefits);

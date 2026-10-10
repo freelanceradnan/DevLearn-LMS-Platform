@@ -1,18 +1,23 @@
 import { ArrowRight } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useGetAllCategoryQuery } from "../../../Features/ApiSlice";
+import { useGetAllCategoryQuery, useGetMentorQuery } from "../../../Features/ApiSlice";
 
 const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImageFile,state}) => {
     const {data}=useGetAllCategoryQuery()
     const [CategoryData,setCategoryData]=useState([])
-    
+    const {data:AllMentors}=useGetMentorQuery()
+   const [Mentors,SetMentors]=useState([])
+
     useEffect(()=>{
    if (Array.isArray(data) && data.length > 0) {
     const categories = data[0]?.categories || [];
     setCategoryData(categories);
   }
-    },[data])
+  if(Array.isArray(AllMentors?.data) &&data?.length>0){
+SetMentors(AllMentors.data)
+  }
+    },[data,AllMentors])
 
  const handleChange = (e) => {
   const { name, value } = e.target;
@@ -38,6 +43,7 @@ const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImag
       formData.estimatedPrice,
       formData.tags,
       formData.categoryId,
+      formData.owner,
       formData.level,
       formData.demoUrl,
       formData.image,
@@ -220,15 +226,18 @@ const CourseInfo = ({ active, setActive, formData, setFormData,imageFile,setImag
             >
               Course Owner
             </label>
-              <input
-              type="text"
+             <select
               id="owner"
               name="owner"
               value={formData.owner}
               onChange={handleChange}
-              placeholder="Enter Course Owner Name"
               className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            >
+              <option >Select A Option</option>
+             {Mentors.map((item,index)=>(
+              <option value={item._id} key={index}>{item.name}</option>
+             ))}
+            </select>
           </div>
 
           

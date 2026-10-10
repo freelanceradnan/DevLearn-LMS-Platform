@@ -39,6 +39,9 @@ import CoursesPage from "./Pages/CoursesPage";
 import MentorPage from "./Pages/MentorsPage";
 import PolicyPage from "./Pages/PolicyPage";
 import Policy from "./Components/AdminDeshboard/Policy/Policy";
+import ReviewsPage from "./Pages/ReviewsPage";
+import SearchPage from "./Pages/SearchPage";
+import ReviewSection from "./Components/AdminDeshboard/ReviewSection/ReviewSection";
 function App() {
   return (
     <SmoothScroll>
@@ -51,6 +54,8 @@ function App() {
           <Route path="/PaymentCheckout" element={<PaymentCheckout />} />
          </Route>
             <Route path="/courses" element={<CoursesPage/>}/>
+            <Route path="/reviews" element={<ReviewsPage/>}/>
+            <Route path="/search" element={<SearchPage/>}/>
             <Route path="/mentors" element={<MentorPage/>}/>
             <Route path="/policy" element={<PolicyPage/>}/>
         <Route path="/profile" element={<Profile />}>
@@ -93,6 +98,8 @@ function App() {
           <Route path="dashboard" element={<CreateCourse />} />
           <Route path="Invoices" element={<Invoices />} />
           <Route path="heroSection" element={<Hero />} />
+          <Route path="courseReviews" element={<ReviewSection />} />
+          <Route path="courseComments" element={<ReviewSection />} />
         </Route>
       </Route>
       {/* errorpage */}

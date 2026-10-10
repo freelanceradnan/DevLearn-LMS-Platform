@@ -4,7 +4,7 @@ import course from '../Models/Course.js';
 import ErrorHandler from './../Utils/ErrorHandler.js';
 export const GetAllReviews=CatchAsyncError(async(req,res,next)=>{
     try {
-       const getAllCourses = await course.find({}).sort({ createdAt: -1 });
+        const getAllCourses=await course.find({}).sort({createdAt:-1})
        const reviews = getAllCourses?.flatMap((item) => item?.reviews || []) || [];
        if(!reviews){
        return next(new ErrorHandler("Failed to get course reviews"))

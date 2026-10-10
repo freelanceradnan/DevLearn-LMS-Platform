@@ -42,6 +42,7 @@ import Policy from "./Components/AdminDeshboard/Policy/Policy";
 import ReviewsPage from "./Pages/ReviewsPage";
 import SearchPage from "./Pages/SearchPage";
 import ReviewSection from "./Components/AdminDeshboard/ReviewSection/ReviewSection";
+import CommentSection from "./Components/AdminDeshboard/CommentSection/CommentSection";
 function App() {
   return (
     <SmoothScroll>
@@ -99,7 +100,7 @@ function App() {
           <Route path="Invoices" element={<Invoices />} />
           <Route path="heroSection" element={<Hero />} />
           <Route path="courseReviews" element={<ReviewSection />} />
-          <Route path="courseComments" element={<ReviewSection />} />
+          <Route path="courseComments" element={<CommentSection />} />
         </Route>
       </Route>
       {/* errorpage */}

@@ -51,7 +51,8 @@ const UserReview = ({ courseId, courseData }) => {
 
   return (
     <>
-      <form onSubmit={AddReviewHandler} className="space-y-4 p-4 border-[#FCFCFC] rounded-xl bg-white shadow-sm">
+      {courseData[0]?.reviews?.length===0 &&(
+        <form onSubmit={AddReviewHandler} className="space-y-4 p-4 border-[#FCFCFC] rounded-xl bg-white shadow-sm">
         <div className="flex gap-2 items-center">
           <div className="border h-10 w-10 rounded-full flex items-center justify-center bg-gray-100 font-bold">
             {user?.user?.name ? user.user.name.charAt(0).toUpperCase() : "A"}
@@ -98,6 +99,7 @@ const UserReview = ({ courseId, courseData }) => {
           </div>
         </div>
       </form>
+      )}
 
       {/* Display reviews */}
       <div className="space-y-4 mt-6">

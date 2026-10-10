@@ -17,6 +17,7 @@ import * as PaymentController from '../App/Controller/PaymentController.js'
 import *as MentorController from '../App/Controller/MentorsController.js'
 import *as PolicyController from '../App/Controller/PolicyController.js'
 import *as ReviewController from '../App/Controller/ReviewsController.js'
+import *as CommentController from '../App/Controller/CommentsController.js'
 import multer from 'multer';
 const storage = multer.memoryStorage();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -89,6 +90,7 @@ router.get('/layout',isAuthenticated,AdminMiddlewares,LayoutController.GetLayout
 router.post('/createMentor',isAuthenticated,AdminMiddlewares,MentorController.CreateMentor)
 router.put('/UpdateMentor/:mentorId',isAuthenticated,AdminMiddlewares,MentorController.UpdateMentor)
 router.get('/getallReviews', isAuthenticated, AdminMiddlewares, ReviewController.GetAllReviews)
+router.get('/getcomments',isAuthenticated,AdminMiddlewares,CommentController.GetAllComments)
 //public all routes
 router.post('/create-paymentIntent',PaymentController.PaymentIntent)
 router.get('/GetPubCourses',PublicController.PublicAllCourse)

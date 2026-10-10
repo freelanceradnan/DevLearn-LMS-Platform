@@ -46,7 +46,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["users", "course", "orders", "faq", "category",'questions','reviews','Notifications','mentor','policy'],
+  tagTypes: ["users", "course", "orders", "faq", "category",'questions','reviews','Notifications','mentor','policy','comments'],
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (userData) => ({
@@ -409,9 +409,26 @@ AddReplyReviews:builder.mutation({
    body:{comment,courseId,reviewId}
   }),
   invalidatesTags:['reviews']
+}),
+GetAllComments:builder.query({
+  query:()=>({
+  url:'/getcomments',
+  method:'GET'
+  }),
+  transformResponse:(response)=>response.data,
+  providesTags:['comments']
+}),
+ReplyComment:builder.mutation({
+  query:({contentId, reply, courseId, questionId})=>({
+    url:`/add-replies`,
+    method:'POST',
+    body:{contentId, reply, courseId, questionId}
+  }),
+  invalidatesTags:['comments']
 })
   }),
 });
+// comment,courseId,reviewId,user
 export const {
   useRegisterUserMutation,
   useActivateUserMutation,
@@ -461,5 +478,7 @@ export const {
   useUpdatePolicyMutation,
   useGetAllPolicyQuery,
   useGetAllReviewsQuery,
-  useAddReplyReviewsMutation
+  useAddReplyReviewsMutation,
+  useGetAllCommentsQuery,
+  useReplyCommentMutation
 } = ApiSlice;

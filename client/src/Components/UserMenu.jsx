@@ -9,8 +9,7 @@ const UserMenu = ({logout}) => {
     { name: "My Learning", to: "/my-courses",icons:<BookOpen size={16}/>},
     { name: "My Cart", to: "/cart",icons:<ShoppingCart size={16}/>},
     { name: "My WishList", to: "/wishlist",icons:<Heart size={16}/>},
-    { name: "Purchase History", to: "/purchasehistory",icons:<FileClock size={16}/>},
-    { name: "Help and Support", to: "/support",icons:<Headset size={16}/>},
+    { name: "Purchase History", to: "/purchasehistory",icons:<FileClock size={16}/>}
   ];
   return (
     <div className="flex flex-col gap-2.5 items-start">

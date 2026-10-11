@@ -32,7 +32,10 @@ if (!fullCourse) {
 const data = {
     courseId: fullCourse._id,
     user_id: user._id,
-    paymentInfo: payment_info 
+    paymentInfo: payment_info,
+    email:user.email,
+    price:fullCourse.price,
+    name:user.name
   };
 
 const createOrder = await Orders.create(data);

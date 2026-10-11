@@ -27,6 +27,13 @@ import AdminNavbar from "./AdminNavbar";
 export default function AdminLayout() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [OpenLogoutModel,setOpenLogoutModel]=useState(false)
+  const [collapsed, setCollapsed] = useState(() => {
+  try {
+    return localStorage.getItem("admin-sidebar-collapsed") === "true";
+  } catch {
+    return false;
+  }
+});
   const menuGroups = [
     {
       group: "Overview",
@@ -71,7 +78,7 @@ export default function AdminLayout() {
   ];
   return (
     <div>
-      <div className="min-h-screen bg-[#FFFFFF] md:flex">
+      <div className="min-h-screen bg-[#FFFFFF] md:flex ">
         <div className="">
           <Sidebar
             showMobileMenu={showMobileMenu}
@@ -79,13 +86,19 @@ export default function AdminLayout() {
             menuGroups={menuGroups}
             OpenLogoutModel={OpenLogoutModel}
             setOpenLogoutModel={setOpenLogoutModel}
+             collapsed={collapsed}
+  setCollapsed={setCollapsed}
           />
         </div>
 
-        <div className="flex-1 md:pl-64 flex flex-col min-h-screen">
+       <div
+  className={`flex min-h-screen flex-1 flex-col transition-[padding] duration-200 ease-out ${
+    collapsed ? "md:pl-[72px]" : "md:pl-64"
+  }`}
+>
          <AdminNavbar setShowMobileMenu={setShowMobileMenu} showMobileMenu={showMobileMenu}/>
            <main className="flex-1 p-6">
-            <Outlet />
+            <Outlet />    
           </main>
           {OpenLogoutModel && <LogoutModal OpenLogoutModel={OpenLogoutModel} setOpenLogoutModel={setOpenLogoutModel}/>}
           

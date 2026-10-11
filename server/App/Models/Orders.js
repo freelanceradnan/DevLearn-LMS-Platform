@@ -7,6 +7,9 @@ const orderSchema = mongoose.Schema({
     required: true,
   },
   payment_info: { type: Object },
+  email:{type:String,required:true},
+  price:{type:Number,required:true},
+  name:{type:String,required:true}
 },{timestamps:true});
 const Orders = mongoose.model("Orders", orderSchema);
 export default Orders;

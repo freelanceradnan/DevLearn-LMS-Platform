@@ -43,6 +43,7 @@ import ReviewsPage from "./Pages/ReviewsPage";
 import SearchPage from "./Pages/SearchPage";
 import ReviewSection from "./Components/AdminDeshboard/ReviewSection/ReviewSection";
 import CommentSection from "./Components/AdminDeshboard/CommentSection/CommentSection";
+import InvoicePage from "./Components/InvoicePage";
 function App() {
   return (
     <SmoothScroll>
@@ -73,6 +74,7 @@ function App() {
         <Route path="/cart" element={<CartPage/>}/>
         <Route path="/wishlist" element={<WishList/>}/>
         <Route path="/purchasehistory" element={<Purchasehistory/>}/>
+        <Route path="/invoice" element={<InvoicePage/>}/>
        
       </Route>
       <Route element={<UserProtected/>}>
@@ -81,7 +83,7 @@ function App() {
       {/* adminroutes */}
       <Route element={<AdminProtected />}>
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Dashboard />} />
+          <Route index element={<Overview />} />
           <Route path="allcourses" element={<AllCourses />} />
           <Route path="dashboard" element={<Overview />} />
           <Route path="createCourse" element={<CreateCourse />} />

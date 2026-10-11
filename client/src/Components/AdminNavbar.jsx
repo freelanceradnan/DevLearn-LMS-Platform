@@ -1,145 +1,307 @@
-import React, { useState } from 'react';
-import { 
-  ArrowLeftFromLine, 
-  Bell, 
-  LogOut, 
-  Menu, 
-  Search, 
-  Settings, 
-  Sun, 
-  User 
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import {
+  Bell,
+  ChevronRight,
+  LogOut,
+  Menu,
+  Moon,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Search,
+  Settings,
+  Sun,
+  User,
 } from 'lucide-react';
 
-const AdminNavbar = ({ 
-  setShowMobileMenu, 
-  showMobileMenu, 
-  showDesktop, 
-  setShowDesktop 
-}) => {
-  const user = { name: "Adnan" };
-  const [showMenu, setShowMenu] = useState(false);
 
- 
+// Closes a dropdown on outside click or Escape
+const useDismiss = (open, onClose) => {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) onClose();
+    };
+    const onKey = (e) => e.key === 'Escape' && onClose();
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open, onClose]);
+  return ref;
+};
+
+const IconButton = ({ label, children, className = '', ...props }) => (
+  <button
+    type="button"
+    aria-label={label}
+    title={label}
+    className={`relative inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white ${className}`}
+    {...props}
+  >
+    {children}
+  </button>
+);
+
+const titleCase = (s) =>
+  s.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
+const NOTIFICATIONS = [
+  { id: 1, title: 'New student enrolled', time: '2 min ago', unread: true },
+  { id: 2, title: 'Course "React Basics" was updated', time: '1 hour ago', unread: true },
+  { id: 3, title: 'Weekly report is ready', time: 'Yesterday', unread: false },
+];
+
+
+const AdminNavbar = ({
+  setShowMobileMenu,
+  showMobileMenu,
+  showDesktop,
+  setShowDesktop,
+}) => {
+  const user = { name: 'Adnan', role: 'Admin', email: 'adnan@example.com' };
+  const initials = user.name.slice(0, 2).toUpperCase();
+
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [dark, setDark] = useState(
+    () => document.documentElement.classList.contains('dark')
+  );
+  const searchRef = useRef(null);
+
+  const profileRef = useDismiss(profileOpen, () => setProfileOpen(false));
+  const notifRef = useDismiss(notifOpen, () => setNotifOpen(false));
+
+  const { pathname } = useLocation();
+  const crumbs = pathname.split('/').filter(Boolean);
+  const unreadCount = NOTIFICATIONS.filter((n) => n.unread).length;
+
+  // Ctrl/Cmd + K focuses search
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle('dark', next);
+    try {
+      localStorage.setItem('theme', next ? 'dark' : 'light');
+    } catch {
+      
+    }
+  };
+
   const handleMobileMenuToggle = () => {
-    setShowMenu(false);
+    setProfileOpen(false);
+    setNotifOpen(false);
     setShowMobileMenu(!showMobileMenu);
   };
 
   return (
-    <header className="sticky top-0 z-10 flex h-14 items-center border-b border-[#EFEFEF] bg-white px-4 md:px-6">
-      {/* Mobile Hamburger Toggle */}
-      <button 
-        type="button"
+    <header className="sticky top-0 z-0 flex h-16 w-full items-center gap-2 border-b border-slate-200/80 bg-white/80 px-4 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80 md:px-6">
+      {/* Mobile menu */}
+      <IconButton
+        label="Toggle mobile menu"
         onClick={handleMobileMenuToggle}
-        className="relative z-50 mr-3 p-1 text-gray-600 hover:text-gray-900 md:hidden"
-        aria-label="Toggle mobile menu"
+        className="md:hidden"
       >
-        <Menu className="h-6 w-6" />
-      </button>
+        <Menu className="h-5 w-5" />
+      </IconButton>
 
-      {/* Main Nav Row */}
-      <div className="flex w-full items-center justify-between gap-4">
-        <div className="flex items-center gap-3 flex-1 max-w-md">
-          {setShowDesktop && (
-            <button
-              type="button"
-              onClick={() => setShowDesktop(!showDesktop)}
-              className="hidden p-1.5 text-gray-500 hover:text-gray-800 md:block"
-              aria-label="Toggle desktop sidebar"
-            >
-              <ArrowLeftFromLine className={`h-5 w-5 transition-transform ${!showDesktop ? 'rotate-180' : ''}`} />
-            </button>
+      {/* Desktop sidebar toggle */}
+      {setShowDesktop && (
+        <IconButton
+          label={showDesktop ? 'Collapse sidebar' : 'Expand sidebar'}
+          onClick={() => setShowDesktop(!showDesktop)}
+          className="hidden md:inline-flex"
+        >
+          {showDesktop ? (
+            <PanelLeftClose className="h-5 w-5" />
+          ) : (
+            <PanelLeftOpen className="h-5 w-5" />
           )}
+        </IconButton>
+      )}
 
-          <div className="relative w-full hidden md:block">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-            <input
-              type="search"
-              placeholder="Search for anything ..."
-              className="w-full rounded-lg border border-[#e0dbdb] bg-white py-1.5 pl-9 pr-4 text-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            />
-          </div>
-        </div>
+      {/* Breadcrumb */}
+     <nav aria-label="Breadcrumb" className="min-w-0 items-center text-sm flex">
+  {crumbs.length === 0 ? (
+    <span className="font-medium text-slate-900 dark:text-white" aria-current="page">
+      Overview
+    </span>
+  ) : (
+    crumbs.map((seg, i) => {
+      const isLast = i === crumbs.length - 1;
+      const to = '/' + crumbs.slice(0, i + 1).join('/');
+      return (
+        <React.Fragment key={to}>
+          {i > 0 && (
+            <ChevronRight className="mx-1.5 h-4 w-4 shrink-0 text-slate-300 dark:text-slate-600" />
+          )}
+          {isLast ? (
+            <span className="truncate font-medium text-slate-900 dark:text-white" aria-current="page">
+              {titleCase(seg)}
+            </span>
+          ) : (
+            <Link
+              to={to}
+              className="truncate text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+            >
+              {titleCase(seg)}
+            </Link>
+          )}
+        </React.Fragment>
+      );
+    })
+  )}
+</nav>
 
-        {/* Right Action Buttons */}
-        <div className="flex items-center gap-2">
-          <button 
-            type="button" 
-            aria-label="Toggle theme"
-            className="rounded-md border border-[#e0dbdb] p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-          >
-            <Sun className="h-4 w-4" />
-          </button>
-
-          <button 
-            type="button" 
-            aria-label="Notifications"
-            className="relative rounded-md border border-[#e0dbdb] p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-          >
-            <Bell className="h-4 w-4" />
-            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
-          </button>
-          
-          <button 
-            type="button" 
-            aria-label="User profile"
-            className="rounded-md border border-[#e0dbdb] p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-            onClick={() => setShowMenu(!showMenu)}
-          >
-            <User className="h-4 w-4" />
-          </button>
-        </div>
+      {/* Search */}
+      <div className="relative mx-auto hidden w-full max-w-md md:block">
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <input
+          ref={searchRef}
+          type="search"
+          placeholder="Search students, courses..."
+          className="h-9 w-full rounded-lg border border-transparent bg-slate-100 pl-9 pr-14 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:bg-slate-800 dark:text-white dark:focus:bg-slate-900"
+        />
+        <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-slate-300 bg-white px-1.5 py-0.5 text-[10px] font-medium text-slate-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-400">
+          Ctrl K
+        </kbd>
       </div>
 
-      {/* Dropdown Backdrop Layer */}
-      {showMenu && (
-        <div
-          className="fixed inset-0 z-30"
-          onClick={() => setShowMenu(false)}
+      <div className="ml-auto flex items-center gap-1 md:ml-0">
+        {/* Theme */}
+        <IconButton
+          label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+          onClick={toggleTheme}
         >
-          <div
-            className="absolute right-5 top-16 z-40 w-56 rounded-md border border-[#E0DBDB] bg-white/95 p-3 shadow-2xl backdrop-blur-sm"
-            onClick={(e) => e.stopPropagation()}
+          {dark ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+        </IconButton>
+
+        {/* Notifications */}
+        <div className="relative" ref={notifRef}>
+          <IconButton
+            label="Notifications"
+            aria-expanded={notifOpen}
+            onClick={() => {
+              setNotifOpen((v) => !v);
+              setProfileOpen(false);
+            }}
           >
-            <div className="flex items-center gap-3 border-b border-gray-200 pb-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 font-medium text-white">
-                <User size={18} />
+            <Bell className="h-[18px] w-[18px]" />
+            {unreadCount > 0 && (
+              <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold leading-none text-white ring-2 ring-white dark:ring-slate-900">
+                {unreadCount}
+              </span>
+            )}
+          </IconButton>
+
+          {notifOpen && (
+            <div className="absolute right-0 top-12 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900">
+              <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+                <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Notifications</h2>
+                <button
+                  type="button"
+                  className="text-xs font-medium text-blue-600 hover:underline dark:text-blue-400"
+                >
+                  Mark all as read
+                </button>
               </div>
-              <div className="overflow-hidden">
-                <h2 className="truncate text-sm font-semibold text-gray-800">
-                  {user?.name || 'Adnan dev'}
-                </h2>
-                <p className="truncate text-xs text-gray-400">Admin</p>
-              </div>
+              <ul className="max-h-72 divide-y divide-slate-100 overflow-y-auto dark:divide-slate-800">
+                {NOTIFICATIONS.map((n) => (
+                  <li
+                    key={n.id}
+                    className="flex gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                  >
+                    <span
+                      className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
+                        n.unread ? 'bg-blue-500' : 'bg-transparent'
+                      }`}
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate text-sm text-slate-800 dark:text-slate-100">{n.title}</p>
+                      <p className="text-xs text-slate-400">{n.time}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
-
-            <div className="mt-3 flex flex-col gap-1 text-sm text-gray-700">
-              <button 
-                type="button"
-                className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 hover:bg-gray-100 transition-colors"
-                onClick={() => setShowMenu(false)}
-              >
-                <User size={16} /> My Profile
-              </button>
-
-              <button 
-                type="button"
-                className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 hover:bg-gray-100 transition-colors"
-                onClick={() => setShowMenu(false)}
-              >
-                <Settings size={16} /> Settings
-              </button>
-
-              <button
-                type="button"
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-md bg-red-500 py-1.5 text-white hover:bg-red-600 transition-colors"
-              >
-                Logout <LogOut size={16} />
-              </button>
-            </div>
-          </div>
+          )}
         </div>
-      )}
+
+        <span className="mx-2 hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
+
+        {/* Profile */}
+        <div className="relative" ref={profileRef}>
+          <button
+            type="button"
+            aria-label="Open user menu"
+            aria-expanded={profileOpen}
+            onClick={() => {
+              setProfileOpen((v) => !v);
+              setNotifOpen(false);
+            }}
+            className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-2 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:hover:bg-slate-800"
+          >
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-xs font-semibold text-white">
+              {initials}
+            </span>
+            <span className="hidden text-left sm:block">
+              <span className="block text-sm font-medium leading-4 text-slate-900 dark:text-white">
+                {user.name}
+              </span>
+              <span className="block text-xs text-slate-400">{user.role}</span>
+            </span>
+          </button>
+
+          {profileOpen && (
+            <div className="absolute right-0 top-12 w-60 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900">
+              <div className="border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+                <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{user.name}</p>
+                <p className="truncate text-xs text-slate-400">{user.email}</p>
+              </div>
+
+              <div className="p-1.5 text-sm text-slate-700 dark:text-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setProfileOpen(false)}
+                  className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  <User size={16} /> My profile
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setProfileOpen(false)}
+                  className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  <Settings size={16} /> Settings
+                </button>
+              </div>
+
+              <div className="border-t border-slate-100 p-1.5 dark:border-slate-800">
+                <button
+                  type="button"
+                  className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10"
+                >
+                  <LogOut size={16} /> Log out
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </header>
   );
 };

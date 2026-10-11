@@ -388,65 +388,69 @@ useEffect(() => {
                 </button>
               </>
             )}
-            {profileOn && (
-              <div className="absolute right-0 top-15 z-50 w-64 overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm shadow-slate-200/50 transition-all">
-                {/* Header Section */}
-                <button
-                  className="flex items-center gap-3 border-b border-slate-100 p-4"
-                  onClick={() => {
-                    navigate("/profile/info");
-                    setProfileOn(false);
-                  }}
-                >
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-purple-200 bg-purple-100 font-semibold text-purple-700 shadow-xs">
-                    {user?.avatar ? (
-                      <span className="text-lg font-bold">
-                        <img
-                          src={user?.avatar?.url}
-                          className="w-full rounded-full"
-                        />
-                      </span>
-                    ) : (
-                      <User size={20} className="text-purple-600" />
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1 flex flex-col items-start">
-                    <p className="truncate text-sm font-semibold text-slate-800">
-                      {user?.name || "Guest User"}
-                    </p>
-                    <p className="truncate text-xs font-normal text-slate-400">
-                      {user?.email || "Welcome back"}
-                    </p>
-                  </div>
-                  <div>
-                    <ChevronRight size={18} className="text-blue-300" />
-                  </div>
-                </button>
+           {profileOn && (
+  <div className="absolute right-0 top-15 z-50 w-72 overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-xl shadow-slate-200/50 transition-all animate-in fade-in zoom-in-95 duration-150">
+    
+    {/* Header Section */}
+    <button
+      className="flex w-full items-center gap-3.5 border-b border-slate-100 p-4 text-left transition-colors hover:bg-slate-50/80"
+      onClick={() => {
+        navigate("/profile/info");
+        setProfileOn(false);
+      }}
+    >
+      {/* Avatar */}
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-purple-200 bg-purple-50 shadow-xs">
+        {user?.avatar?.url ? (
+          <img
+            src={user.avatar.url}
+            alt={user?.name || "User Avatar"}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <User size={20} className="text-purple-600" />
+        )}
+      </div>
 
-                {/* Menu Options */}
-                <div className="py-2 px-6">
-                  {user ? (
-                    <>
-                      <UserMenu logout={logout} />
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex flex-col gap-2.5 items-start">
-                        {guestMenu.map((items, index) => (
-                          <Link
-                            key={index}
-                            className="hover:bg-[#f0f6ff] w-full py-1 text-sm px-1 flex gap-2 items-center text-[#676a83]"
-                          >
-                            <span> {items.icons}</span>
-                            {items.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
+      {/* User Info */}
+      <div className="min-w-0 flex-1 flex flex-col items-start">
+        <p className="truncate text-sm font-semibold text-slate-900">
+          {user?.name || "Guest User"}
+        </p>
+        <p className="truncate text-xs text-slate-500">
+          {user?.email || "Welcome back"}
+        </p>
+      </div>
+
+      {/* Chevron */}
+      <div className="text-slate-400 transition-transform hover:translate-x-0.5">
+        <ChevronRight size={18} />
+      </div>
+    </button>
+
+    {/* Menu Options */}
+    <div className="p-2">
+      {user ? (
+        <UserMenu logout={logout} />
+      ) : (
+        <div className="flex flex-col gap-1">
+          {guestMenu.map((item, index) => (
+            <Link
+              key={index}
+              to={item.path || "#"}
+              onClick={() => setProfileOn(false)}
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+            >
+              <span className="text-slate-400">{item.icons}</span>
+              {item.name}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+
+  </div>
+)}
           </div>
         </div>
       </nav>

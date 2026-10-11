@@ -9,7 +9,7 @@ const ProfileInfo = () => {
   const dispatch = useDispatch();
   const [upload, { isLoading: isUploading }] = useImageUploadMutation();
   const [updateUserInfo, { isLoading: isUpdating }] = useUpdateUserInfoMutation();
-  const {data:userInfo}=useGetUserInfoQuery()
+  const {data:userInfo,isLoading:UserLoading}=useGetUserInfoQuery()
   
   // const userInfo = useSelector((state) => state.auth);
   const [imageFile, setimageFile] = useState(null);
@@ -25,8 +25,9 @@ const ProfileInfo = () => {
     date: "",
     mobile: "",
   });
-console.log(userInfo)
-  useEffect(() => {
+
+ useEffect(() => {
+   
     if (userInfo) {
       setFormData({
         fullName: userInfo.name || "",
@@ -40,9 +41,10 @@ console.log(userInfo)
           url: userInfo.avatar.url || "",
         });
       }
+      
+      dispatch(setUser(userInfo));
     }
-    dispatch(setUser(userInfo))
-  }, [userInfo]);
+  }, [userInfo, dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -109,7 +111,9 @@ console.log(userInfo)
   const profileImageSrc = imageFile 
     ? URL.createObjectURL(imageFile) 
     : (avatar.url || assets.guestUser);
-
+if(UserLoading){
+  return <div>Loading ...</div>
+}
   return (
     <div className="md:max-w-3xl mx-auto md:px-6 space-y-6 w-full py-5 md:py-0">
       <div className="border border-gray-200 rounded-lg p-6 bg-white shadow-sm flex items-center gap-6">

@@ -10,7 +10,7 @@ import jwt from "jsonwebtoken";
 import { fileURLToPath } from "url";
 import sendMail from "../Utils/EmailSent.js";
 import bcrypt from "bcryptjs";
-import { SendToken } from "../Utils/Jwt_auth.js";
+import { SendAdminToken, SendToken } from "../Utils/Jwt_auth.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { OAuth2Client } from 'google-auth-library';
@@ -125,7 +125,34 @@ export async function MyLogin(email, password, res) {
   const userObject = isExistingUser.toObject();
   delete userObject.password;
 
+  if(isExistingUser.role!=='user'){
+    throw new Error("User not found")
+  }
   const result = SendToken(userObject, 200, res);
+  return { success: true, user: userObject, AccessToken: result.AccessToken };
+}
+export async function MyAdminLogin(email, password, res) {
+  const normalizedEmail = email.toLowerCase();
+  const isExistingUser = await User.findOne({ email: normalizedEmail }).select(
+    "+password",
+  );
+  if (!isExistingUser) {
+    throw new Error("User not found!");
+  }
+  if(isExistingUser.password===undefined){
+  throw new Error('You have a account with google/github login with this!')
+  }
+  const isMatch = await bcrypt.compare(password, isExistingUser.password);
+  
+  if (!isMatch) {
+    throw new Error("user and pass not match!");
+  }
+  const userObject = isExistingUser.toObject();
+  delete userObject.password;
+  if(isExistingUser.role!=='admin'){
+    throw new Error("User and Password wrong!")
+  }
+  const result = SendAdminToken(userObject, 200, res);
   return { success: true, user: userObject, AccessToken: result.AccessToken };
 }
 export async function socialMyAuth(credential, res, githubDetails) {
@@ -193,8 +220,12 @@ export async function socialMyAuth(credential, res, githubDetails) {
         await user.save();
       }
     }
+   if(user.role==='admin'){
+     throw new Error("User not found!")
+   }else{
     return SendToken(user, 200, res);
-
+   }
+   
   } catch (error) {
     console.error("Social Auth Error:", error);
     return res.status(500).json({ success: false, message: error.message });

@@ -31,7 +31,7 @@ export const refreshtokenOptions = {
     httpOnly: true,
     sameSite: "lax",
   };
-
+//users cookie token
 export const SendToken = (user, statusCode,res) => {
   const AccessToken = signAccessToken(user._id);
   const RefreshToken = signRefreshToken(user._id);
@@ -52,6 +52,31 @@ export const SendToken = (user, statusCode,res) => {
 
   res.cookie("access_token", AccessToken, accesstokenOptions);
   res.cookie("refresh_token", RefreshToken, refreshtokenOptions);
+ 
+  return {success:true,user,AccessToken}
+  
+};
+//admin cookie token
+export const SendAdminToken = (user, statusCode,res) => {
+  const AccessToken = signAccessToken(user._id);
+  const RefreshToken = signRefreshToken(user._id);
+
+  // Redis user caching
+  redis.set(user._id.toString(), JSON.stringify(user));
+
+  
+
+  
+
+  if (process.env.NODE_ENV === "production") {
+    accesstokenOptions.secure = true;
+    accesstokenOptions.sameSite="none",
+    refreshtokenOptions.sameSite="none";
+    refreshtokenOptions.secure = true;
+  }
+
+  res.cookie("admin_access_token", AccessToken, accesstokenOptions);
+  res.cookie("admin_refresh_token", RefreshToken, refreshtokenOptions);
  
   return {success:true,user,AccessToken}
   

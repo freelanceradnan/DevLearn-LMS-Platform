@@ -7,7 +7,7 @@ import MentorsCart from '../Components/MentorsCart';
 const MentorPage = () => {
     const { data: allCategory, isLoading: categoryLoading } = useGetAllCategoryQuery();
     const { data: allMentors, isLoading: coursesLoading } = useGetMentorQuery();
-    console.log(allMentors)
+
     const [filteredMentors, setFilteredMentors] = useState([]);
     const [activeBtn, setActiveBtn] = useState("All");
     const [categories, setCategories] = useState([]);

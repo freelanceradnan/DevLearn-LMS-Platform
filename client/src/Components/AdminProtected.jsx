@@ -3,12 +3,13 @@ import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 
 const AdminProtected = () => {
-    const {user,isLoading}=useSelector((state)=>state.auth)
+    const {admin,isLoading}=useSelector((state)=>state.admin)
+ 
     if(isLoading){
         return <div>Loading...</div>
     }
-    if(!user ||user?.role!=='admin'){
-        return <Navigate to="/" replace/>
+    if(!admin ||admin?.role!=='admin'){
+        return <Navigate to="/login" replace/>
     }
    return <Outlet/>
 };

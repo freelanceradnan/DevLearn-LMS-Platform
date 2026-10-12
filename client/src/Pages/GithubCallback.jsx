@@ -22,12 +22,19 @@ const GitHubCallback = () => {
         const result=await  githubAccess(code).unwrap()
        if(result.user){
        const githubLogin=await githubUser({githubDetails:result.user}).unwrap()
-       dispatch(setUser(githubLogin?.data))
+       if(githubLogin.data.role==='user'){
+        dispatch(setUser(githubLogin?.data))
        toast.success('login with github added')
        navigate('/')
+       }else{
+        toast.error("No User Found")
+        navigate('/')
+       }
+       
        }
      } catch (error) {
          toast.error('login with github failed!')
+         navigate('/')
      }
      }
      githubapi()

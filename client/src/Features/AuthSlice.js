@@ -23,6 +23,20 @@ export const authSlice=createSlice({
     
     localStorage.removeItem('user')
     localStorage.removeItem('isAuthenticate')
+    },
+    setAdmin:(state,action)=>{
+    state.user=action.payload
+    console.log(state.user)
+    state.isAuthenticate=true
+    localStorage.setItem('user',JSON.stringify(state.user))
+    localStorage.setItem('isAuthenticate',JSON.stringify(state.isAuthenticate))
+    },
+    logoutAdmin:(state,action)=>{
+    state.user=null,
+    state.isAuthenticate=false
+    
+    localStorage.removeItem('user')
+    localStorage.removeItem('isAuthenticate')
     }
    }
 })

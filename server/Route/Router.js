@@ -34,6 +34,8 @@ router.post("/register", authController.Registration);
 router.post("/activation", authController.ActiveUser);
 router.post("/login", authController.UserLogin);
 router.post("/logout", isAuthenticated, authController.LogoutUser);
+router.post("/logoutadmin", isAuthenticated, authController.LogoutAdmin);
+router.post('/adminLogin',authController.AdminLogin)
 router.get("/refreshtoken", authController.updateToken);
 router.get("/getUserInfo", isAuthenticated, userController.getInfo);
 router.post("/social-auth", authController.socialAuth);

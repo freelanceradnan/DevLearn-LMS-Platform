@@ -69,6 +69,19 @@ export const ApiSlice = createApi({
         body: data,
       }),
     }),
+    loginAdmin:builder.mutation({
+    query:(data)=>({
+    url:'/adminLogin',
+    method:'POST',
+    body:data
+    })
+    }),
+    logoutAdmin:builder.mutation({
+    query:()=>({
+    url:'/logoutadmin',
+    method:'POST'
+    })
+    }),
     logoutUser: builder.mutation({
       query: () => ({
         url: "/logout",
@@ -480,5 +493,7 @@ export const {
   useGetAllReviewsQuery,
   useAddReplyReviewsMutation,
   useGetAllCommentsQuery,
-  useReplyCommentMutation
+  useReplyCommentMutation,
+  useLoginAdminMutation,
+  useLogoutAdminMutation
 } = ApiSlice;

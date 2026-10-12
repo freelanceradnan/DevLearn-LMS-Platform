@@ -1,7 +1,7 @@
 import React from 'react';
 import { LogOut, X } from 'lucide-react';
-import { logoutUser } from '../Features/AuthSlice';
-import { useLogoutUserMutation } from '../Features/ApiSlice';
+import { logoutAdmin } from '../Features/AdminSlice';
+import { useLogoutAdminMutation, useLogoutUserMutation } from '../Features/ApiSlice';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 
@@ -9,13 +9,13 @@ import { useDispatch } from 'react-redux';
 
 export const LogoutModal  = ({OpenLogoutModel,setOpenLogoutModel }) => {
   const dispatch=useDispatch()
-  const [logoutuser] = useLogoutUserMutation();
+  const [logout] = useLogoutAdminMutation();
  
  const Logout = async () => {
     try {
-      const result = await logoutuser().unwrap();
+      const result = await logout().unwrap();
       if (result) {
-       dispatch(logoutUser());
+       dispatch(logoutAdmin());
       toast.success('logout done');
       setOpenLogoutModel(false)
       }

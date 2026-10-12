@@ -3,16 +3,21 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   Bell,
   ChevronRight,
+  CirclePlus,
   LogOut,
+  Maximize,
   Menu,
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
+  Plus,
   Search,
   Settings,
+  SquareArrowOutUpRight,
   Sun,
   User,
 } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 
 // Closes a dropdown on outside click or Escape
@@ -55,6 +60,11 @@ const NOTIFICATIONS = [
   { id: 3, title: 'Weekly report is ready', time: 'Yesterday', unread: false },
 ];
 
+//open main side
+const handleOpenMainSite = () => {
+  
+    window.open('/', '_blank', 'noopener,noreferrer');
+  };
 
 const AdminNavbar = ({
   setShowMobileMenu,
@@ -62,8 +72,10 @@ const AdminNavbar = ({
   showDesktop,
   setShowDesktop,
 }) => {
-  const user = { name: 'Adnan', role: 'Admin', email: 'adnan@example.com' };
-  const initials = user.name.slice(0, 2).toUpperCase();
+  const {admin}=useSelector((state)=>state.admin)
+  
+  // const user = { name: 'Adnan', role: 'Admin', email: 'adnan@example.com' };
+  const initials = admin.name.slice(0, 2).toUpperCase();
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -101,7 +113,18 @@ const AdminNavbar = ({
       
     }
   };
-
+const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+   
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
   const handleMobileMenuToggle = () => {
     setProfileOpen(false);
     setNotifOpen(false);
@@ -147,7 +170,7 @@ const AdminNavbar = ({
       return (
         <React.Fragment key={to}>
           {i > 0 && (
-            <ChevronRight className="mx-1.5 h-4 w-4 shrink-0 text-slate-300 dark:text-slate-600" />
+            <ChevronRight className="hidden mx-1.5 h-4 w-4 shrink-0 text-slate-300 dark:text-slate-600 md:block" />
           )}
           {isLast ? (
             <span className="truncate font-medium text-slate-900 dark:text-white" aria-current="page">
@@ -156,7 +179,7 @@ const AdminNavbar = ({
           ) : (
             <Link
               to={to}
-              className="truncate text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+              className="hidden truncate text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white md:block"
             >
               {titleCase(seg)}
             </Link>
@@ -181,16 +204,20 @@ const AdminNavbar = ({
         </kbd>
       </div>
 
-      <div className="ml-auto flex items-center gap-1 md:ml-0">
-        {/* Theme */}
-        <IconButton
-          label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-          onClick={toggleTheme}
-        >
-          {dark ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
-        </IconButton>
+      <div className="ml-auto flex items-center gap-0 md:ml-0">
+        <div className='relative inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white '>
+          <CirclePlus className="h-[18px] w-[18px]"/>
+        </div>
 
-        {/* Notifications */}
+        <button className='relative inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white' onClick={handleOpenMainSite}>
+      
+          <SquareArrowOutUpRight className="h-[18px] w-[18px]" />
+        </button>
+
+       <button className='relative inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white '  onClick={toggleFullscreen}>
+        <Maximize className="h-[18px] w-[18px]"/>
+       </button>
+         {/* Notifications */}
         <div className="relative" ref={notifRef}>
           <IconButton
             label="Notifications"
@@ -240,6 +267,15 @@ const AdminNavbar = ({
             </div>
           )}
         </div>
+        {/* Theme */}
+        <IconButton
+          label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+          onClick={toggleTheme}
+        >
+          {dark ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+        </IconButton>
+
+       
 
         <span className="mx-2 hidden h-6 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
 
@@ -260,9 +296,9 @@ const AdminNavbar = ({
             </span>
             <span className="hidden text-left sm:block">
               <span className="block text-sm font-medium leading-4 text-slate-900 dark:text-white">
-                {user.name}
+                {admin.name}
               </span>
-              <span className="block text-xs text-slate-400">{user.role}</span>
+              <span className="block text-xs text-slate-400">{admin.role}</span>
             </span>
           </button>
 
@@ -270,7 +306,7 @@ const AdminNavbar = ({
             <div className="absolute right-0 top-12 w-60 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900">
               <div className="border-b border-slate-100 px-4 py-3 dark:border-slate-800">
                 <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{user.name}</p>
-                <p className="truncate text-xs text-slate-400">{user.email}</p>
+                <p className="truncate text-xs text-slate-400">{admin.email}</p>
               </div>
 
               <div className="p-1.5 text-sm text-slate-700 dark:text-slate-200">

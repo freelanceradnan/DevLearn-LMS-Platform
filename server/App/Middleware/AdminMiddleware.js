@@ -5,6 +5,7 @@ import { CatchAsyncError } from "./CatchAsyncError.js";
 
 export const AdminMiddlewares=CatchAsyncError(async(req,res,next)=>{
     const userId=req.user._id;
+   
     if(!userId){
     return next(new ErrorHandler('user id not found!'))
     }

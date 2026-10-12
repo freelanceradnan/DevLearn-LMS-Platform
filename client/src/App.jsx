@@ -44,6 +44,7 @@ import SearchPage from "./Pages/SearchPage";
 import ReviewSection from "./Components/AdminDeshboard/ReviewSection/ReviewSection";
 import CommentSection from "./Components/AdminDeshboard/CommentSection/CommentSection";
 import InvoicePage from "./Components/InvoicePage";
+import LoginPage from "./Pages/LoginPage";
 function App() {
   return (
     <SmoothScroll>
@@ -77,6 +78,7 @@ function App() {
         <Route path="/invoice" element={<InvoicePage/>}/>
        
       </Route>
+      <Route path="/login" element={<LoginPage/>}/>
       <Route element={<UserProtected/>}>
  <Route path="/my-courses/:id" element={<CourseContent/>}/>
       </Route>
@@ -103,6 +105,10 @@ function App() {
           <Route path="heroSection" element={<Hero />} />
           <Route path="courseReviews" element={<ReviewSection />} />
           <Route path="courseComments" element={<CommentSection />} />
+
+
+          {/* home routes */}
+          
         </Route>
       </Route>
       {/* errorpage */}

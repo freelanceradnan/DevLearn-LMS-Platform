@@ -8,32 +8,46 @@ import { User } from "../Models/Users.js";
 import { decode } from "punycode";
 dotenv.config({path:path.resolve(process.cwd(),'.env')})
 
-const isAuthenticated = CatchAsyncError(async (req, res, next) => {
-  const access_token = req?.cookies?.access_token;
+export const isAuthenticated = CatchAsyncError(async (req, res, next) => {
 
-  if (!access_token) {
+  const access_token = req?.cookies?.access_token;
+  const admin_access_token = req?.cookies?.admin_access_token;
+
+  let token = null;
+  let secret = null;
+
+  if (admin_access_token) {
+    token = admin_access_token;
+    secret = process.env.ACCESS_TOKEN; 
+  } 
+  else if (access_token) {
+    token = access_token;
+    secret = process.env.ACCESS_TOKEN;
+  }
+
+  if (!token) {
     return next(new ErrorHandler("Please login to access this resource", 401));
   }
 
   let decoded;
   try {
-    decoded = jwt.verify(access_token, process.env.ACCESS_TOKEN);
+    decoded = jwt.verify(token, secret);
   } catch (error) {
     return next(new ErrorHandler("Invalid or expired access token", 401));
   }
 
   const caching = await redis.get(decoded.id);
-  let data={}
- if(caching){
- data=JSON.parse(caching)
- }
- else{
- data=await User.findById(decoded.id)
- redis.set(decode.id,JSON.stringify(data))
- }
-  // if (!user) {
-  //   return next(new ErrorHandler("User session expired Please login to access this", 400));
-  // }
+  let data = {};
+
+  if (caching) {
+    data = JSON.parse(caching);
+  } else {
+    data = await User.findById(decoded.id);
+    if (!data) {
+      return next(new ErrorHandler("User session expired, please login again", 404));
+    }
+    await redis.set(decoded.id, JSON.stringify(data));
+  }
 
   req.user = data;
   next();

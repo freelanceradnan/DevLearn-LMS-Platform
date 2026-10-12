@@ -4,6 +4,7 @@ import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
 import {
   ActiveMyUser,
   ChangeMyPassword,
+  MyAdminLogin,
   MyLogin,
   MyRegister,
   SendMyOtp,
@@ -75,6 +76,25 @@ export const UserLogin = CatchAsyncError(async (req, res, next) => {
     AccessToken: result.AccessToken,
   });
 });
+export const AdminLogin = CatchAsyncError(async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next(new ErrorHandler("enter email password to login", 400));
+  }
+
+  const result = await MyAdminLogin(email, password, res);
+
+  if (!result.success) {
+    return next(new ErrorHandler("failed to login", 400));
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "User login success!",
+    data: result.user,
+    AccessToken: result.AccessToken,
+  });
+});
 export const LogoutUser = CatchAsyncError(async (req, res, next) => {
   const refreshToken = req.cookies.refresh_token;
 
@@ -111,20 +131,76 @@ export const LogoutUser = CatchAsyncError(async (req, res, next) => {
     message: "Logout success!",
   });
 });
-export const updateToken = CatchAsyncError(async (req, res, next) => {
-  const refresh_token = req?.cookies?.refresh_token;
+export const LogoutAdmin = CatchAsyncError(async (req, res, next) => {
+  const refreshToken = req.cookies.admin_refresh_token;
 
-  if (!refresh_token) {
+  let userId = req?.user?._id;
+
+  if (!userId && refreshToken) {
+    try {
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET || process.env.REFRESH_TOKEN,
+      );
+      userId = decoded.id;
+    } catch (err) {}
+  }
+
+  if (userId) {
+    await redis.del(userId);
+  }
+
+  const isProduction = process.env.NODE_ENV === "production";
+
+ 
+  res.clearCookie("admin_access_token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+  });
+
+  res.clearCookie("admin_refresh_token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+  });
+  res.status(200).json({
+    success: true,
+    message: "Admin logout success!",
+  });
+});
+export const updateToken = CatchAsyncError(async (req, res, next) => {
+ 
+  const user_refresh_token = req?.cookies?.refresh_token;
+  const admin_refresh_token = req?.cookies?.admin_refresh_token;
+
+  let refreshToken = null;
+  let secret = null;
+  let isAdmin = false;
+
+  if (admin_refresh_token) {
+    refreshToken = admin_refresh_token;
+    secret = process.env.REFRESH_TOKEN;
+    isAdmin = true;
+  } else if (user_refresh_token) {
+    refreshToken = user_refresh_token;
+    secret = process.env.REFRESH_TOKEN;
+    isAdmin = false;
+  }
+
+ 
+  if (!refreshToken) {
     return next(new ErrorHandler("Please login to access this resource", 400));
   }
 
   let decoded;
   try {
-    decoded = jwt.verify(refresh_token, process.env.REFRESH_TOKEN);
+    decoded = jwt.verify(refreshToken, secret);
   } catch (error) {
     return next(new ErrorHandler("Invalid or expired refresh token", 400));
   }
 
+ 
   const session = await redis.get(decoded.id);
 
   if (!session) {
@@ -133,18 +209,27 @@ export const updateToken = CatchAsyncError(async (req, res, next) => {
 
   const user = JSON.parse(session);
 
-  const AccessToken = jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN, {
-    expiresIn: "5m",
+  const accessTokenSecret = isAdmin ? process.env.ACCESS_TOKEN : process.env.ACCESS_TOKEN;
+  const refreshTokenSecret = isAdmin ? process.env.REFRESH_TOKEN : process.env.REFRESH_TOKEN;
+
+  const AccessToken = jwt.sign({ id: user._id }, accessTokenSecret, {
+    expiresIn: "15m",
   });
 
-  const RefreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN, {
+  const RefreshToken = jwt.sign({ id: user._id }, refreshTokenSecret, {
     expiresIn: "3d",
   });
 
-  //Set cookies
-  res.cookie("access_token", AccessToken, accesstokenOptions);
-  res.cookie("refresh_token", RefreshToken, refreshtokenOptions);
-  //auto expires redis cahing after 7days
+
+  if (isAdmin) {
+    res.cookie("admin_access_token", AccessToken, accesstokenOptions); 
+    res.cookie("admin_refresh_token", RefreshToken, refreshtokenOptions);
+  } else {
+    res.cookie("access_token", AccessToken, accesstokenOptions);
+    res.cookie("refresh_token", RefreshToken, refreshtokenOptions);
+  }
+
+
   await redis.set(user._id, JSON.stringify(user), "EX", 604800);
 
   res.status(200).json({

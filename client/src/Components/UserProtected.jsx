@@ -7,6 +7,7 @@ const UserProtected = ({ children }) => {
   
  
   const { user } = useSelector((state) => state.auth); 
+  
   const isAuthenticated = !!user; 
 
   if (!isAuthenticated) {

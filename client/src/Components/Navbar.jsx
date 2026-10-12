@@ -153,11 +153,11 @@ useEffect(() => {
     }
   };
   //checking isadmin login
-  useEffect(() => {
-    if (user?.role === "admin") {
-      navigate("/admin/dashboard", { replace: true });
-    }
-  }, [user, navigate]);
+  // useEffect(() => {
+  //   if (user?.role === "admin") {
+  //     navigate("/admin/dashboard", { replace: true });
+  //   }
+  // }, [user, navigate]);
   const logout = async () => {
     try {
       const result = await logoutcall().unwrap();

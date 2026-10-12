@@ -107,9 +107,13 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
 
       if (result.data) {
         const userdata=result.data.data
-        toast.success("login user success!");
-        
+        if(userdata.role==='user'){
+          
         dispatch(setUser(userdata));
+        toast.success("login user success!");
+        }else{
+          toast.error("User not found!")
+        }
         
         setRegisterInfo({});
         setModal(false);
@@ -129,9 +133,15 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
    try {
    const result=await googleLogin({credential:credential.credential}).unwrap()
    if(result){
+    if(result.data.role==='user'){
     dispatch(setUser(result.data))
     toast.success(`google ${currentState} success!`)
     setModal(false)
+    }
+    else{
+      toast.error("User not found!")
+    }
+    
    }else{
     toast.error("failed to authentication with google")
    }

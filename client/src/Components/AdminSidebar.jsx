@@ -196,7 +196,7 @@ export default function Sidebar({
 
       {/* Desktop sidebar */}
       <aside
-        className={`sidebar-desktop fixed left-0 top-0 z-20 hidden h-screen border-r border-zinc-200 bg-white transition-[width] duration-200 ease-out md:block ${
+        className={`sidebar-desktop fixed left-0 top-0 z-1000 hidden h-screen border-r border-zinc-200 bg-white transition-[width] duration-200 ease-out md:block ${
           collapsed ? 'w-[72px]' : 'w-64'
         }`}
       >
@@ -214,7 +214,7 @@ export default function Sidebar({
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           aria-expanded={!collapsed}
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          className="absolute -right-3.5 top-[22px] z-30 flex h-7 w-7 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-500 shadow-sm transition-colors hover:bg-zinc-50 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+          className="absolute -right-3 top-[22px] z-30 flex h-7 w-7 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-500 shadow-sm transition-colors hover:bg-zinc-50 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
         >
           {collapsed ? <ChevronRight size={15} /> : <ChevronLeft size={15} />}
         </button>

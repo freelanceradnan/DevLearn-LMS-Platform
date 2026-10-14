@@ -45,6 +45,8 @@ import ReviewSection from "./Components/AdminDeshboard/ReviewSection/ReviewSecti
 import CommentSection from "./Components/AdminDeshboard/CommentSection/CommentSection";
 import InvoicePage from "./Components/InvoicePage";
 import LoginPage from "./Pages/LoginPage";
+import AdminProfile from "./Components/AdminDeshboard/AdminProfile/AdminProfile";
+import AdminNotifications from "./Components/AdminDeshboard/AdminNotification/AdminNotifications";
 function App() {
   return (
     <SmoothScroll>
@@ -87,6 +89,7 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Overview />} />
           <Route path="allcourses" element={<AllCourses />} />
+          <Route path="profile" element={<AdminProfile />} />
           <Route path="dashboard" element={<Overview />} />
           <Route path="createCourse" element={<CreateCourse />} />
           <Route path="faqSection" element={<FaqSection />} />
@@ -105,6 +108,7 @@ function App() {
           <Route path="heroSection" element={<Hero />} />
           <Route path="courseReviews" element={<ReviewSection />} />
           <Route path="courseComments" element={<CommentSection />} />
+          <Route path="allnotifications" element={<AdminNotifications />} />
 
 
           {/* home routes */}

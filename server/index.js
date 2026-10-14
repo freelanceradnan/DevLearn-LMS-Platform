@@ -78,6 +78,18 @@ io.on('connection', (socket) => {
     
     }
   });
+  socket.on('join_admin_room', () => {
+    socket.join('admin_room');
+    console.log("Admin successfully joined to admin_room! Socket ID:", socket.id);
+  });
+  socket.on('disconnect', () => {
+    for (let [userId, socketId] of activeUsers.entries()) {
+      if (socketId === socket.id) {
+        activeUsers.delete(userId);
+        break;
+      }
+    }
+  });
 });
 
 export const sendRealTimeNotification = (userId, notificationData) => {
@@ -92,6 +104,20 @@ export const sendRealTimeNotification = (userId, notificationData) => {
   } else {
     console.log("⚠️ Still not found! Check if register_user was called for:", cleanTargetId);
   }
+};
+export const sendAdminNotification = (notificationData) => {
+
+  const room = io.sockets.adapter.rooms.get('admin_room');
+  const roomSize = room ? room.size : 0;
+
+
+  if (roomSize === 0) {
+    return;
+  }
+
+
+  io.to('admin_room').emit('new_notification', notificationData);
+  
 };
 const PORT = process.env.PORT || 3000;
 

@@ -162,6 +162,7 @@ export const generateVideoUrl = CatchAsyncError(async (req, res, next) => {
 });
 export const GetUsersCourses=CatchAsyncError(async(req,res,next)=>{
   const id=req.user._id
+ console.log(req.user)
   if(!id){
     return next(new ErrorHandler('course id not found!'))
   }

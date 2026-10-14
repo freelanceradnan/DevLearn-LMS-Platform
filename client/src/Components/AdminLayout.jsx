@@ -96,10 +96,12 @@ export default function AdminLayout() {
     collapsed ? "md:pl-[72px]" : "md:pl-64"
   }`}
 >
-         <AdminNavbar setShowMobileMenu={setShowMobileMenu} showMobileMenu={showMobileMenu}/>
-           <main className="flex-1 p-6">
-            <Outlet />    
-          </main>
+        <div className="sticky top-0 z-50 bg-white">
+  <AdminNavbar setShowMobileMenu={setShowMobileMenu} showMobileMenu={showMobileMenu} />
+</div>
+          <main className="relative z-0 flex-1 p-6">
+  <Outlet />
+</main>
           {OpenLogoutModel && <LogoutModal OpenLogoutModel={OpenLogoutModel} setOpenLogoutModel={setOpenLogoutModel}/>}
           
         </div>

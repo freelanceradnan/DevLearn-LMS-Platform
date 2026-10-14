@@ -7,7 +7,7 @@ import crypto from 'crypto'
 import path from 'path';
 import { fileURLToPath } from 'url';
 import ejs from 'ejs';
-import { sendRealTimeNotification } from "../../index.js";
+import { sendAdminNotification, sendRealTimeNotification } from "../../index.js";
 import mongoose from "mongoose";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -87,8 +87,14 @@ const notification=await Notification.create({
 
   setTimeout(() => {
   sendRealTimeNotification(user._id, notification);
+
 }, 300);
-console.log(notification)
+sendAdminNotification({
+  title: "New Order!",
+  message: "A customer placed a new order of $100.",
+  createdAt: new Date()
+});
+
 return { success: true, createOrder };
 }
 export async function GetMyOrder(userid){

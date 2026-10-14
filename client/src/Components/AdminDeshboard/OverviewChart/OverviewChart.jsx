@@ -17,26 +17,21 @@ const data = [
 
 const OverviewChart = () => {
   return (
-    <BarChart
-      style={{ width: '100%', maxWidth: '700px', maxHeight: '70vh', aspectRatio: 1.618,height:'100%'}}
-      responsive
-      className='bg-[#FDFDFD] '
-      data={data}
-      margin={{
-        top: 20,
-        right: 30,
-        left: 20,
-        bottom: 5,
-      }}
-    >
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="month" />
-      <YAxis width="auto" />
-      <Tooltip />
-      <Legend />
-      <Bar dataKey="visits" name="Platform Visits" fill="#1BD484"/>
-      <Bar dataKey="sales" name="Course Sales" fill="#a6a6c4" />
-    </BarChart>
+   <BarChart
+  style={{ width: '100%', height: '100%' }}
+  responsive
+  className="bg-[#FDFDFD]"
+  data={data}
+  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+>
+  <CartesianGrid strokeDasharray="3 3" />
+  <XAxis dataKey="month" />
+  <YAxis width="auto" />
+  <Tooltip />
+  <Legend />
+  <Bar dataKey="visits" name="Platform Visits" fill="#1BD484" />
+  <Bar dataKey="sales" name="Course Sales" fill="#a6a6c4" />
+</BarChart>
   );
 };
 

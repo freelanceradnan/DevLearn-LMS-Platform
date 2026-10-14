@@ -105,9 +105,9 @@ const Overview = () => {
               Overview of recent performance metrics
             </p>
           </div>
-          <div className="w-full h-full flex items-center">
-            <OverviewChart />
-          </div>
+          <div className="w-full h-[350px] relative z-0 isolate overflow-hidden">
+  <OverviewChart />
+</div>
         </div>
 
         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm lg:col-span-5 flex flex-col justify-between">

@@ -40,6 +40,7 @@ export const UsersNotification = ({state}) => {
       socket.off("new_notification");
     };
   }, [user?._id, AllNotifications,location.pathname]);
+  
   const UpdateNotificationStatus=async(itemId)=>{
   try {
     const res=await ChangeStatus(itemId).unwrap()

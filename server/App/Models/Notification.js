@@ -14,5 +14,24 @@ const NoficationSchema = mongoose.Schema({
   subject:{type:String},
   message:{type:String,required:true}
 },{timestamps:true});
+
+
+const adminNotificationSchema = mongoose.Schema({
+  title: { type: String, required: true },
+  isAdminNotify: { type: Boolean, default: true },
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Users",
+    required: true,
+  },
+  status: { type: String, default: "unread", required: true },
+  data: {
+    taskId: { type: mongoose.Schema.Types.ObjectId }, 
+    redirectUrl: { type: String }
+  },
+  subject: { type: String },
+  message: { type: String, required: true }
+}, { timestamps: true });
 const Notification = mongoose.model("Notification", NoficationSchema);
-export default Notification;
+const AdminNotification = mongoose.model("AdminNotification", adminNotificationSchema);
+export default {Notification,AdminNotification}

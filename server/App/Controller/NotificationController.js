@@ -1,5 +1,6 @@
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
-import Notification from "../Models/Notification.js";
+import db from '../Models/Notification.js'
+const {Notification,AdminNotification}=db
 import { getMyNotifications, updateMyNotificationStatus } from "../Services/NotificationSevices.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 
@@ -39,7 +40,7 @@ export const UpdateNotificationStatus=CatchAsyncError(async(req,res,next)=>{
     if(!notificationId){
     return next(new ErrorHandler("Notification id not found!"))
     }
-    console.log(notificationId)
+    // console.log(notificationId)
     const updateStatus=await Notification.findByIdAndUpdate(notificationId,{
         $set:{status:"read"}
     })
@@ -55,5 +56,44 @@ export const UpdateAllNotificationStatus=CatchAsyncError(async(req,res,next)=>{
     { user_id: userId, status: "unread" }, 
     { $set: { status: "read" } }       
 );
+    res.status(200).json({success:true,message:"Notification update success!"})
+})
+export const GetAdminNotification=CatchAsyncError(async(req,res,next)=>{
+   
+   const getNotifications = await AdminNotification.find({}).sort({ createdAt: -1 })||[]
+   if(!getMyNotifications){
+    return next (new ErrorHandler("Notification not found!"))
+   }
+   res.status(200).json({
+    success:true,
+    message:'Notification Gets Success',
+    getNotifications
+   })
+})
+export const UpdateAdminNotificationStatus=CatchAsyncError(async(req,res,next)=>{
+    const {notificationId}=req.body
+    
+    if(!notificationId){
+    return next(new ErrorHandler("Notification id not found!"))
+    }
+   
+    const updateStatus = await AdminNotification.findByIdAndUpdate(
+    notificationId,
+    { $set: { status: "read" } },
+    { new: true } 
+);
+
+    
+    res.status(200).json({success:true,message:"Notification update success!"})
+})
+export const UpdateAdminAllNotificationStatus=CatchAsyncError(async(req,res,next)=>{
+    
+   
+    const updateStatus = await AdminNotification.updateMany(
+  { status: "unread" },        
+  { $set: { status: "read" } } ,
+   { new: true }
+);
+
     res.status(200).json({success:true,message:"Notification update success!"})
 })

@@ -46,7 +46,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["users", "course", "orders", "faq", "category",'questions','reviews','Notifications','mentor','policy','comments'],
+  tagTypes: ["users", "course", "orders", "faq", "category",'questions','reviews','Notifications','mentor','policy','comments','AdminNotification'],
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (userData) => ({
@@ -438,6 +438,30 @@ ReplyComment:builder.mutation({
     body:{contentId, reply, courseId, questionId}
   }),
   invalidatesTags:['comments']
+}),
+GetAdminNotification:builder.query({
+  query:()=>({
+  url:'/getAdminNotification',
+  method:'GET'
+  }),
+  providesTags:['AdminNotification'],
+  transformResponse:(response)=>response.getNotifications
+
+}),
+UpdateAdminNotification:builder.mutation({
+query:({notificationId})=>({
+  url:'/update-admin-notification',
+  method:'PUT',
+  body:{notificationId}
+}),
+invalidatesTags:['AdminNotification']
+}),
+UpdateAllAdminNotification:builder.mutation({
+  query:()=>({
+  url:'/update-admin-all-notifications',
+  method:'PUT'
+  }),
+  invalidatesTags:['AdminNotification']
 })
   }),
 });
@@ -495,5 +519,8 @@ export const {
   useGetAllCommentsQuery,
   useReplyCommentMutation,
   useLoginAdminMutation,
-  useLogoutAdminMutation
+  useLogoutAdminMutation,
+  useGetAdminNotificationQuery,
+  useUpdateAdminNotificationMutation,
+  useUpdateAllAdminNotificationMutation
 } = ApiSlice;

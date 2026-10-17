@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import AdminNotifications from './AdminDeshboard/AdminNotification/AdminNotifications';
+import { useUpdateAllAdminNotificationMutation, useUpdateAllNotificationStatusMutation } from '../Features/ApiSlice';
 
 
 // Closes a dropdown on outside click or Escape
@@ -118,6 +119,7 @@ const AdminNavbar = ({
   showDesktop,
   setShowDesktop,
 }) => {
+   const [updateAllStatus]=useUpdateAllAdminNotificationMutation()
   const { admin } = useSelector((state) => state.admin);
   const [quickAccess, setQuickAccess] = useState(false);
   const initials = admin?.name ? admin.name.slice(0, 2).toUpperCase() : 'AD';
@@ -175,7 +177,14 @@ const AdminNavbar = ({
     setQuickAccess(false);
     setShowMobileMenu(!showMobileMenu);
   };
-
+const updateAllNotification=async()=>{
+    try {
+        const res=updateAllStatus().unwrap()
+       console.log(res)
+    } catch (error) {
+        
+    }
+}
   return (
     <header className="sticky top-0 z-0 flex h-16 w-full items-center gap-2 border-b border-slate-200/80 bg-white/80 px-4 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80 md:px-6">
       <IconButton
@@ -300,6 +309,7 @@ const AdminNavbar = ({
                 <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Notifications</h2>
                 <button
                   type="button"
+                  onClick={updateAllNotification}
                   className="text-xs font-medium text-blue-600 hover:underline dark:text-blue-400"
                 >
                   Mark all as read
@@ -323,7 +333,7 @@ const AdminNavbar = ({
                   </li>
                 ))}
               </ul> */}
-              <AdminNotifications/>
+              <AdminNotifications />
             </div>
           )}
         </div>

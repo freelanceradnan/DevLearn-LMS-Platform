@@ -1,7 +1,7 @@
 import course from "../Models/Course.js";
 import { User } from "../Models/Users.js";
 import sendMail from "../Utils/EmailSent.js";
-import Notification from "../Models/Notification.js";
+
 import Orders from "../Models/Orders.js";
 import crypto from 'crypto'
 import path from 'path';
@@ -9,6 +9,11 @@ import { fileURLToPath } from 'url';
 import ejs from 'ejs';
 import { sendAdminNotification, sendRealTimeNotification } from "../../index.js";
 import mongoose from "mongoose";
+import db from '../Models/Notification.js'
+const {Notification,AdminNotification}=db
+// Notification
+
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 export async function CreateMyOrder(user,course_id,payment_info){
@@ -89,11 +94,22 @@ const notification=await Notification.create({
   sendRealTimeNotification(user._id, notification);
 
 }, 300);
-sendAdminNotification({
-  title: "New Order!",
-  message: "A customer placed a new order of $100.",
-  createdAt: new Date()
+const adminNotification = await AdminNotification.create({
+  user_id: user._id,
+  title: "New Course Purchase",
+  message: `Your User ${user._id} purchased ${fullCourse.name} course`, 
+  data: {
+    taskId: fullCourse._id, 
+    redirectUrl: `/my-courses/${fullCourse._id}`
+  },
+  subject: "Purchase Course"
 });
+
+  setTimeout(() => {
+  sendAdminNotification(user._id, adminNotification);
+
+}, 300);
+console.log(adminNotification)
 
 return { success: true, createOrder };
 }

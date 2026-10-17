@@ -1,6 +1,10 @@
 import ErrorHandler from "../Utils/ErrorHandler.js";
 import { CatchAsyncError } from "./CatchAsyncError.js";
-
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+import path from 'path'
+import { User } from "../Models/Users.js";
+dotenv.config({path:path.resolve(process.cwd(),'.env')})
 export const isAdminAuthenticated = CatchAsyncError(async (req, res, next) => {
   const admin_access_token = req?.cookies?.admin_access_token;
 

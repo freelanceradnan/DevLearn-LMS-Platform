@@ -18,6 +18,7 @@ import *as MentorController from '../App/Controller/MentorsController.js'
 import *as PolicyController from '../App/Controller/PolicyController.js'
 import *as ReviewController from '../App/Controller/ReviewsController.js'
 import *as CommentController from '../App/Controller/CommentsController.js'
+import *as AdminController from '../App/Controller/AdminController.js'
 import multer from 'multer';
 import { isAdminAuthenticated } from './../App/Middleware/IsAdminMiddleware.js';
 const storage = multer.memoryStorage();
@@ -97,6 +98,8 @@ router.post('/createMentor',isAdminAuthenticated,AdminMiddlewares,MentorControll
 router.put('/UpdateMentor/:mentorId',isAdminAuthenticated,AdminMiddlewares,MentorController.UpdateMentor)
 router.get('/getallReviews', isAdminAuthenticated, AdminMiddlewares, ReviewController.GetAllReviews)
 router.get('/getcomments',isAdminAuthenticated,AdminMiddlewares,CommentController.GetAllComments)
+router.get('/admin-info',isAdminAuthenticated,AdminMiddlewares,AdminController.GetAdminInfo)
+router.put('/update-Admin-info',isAdminAuthenticated,AdminMiddlewares,AdminController.UpdateAdminInfo)
 //public all routes
 router.post('/create-paymentIntent',PaymentController.PaymentIntent)
 router.get('/GetPubCourses',PublicController.PublicAllCourse)

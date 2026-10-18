@@ -46,7 +46,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["users", "course", "orders", "faq", "category",'questions','reviews','Notifications','mentor','policy','comments','AdminNotification'],
+  tagTypes: ["users", "course", "orders", "faq", "category",'questions','reviews','Notifications','mentor','policy','comments','AdminNotification','admininfo'],
   endpoints: (builder) => ({
     registerUser: builder.mutation({
       query: (userData) => ({
@@ -462,6 +462,21 @@ UpdateAllAdminNotification:builder.mutation({
   method:'PUT'
   }),
   invalidatesTags:['AdminNotification']
+}),
+GetAdminInfo:builder.query({
+  query:()=>({
+  url:'/admin-info',
+  method:'GET'
+  }),
+providesTags:['admininfo']
+}),
+UpdateAdminInfo:builder.mutation({
+  query:(payload)=>({
+  url:'/update-Admin-info',
+  method:'PUT',
+  body:payload
+  }),
+  invalidatesTags:['admininfo']
 })
   }),
 });
@@ -522,5 +537,7 @@ export const {
   useLogoutAdminMutation,
   useGetAdminNotificationQuery,
   useUpdateAdminNotificationMutation,
-  useUpdateAllAdminNotificationMutation
+  useUpdateAllAdminNotificationMutation,
+  useGetAdminInfoQuery,
+  useUpdateAdminInfoMutation
 } = ApiSlice;

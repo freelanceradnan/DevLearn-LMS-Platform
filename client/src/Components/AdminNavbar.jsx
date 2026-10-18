@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import AdminNotifications from './AdminDeshboard/AdminNotification/AdminNotifications';
-import { useUpdateAllAdminNotificationMutation, useUpdateAllNotificationStatusMutation } from '../Features/ApiSlice';
+import { useGetAdminInfoQuery, useUpdateAllAdminNotificationMutation, useUpdateAllNotificationStatusMutation } from '../Features/ApiSlice';
 
 
 // Closes a dropdown on outside click or Escape
@@ -123,6 +123,7 @@ const AdminNavbar = ({
   const { admin } = useSelector((state) => state.admin);
   const [quickAccess, setQuickAccess] = useState(false);
   const initials = admin?.name ? admin.name.slice(0, 2).toUpperCase() : 'AD';
+ const {data:AdminInfo}=useGetAdminInfoQuery()
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);

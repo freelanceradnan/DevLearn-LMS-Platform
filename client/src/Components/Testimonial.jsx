@@ -60,15 +60,22 @@ const Testimonial = () => {
              </div>
 
         {/* Testimonials Grid */}
-        <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-15"
-         initial={{ y: 50, opacity: 0 }} 
+        <motion.div 
+  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-15"
+  initial={{ y: 25, opacity: 0 }} 
   whileInView={{ y: 0, opacity: 1 }}
+  viewport={{ once: true, margin: "-50px" }}
   transition={{ 
-    duration: 3, 
-    delay:  0.15, 
-    ease: "easeOut" 
+    duration: 0.5, 
+    delay: 0.1, 
+    ease: [0.215, 0.61, 0.355, 1]
   }}
-        >
+  style={{ 
+    willChange: "transform, opacity",
+    transform: "translateZ(0)"
+  }}
+>
+
           {dummyData.map((item,index) => (
             <div
               key={item.id}

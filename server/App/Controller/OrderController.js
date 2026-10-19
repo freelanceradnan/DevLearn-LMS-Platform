@@ -1,4 +1,6 @@
 import { CatchAsyncError } from "../Middleware/CatchAsyncError.js";
+import Orders from "../Models/Orders.js";
+import { User } from "../Models/Users.js";
 import { CreateMyOrder, GetMyOrder } from "../Services/OrderServices.js";
 import ErrorHandler from "../Utils/ErrorHandler.js";
 
@@ -35,4 +37,27 @@ export const getUserOrder=CatchAsyncError(async(req,res,next)=>{
         data:result
         })
     
+})
+export const getAdminOrder=CatchAsyncError(async(req,res,next)=>{
+    try {
+    const id=req.user._id
+    const data=await User.findById(id)
+    if(data.role!=='admin'){
+    return next(new ErrorHandler("You are not admin!"))
+    }
+    const allOrder = await Orders.find({ }).sort({ createdAt: -1 }).lean();
+    if(!allOrder){
+    return next(new ErrorHandler("Order not found!"))
+    }
+    res.status(200).json({
+    success:true,
+    message:"orders fetch success",
+    data:allOrder
+    })
+    } catch (error) {
+         res.status(400).json({
+    success:false,
+    message:"orders fetch failed",
+    })
+    }
 })

@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, ShieldCheck, Loader2 } from "lucide-react";
 import { useLoginAdminMutation } from "../Features/ApiSlice";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAdmin } from "../Features/AdminSlice";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const AdminLogin = () => {
   const dispatch=useDispatch()
+    const {admin}=useSelector((state)=>state.admin)
   const navigate=useNavigate()
   const [form, setForm] = useState({ email: "", password: "", remember: false });
   const [loginAdmin]=useLoginAdminMutation()
@@ -44,7 +46,11 @@ const AdminLogin = () => {
       setLoading(false);
     }
   };
-
+ useEffect(() => {
+if (admin && location.pathname === '/login') {
+      navigate('/admin', { replace: true });
+    }
+  }, [admin]);
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 px-4">
       <div className="w-full max-w-md">

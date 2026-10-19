@@ -2,8 +2,10 @@ import React from "react";
 import OverviewChart from "../OverviewChart/OverviewChart";
 import Invoices from "./../Invoices/Invoices";
 import { FiUsers, FiBookOpen, FiShoppingCart } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const Overview = () => {
+  const navigate=useNavigate()
   return (
     <div className="flex gap-6 flex-col">
       {/* Header Section */}
@@ -121,12 +123,12 @@ const Overview = () => {
                   Latest transactions list
                 </p>
               </div>
-              <button className="text-xs font-semibold bg-[#1bd484] hover:bg-[#15b36e] text-white px-3 py-1.5 rounded-lg transition-colors shadow-sm">
+              <button className="text-xs font-semibold bg-[#1bd484] hover:bg-[#15b36e] text-white px-3 py-1.5 rounded-lg transition-colors shadow-sm" onClick={()=>navigate(`/admin/Invoices`)}>
                 View All
               </button>
             </div>
             <div className="w-full">
-              <Invoices />
+              <Invoices state={{data:"overview"}}/>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "./AdminSidebar";
 import {
   BarChart2,
@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   Menu,
   MessageSquare,
+  MonitorCog,
   PenLine,
   PieChart,
   PlusSquare,
@@ -22,10 +23,14 @@ import {
 } from "lucide-react";
 import { LogoutModal } from "./LogoutModel";
 import AdminNavbar from "./AdminNavbar";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 
 export default function AdminLayout() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+  const navigate=useNavigate()
   const [OpenLogoutModel,setOpenLogoutModel]=useState(false)
   const [collapsed, setCollapsed] = useState(() => {
   try {
@@ -76,6 +81,7 @@ export default function AdminLayout() {
       ],
     },
   ];
+
   return (
     <div>
       <div className="min-h-screen bg-[#FFFFFF] md:flex ">

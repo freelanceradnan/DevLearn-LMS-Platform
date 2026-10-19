@@ -105,11 +105,19 @@ const adminNotification = await AdminNotification.create({
   subject: "Purchase Course"
 });
 
-  setTimeout(() => {
-  sendAdminNotification(user._id, adminNotification);
-
+ setTimeout(() => {
+  sendAdminNotification({
+    user_id: user._id,
+    title: "New Course Purchase",
+    message: `Your User ${user._id} purchased ${fullCourse.name} course`, 
+    data: {
+      taskId: fullCourse._id, 
+      redirectUrl: `/my-courses/${fullCourse._id}`
+    },
+    subject: "Purchase Course"
+  });
 }, 300);
-console.log(adminNotification)
+
 
 return { success: true, createOrder };
 }

@@ -47,6 +47,7 @@ import InvoicePage from "./Components/InvoicePage";
 import LoginPage from "./Pages/LoginPage";
 import AdminProfile from "./Components/AdminDeshboard/AdminProfile/AdminProfile";
 import AdminNotifications from "./Components/AdminDeshboard/AdminNotification/AdminNotifications";
+import Managementsite from "./Components/AdminDeshboard/Managementsite/Managementsite";
 function App() {
   return (
     <SmoothScroll>
@@ -80,7 +81,9 @@ function App() {
         <Route path="/invoice" element={<InvoicePage/>}/>
        
       </Route>
-      <Route path="/login" element={<LoginPage/>}/>
+
+        <Route path="/login" element={<LoginPage/>}/>
+
       <Route element={<UserProtected/>}>
  <Route path="/my-courses/:id" element={<CourseContent/>}/>
       </Route>
@@ -104,11 +107,14 @@ function App() {
           <Route path="ordersAnalytics" element={<OrdersAnalytics />} />
           <Route path="Users" element={<Users />} />
           <Route path="dashboard" element={<CreateCourse />} />
-          <Route path="Invoices" element={<Invoices />} />
+         <Route path="invoices" element={<Invoices/>}/>
+        <Route path="invoice/:id" element={<InvoicePage/>}/>
+          
           <Route path="heroSection" element={<Hero />} />
           <Route path="courseReviews" element={<ReviewSection />} />
           <Route path="courseComments" element={<CommentSection />} />
           <Route path="allnotifications" element={<AdminNotifications />} />
+          {/* <Route path="managementsite" element={<Managementsite />} /> */}
 
 
           {/* home routes */}

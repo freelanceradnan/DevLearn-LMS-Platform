@@ -37,11 +37,20 @@ export default function Hero() {
 <div className="flex flex-col md:flex-row justify-between items-center gap-8 lg:gap-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
   {/* Left Text Column - order-2 on mobile, order-1 on desktop */}
-  <motion.div className="w-full md:w-2/3 flex flex-col gap-6 order-1 md:order-2"
-  initial={{ opacity: 0, x: -50 }}
+ <motion.div 
+  className="w-full md:w-2/3 flex flex-col gap-6 order-1 md:order-2"
+  initial={{ opacity: 0, x: -25 }}
   whileInView={{ opacity: 1, x: 0 }}
-  transition={{ duration: 0.6, ease: "easeOut" }}
-  >
+  viewport={{ once: true, margin: "-50px" }}
+  transition={{ 
+    duration: 0.5, 
+    ease: [0.215, 0.61, 0.355, 1] 
+  }}
+  style={{ 
+    willChange: "transform, opacity",
+    transform: "translateZ(0)" 
+  }}
+>
     <div className="w-full py-3 px-4 bg-[#E5F9E8] text-[#09C93E] text-sm font-semibold rounded-full shadow-sm text-center max-w-60 flex gap-2 items-center justify-center border-[#08AA25] border">
       <div className="h-2 w-2 rounded-full bg-[#09C93E]"></div>
       New Courses Available

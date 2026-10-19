@@ -34,16 +34,23 @@ export default function CourseCard({ cart,index}) {
 
   return (
     <motion.div 
-  className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 md:w-full border border-gray-100 group overflow-hidden flex flex-col justify-between"
-  initial={{ y: 50, opacity: 0 }} 
+  className="bg-white rounded-2xl border border-gray-100 group overflow-hidden flex flex-col justify-between transition-shadow duration-300 shadow-sm hover:shadow-xl"
+  initial={{ y: 25, opacity: 0 }}
   whileInView={{ y: 0, opacity: 1 }}
-  viewport={{once:true}}
-  transition={{ 
-    duration: 3, 
-    delay: index * 0.15, 
-    ease: "easeOut" 
+  viewport={{ once: true, margin: "-50px" }}
+  transition={{
+    duration: 0.5,
+    delay: Math.min(index * 0.05, 0.3), 
+    ease: [0.215, 0.61, 0.355, 1],
+  }}
+  style={{
+    willChange: "transform, opacity",
+    transform: "translateZ(0)",
   }}
 >
+  {/* Content */}
+
+
   <Link to={`/course/${cart._id}`} className="flex flex-col h-full">
     
     {/* Image Container */}
@@ -51,6 +58,7 @@ export default function CourseCard({ cart,index}) {
       <img
         src={thumbnail?.url || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=60'}
         alt={name}
+        loading="lazy"
         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
       />
       {/* Level Badge */}

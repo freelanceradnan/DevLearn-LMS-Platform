@@ -36,7 +36,7 @@ router.post("/register", authController.Registration);
 router.post("/activation", authController.ActiveUser);
 router.post("/login", authController.UserLogin);
 router.post("/logout", isAuthenticated, authController.LogoutUser);
-router.post("/logoutadmin", isAuthenticated, authController.LogoutAdmin);
+router.post("/logoutadmin", isAdminAuthenticated, authController.LogoutAdmin);
 router.post('/adminLogin',authController.AdminLogin)
 router.get("/refreshtoken", authController.updateToken);
 router.get("/getUserInfo", isAuthenticated, userController.getInfo);
@@ -100,6 +100,7 @@ router.get('/getallReviews', isAdminAuthenticated, AdminMiddlewares, ReviewContr
 router.get('/getcomments',isAdminAuthenticated,AdminMiddlewares,CommentController.GetAllComments)
 router.get('/admin-info',isAdminAuthenticated,AdminMiddlewares,AdminController.GetAdminInfo)
 router.put('/update-Admin-info',isAdminAuthenticated,AdminMiddlewares,AdminController.UpdateAdminInfo)
+router.get('/admin-all-order',isAdminAuthenticated,AdminMiddlewares,OrderController.getAdminOrder)
 //public all routes
 router.post('/create-paymentIntent',PaymentController.PaymentIntent)
 router.get('/GetPubCourses',PublicController.PublicAllCourse)

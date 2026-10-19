@@ -477,6 +477,12 @@ UpdateAdminInfo:builder.mutation({
   body:payload
   }),
   invalidatesTags:['admininfo']
+}),
+GetAdminAllOrder:builder.query({
+query:()=>({
+url:'/admin-all-order',
+method:'GET'
+}),
 })
   }),
 });
@@ -539,5 +545,6 @@ export const {
   useUpdateAdminNotificationMutation,
   useUpdateAllAdminNotificationMutation,
   useGetAdminInfoQuery,
-  useUpdateAdminInfoMutation
+  useUpdateAdminInfoMutation,
+  useGetAdminAllOrderQuery
 } = ApiSlice;

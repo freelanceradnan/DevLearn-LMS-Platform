@@ -120,10 +120,12 @@ const AdminNavbar = ({
   setShowDesktop,
 }) => {
    const [updateAllStatus]=useUpdateAllAdminNotificationMutation()
+   const {data:AdminInfo}=useGetAdminInfoQuery()
+   
   const { admin } = useSelector((state) => state.admin);
   const [quickAccess, setQuickAccess] = useState(false);
   const initials = admin?.name ? admin.name.slice(0, 2).toUpperCase() : 'AD';
- const {data:AdminInfo}=useGetAdminInfoQuery()
+
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -363,21 +365,26 @@ const updateAllNotification=async()=>{
             className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-2 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:hover:bg-slate-800"
           >
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-xs font-semibold text-white">
-              {initials}
+             {AdminInfo?.data?.avatar?
+            <img src={AdminInfo?.data?.avatar?.url} alt="" className='full rounded-full'/>:
+            <User/> 
+            }
             </span>
             <span className="hidden text-left sm:block">
               <span className="block text-sm font-medium leading-4 text-slate-900 dark:text-white">
-                {admin?.name}
+                {AdminInfo?.data?.name?.length > 5 
+  ? `${AdminInfo?.data?.name.slice(0, 5)}...` 
+  : AdminInfo?.data?.name}
               </span>
-              <span className="block text-xs text-slate-400">{admin?.role}</span>
+              <span className="block text-xs text-slate-400">{AdminInfo?.data?.role}</span>
             </span>
           </button>
 
           {profileOpen && (
             <div className="absolute right-0 top-12 w-60 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900 z-50">
               <div className="border-b border-slate-100 px-4 py-3 dark:border-slate-800">
-                <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{admin?.name}</p>
-                <p className="truncate text-xs text-slate-400">{admin?.email}</p>
+                <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{AdminInfo.data?.name}</p>
+                <p className="truncate text-xs text-slate-400">{AdminInfo.data?.email}</p>
               </div>
 
               <div className="p-1.5 text-sm text-slate-700 dark:text-slate-200">
@@ -391,13 +398,7 @@ const updateAllNotification=async()=>{
                 >
                   <User size={16} /> My profile
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setProfileOpen(false)}
-                  className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800"
-                >
-                  <Settings size={16} /> Settings
-                </button>
+               
               </div>
 
               <div className="border-t border-slate-100 p-1.5 dark:border-slate-800">

@@ -82,7 +82,7 @@ console.log(AllNotification)
                 return (
                     <Link
                         key={item._id}
-                        // to={item?.data?.redirectUrl || "#"}
+                       
                         onClick={() => isUnread && updateNotifications(item._id)}
                         className={`flex items-start justify-between p-3 rounded-xl border transition-all duration-200 shadow-sm hover:shadow-md ${
                             isUnread 

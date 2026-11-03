@@ -1,76 +1,63 @@
 import {
   Check,
   ChevronRight,
-  FileDown,
   SquarePlay,
   Star,
   Trophy,
   Infinity,
   ChevronUp,
   ChevronDown,
+  RefreshCw,
 } from "lucide-react";
-import React, { useState, useEffect } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
-
   useGetMentorQuery,
   useGetPubCourseDetailsQuery,
   useGetUserInfoQuery,
 } from "../Features/ApiSlice";
-import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  PaymentElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
-import { useSelector } from "react-redux";
-import CheckoutForm from "../Components/CheckoutFrom";
 import CoursePlayer from "../Components/AdminDeshboard/CreateCourse/CoursePlayer";
-
-
 
 const CourseDetails = () => {
   const navigate = useNavigate();
- const {data:UsersCoursesId}=useGetUserInfoQuery()
- const {data:allMentors}=useGetMentorQuery()
   const { id } = useParams();
-  const [courseDetails, setCourseDetails] = useState({});
-  const [GroupOpen, setGroupOpen] = useState("");
-  const [isEnrolled,setIsEnrolled]=useState(false)
-  const { data, isLoading } = useGetPubCourseDetailsQuery(id, {
-    skip: !id,
-  });
+  const [GroupOpen, setGroupOpen] = useState(null);
 
-  useEffect(() => {
-   
-    const userCourses = UsersCoursesId?.Courses || []
+  const { data: UsersCoursesId, isLoading: userLoading } = useGetUserInfoQuery();
+  const { data: allMentors, isLoading: mentorLoading } = useGetMentorQuery();
+  const {
+    data,
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+  } = useGetPubCourseDetailsQuery(id, { skip: !id });
 
-    if (userCourses && Array.isArray(userCourses)) {
-      const enrolled = userCourses?.some((item) => (item._id ? item._id == id : item == id));
-      setIsEnrolled(enrolled);
-     
-    }
-  }, [UsersCoursesId, id]);
+  // derive state
+  const courseDetails = data || {};
 
-  useEffect(() => {
-    if (data) {
-      setCourseDetails(data);
-    }
-  }, [data]);
-  
+  const userCourses = Array.isArray(UsersCoursesId?.Courses)
+    ? UsersCoursesId.Courses
+    : [];
+  const isEnrolled = userCourses.some((item) =>
+    item?._id ? item._id == id : item == id,
+  );
+
+  // Course content section  group
   const groupedMap = {};
-  data?.courseData?.forEach((item) => {
-    const sectionName = item.videoSection?.trim();
-    const titleName = item.title?.trim();
-    if (!sectionName) return;
-    if (!groupedMap[sectionName]) {
-      groupedMap[sectionName] = { section: sectionName, data: [] };
-    }
-    if (!groupedMap[sectionName].data.includes(titleName)) {
-      groupedMap[sectionName].data.push(titleName);
-    }
-  });
+  (Array.isArray(courseDetails.courseData) ? courseDetails.courseData : []).forEach(
+    (item) => {
+      const sectionName = item?.videoSection?.trim();
+      const titleName = item?.title?.trim();
+      if (!sectionName) return;
+      if (!groupedMap[sectionName]) {
+        groupedMap[sectionName] = { section: sectionName, data: [] };
+      }
+      if (titleName && !groupedMap[sectionName].data.includes(titleName)) {
+        groupedMap[sectionName].data.push(titleName);
+      }
+    },
+  );
   const groupedSection = Object.values(groupedMap);
 
   const discountPercentagePrice = courseDetails?.estimatedPrice
@@ -81,17 +68,54 @@ const CourseDetails = () => {
       )
     : 0;
 
+  const mentorName = mentorLoading
+    ? "..."
+    : allMentors?.data?.find((item) => item._id === courseDetails?.owner)?.name ||
+      "Unknown";
+
+  const NavigatePayment = () => {
+    navigate("/paymentcheckout", { state: courseDetails });
+  };
+
+  // 1. Loading
   if (isLoading) {
     return (
-      <div className="text-center py-20 text-lg font-medium text-slate-600">
-        Loading course details...
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
       </div>
     );
   }
-const NavigatePayment=()=>{
- navigate('/paymentcheckout', { state: courseDetails });
-}
- const mentorName = allMentors?.data?.find((item)=>item._id===courseDetails?.owner)?.name||"NotFound"
+
+  // 2. Error 
+  if (isError || !data) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 px-4 text-center">
+        <p className="text-red-500">
+          {isError
+            ? "Course details load hoyni. Internet ba server check koro."
+            : "Course ta pawa jayni."}
+        </p>
+        <div className="flex gap-2">
+          <button
+            onClick={refetch}
+            disabled={isFetching}
+            className="flex items-center gap-2 rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60"
+          >
+            <RefreshCw size={16} className={isFetching ? "animate-spin" : ""} />
+            Retry
+          </button>
+          <button
+            onClick={() => navigate("/courses")}
+            className="rounded-full border px-4 py-2 text-sm font-semibold hover:bg-slate-100"
+          >
+            All Courses
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. Success
   return (
     <div className="bg-slate-50 min-h-screen pb-16">
       {/* Header */}
@@ -117,8 +141,7 @@ const NavigatePayment=()=>{
               <Star size={14} fill="currentColor" /> 4.8
             </span>
             <span>
-              Created by{" "}
-              <strong className="text-white">{mentorName}</strong>
+              Created by <strong className="text-white">{mentorName}</strong>
             </span>
           </div>
         </div>
@@ -126,15 +149,15 @@ const NavigatePayment=()=>{
 
       {/* Content Layout */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Course Details (Left Side) */}
+        {/* Left Side */}
         <div className="lg:col-span-2 space-y-6 flex-1 order-last md:order-first">
           <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
             <h3 className="text-xl font-bold text-slate-800 mb-4">
               What you'll learn
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {courseDetails?.benefits?.map((item) => (
-                <div key={item._id} className="flex items-start gap-2.5">
+              {courseDetails?.benefits?.map((item, index) => (
+                <div key={item._id || index} className="flex items-start gap-2.5">
                   <Check className="text-emerald-600 mt-1 shrink-0" size={18} />
                   <p className="text-sm text-slate-700">{item.title}</p>
                 </div>
@@ -147,69 +170,74 @@ const NavigatePayment=()=>{
             <h3 className="text-xl font-bold text-slate-800 mb-4">
               Course Contents
             </h3>
-            <div className="space-y-3">
-              {groupedSection?.map((group, index) => {
-                const isOpen = GroupOpen === group.section;
-                return (
-                  <div
-                    key={index}
-                    className="border border-slate-200 rounded-lg overflow-hidden transition-all duration-200"
-                  >
-                    <button
-                      onClick={() =>
-                        setGroupOpen(isOpen ? null : group.section)
-                      }
-                      className="w-full flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100 transition-colors text-left"
+            {groupedSection.length === 0 ? (
+              <p className="text-sm text-slate-500">
+                No Lecture Availble
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {groupedSection.map((group, index) => {
+                  const isOpen = GroupOpen === group.section;
+                  return (
+                    <div
+                      key={index}
+                      className="border border-slate-200 rounded-lg overflow-hidden transition-all duration-200"
                     >
-                      <span className="font-semibold text-slate-700 flex items-center gap-2">
-                        {group.section}
-                      </span>
-                      <div className="text-slate-500 flex gap-1 text-sm">
-                        <span>{group?.data?.length} Lectures</span>
-                        {isOpen ? (
-                          <ChevronUp size={20} />
-                        ) : (
-                          <ChevronDown size={20} />
-                        )}
-                      </div>
-                    </button>
-                    {isOpen && (
-                      <div className="bg-white px-4 py-3 border-t border-slate-200 space-y-2.5">
-                        {group.data?.map((title, titleIndex) => (
-                          <div
-                            key={titleIndex}
-                            className="flex items-center gap-3 text-slate-600 hover:text-blue-600 text-sm py-1.5 transition-colors cursor-pointer"
-                          >
-                            <SquarePlay
-                              size={18}
-                              className="text-slate-400 shrink-0"
-                            />
-                            <span>{title}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+                      <button
+                        onClick={() => setGroupOpen(isOpen ? null : group.section)}
+                        className="w-full flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100 transition-colors text-left"
+                      >
+                        <span className="font-semibold text-slate-700 flex items-center gap-2">
+                          {group.section}
+                        </span>
+                        <div className="text-slate-500 flex gap-1 text-sm">
+                          <span>{group.data.length} Lectures</span>
+                          {isOpen ? (
+                            <ChevronUp size={20} />
+                          ) : (
+                            <ChevronDown size={20} />
+                          )}
+                        </div>
+                      </button>
+                      {isOpen && (
+                        <div className="bg-white px-4 py-3 border-t border-slate-200 space-y-2.5">
+                          {group.data.map((title, titleIndex) => (
+                            <div
+                              key={titleIndex}
+                              className="flex items-center gap-3 text-slate-600 hover:text-blue-600 text-sm py-1.5 transition-colors cursor-pointer"
+                            >
+                              <SquarePlay
+                                size={18}
+                                className="text-slate-400 shrink-0"
+                              />
+                              <span>{title}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Preview Card & Checkout (Right Side) */}
+        {/* Right Side: Preview Card & Checkout */}
         <div className="lg:col-span-1">
           <div className="bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden sticky top-6">
             <div className="relative aspect-video bg-black flex items-center justify-center text-white">
-              {/* <p className="text-sm">Course Preview / Video</p> */}
-              <CoursePlayer videoUrl={courseDetails?.demoUrl}/>
+              {courseDetails?.demoUrl ? (
+                <CoursePlayer videoUrl={courseDetails.demoUrl} />
+              ) : (
+                <p className="text-sm text-slate-400">Preview nai</p>
+              )}
             </div>
 
             <div className="p-6 space-y-6">
               <div className="flex items-baseline gap-3">
                 <span className="text-3xl font-extrabold text-slate-900">
-                  {courseDetails?.price === 0
-                    ? "Free"
-                    : `$${courseDetails?.price}`}
+                  {courseDetails?.price === 0 ? "Free" : `$${courseDetails?.price}`}
                 </span>
                 {courseDetails?.estimatedPrice > 0 && (
                   <span className="text-base text-slate-400 line-through font-medium">
@@ -225,8 +253,8 @@ const NavigatePayment=()=>{
 
               <div className="border-t border-slate-100 pt-4 space-y-3 text-sm text-slate-600">
                 <p className="flex items-center gap-2.5">
-                  <Infinity size={18} className="text-slate-400" /> Full
-                  lifetime access
+                  <Infinity size={18} className="text-slate-400" /> Full lifetime
+                  access
                 </p>
                 <p className="flex items-center gap-2.5">
                   <Trophy size={18} className="text-slate-400" /> Certificate of
@@ -234,17 +262,24 @@ const NavigatePayment=()=>{
                 </p>
               </div>
 
-             {!isEnrolled?
-             <button
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-md disabled:opacity-50 cursor-pointer"
-                onClick={()=>NavigatePayment()}
-              >
-                Pay & Enroll
-              </button>:
-              <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-md disabled:opacity-50 cursor-pointer" onClick={()=>navigate(`/my-courses/${id}`)}>
-              View Course
-              </button> 
-            }
+              {/* paybutton */}
+              {userLoading ? (
+                <div className="h-12 w-full rounded-xl bg-gray-200 animate-pulse" />
+              ) : !isEnrolled ? (
+                <button
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-md cursor-pointer"
+                  onClick={NavigatePayment}
+                >
+                  Pay & Enroll
+                </button>
+              ) : (
+                <button
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-md cursor-pointer"
+                  onClick={() => navigate(`/my-courses/${id}`)}
+                >
+                  View Course
+                </button>
+              )}
             </div>
           </div>
         </div>

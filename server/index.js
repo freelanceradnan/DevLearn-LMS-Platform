@@ -37,7 +37,8 @@ app.use(
     origin: [
       "https://dev-learn-lms-platform-xnox-dglpjr3ma.vercel.app",
       "https://dev-learn-lms-platform-git-0927e1-reactorbro722-7825s-projects.vercel.app",
-      "http://localhost:5173"
+      "http://localhost:5173",
+      "http://localhost:4173"
     ],
     credentials: true,
   })

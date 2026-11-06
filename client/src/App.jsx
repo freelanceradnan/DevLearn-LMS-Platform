@@ -64,6 +64,7 @@ function App() {
             <Route path="/search" element={<SearchPage/>}/>
             <Route path="/mentors" element={<MentorPage/>}/>
             <Route path="/policy" element={<PolicyPage/>}/>
+        <Route path="" element={<UserProtected/>}>
         <Route path="/profile" element={<Profile />}>
      
           <Route path="info" index element={<ProfileInfo />} />
@@ -73,12 +74,16 @@ function App() {
           
           <Route path="closeaccount" element={<CloseAccount/>} />
         </Route>
+        </Route>
+         <Route path="" element={<UserProtected/>}>
         <Route path="usersNotification" element={<UsersNotification/>} />
         <Route path="/my-courses" element={<MyCourses/>}/>
         <Route path="/cart" element={<CartPage/>}/>
         <Route path="/wishlist" element={<WishList/>}/>
-        <Route path="/purchasehistory" element={<Purchasehistory/>}/>
+       
+          <Route path="/purchasehistory" element={<Purchasehistory/>}/>
         <Route path="/invoice" element={<InvoicePage/>}/>
+        </Route>
        
       </Route>
 

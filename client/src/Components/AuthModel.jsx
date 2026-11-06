@@ -6,14 +6,31 @@ import {
   useActivateUserMutation,
   useLoginUserMutation,
   useRegisterUserMutation,
+  useResetNewPasswordMutation,
+  useSendResetOtpMutation,
+  useSentEmailOtpMutation,
   useSocialAuthMutation,
+  useVerifyResetOtpMutation,
 } from "../Features/ApiSlice";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../Features/AuthSlice";
 import { GoogleLogin } from "@react-oauth/google";
+
+// small spinner used inside buttons
+const Spinner = () => (
+  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+  </svg>
+);
+
 const AuthModal = ({ setModal, state: initialState = "login" }) => {
+  const [OtpEmail,SetEmailOtp]=useState("")
+  const [verifyResetOtp]=useVerifyResetOtpMutation()
+  const [sendResetOtp] = useSendResetOtpMutation();
+  const [resetNewPassword]=useResetNewPasswordMutation()
   const {user}=useSelector((state)=>state.auth)
   const [googleLogin]=useSocialAuthMutation()
   const dispatch = useDispatch();
@@ -21,10 +38,17 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
   const [loginUser] = useLoginUserMutation();
   const navigate = useNavigate();
   const [userActive] = useActivateUserMutation();
+  const [otpCode, setOtpCode] = useState("");
   //loading states
   const [registerLoading, setRegisterLoading] = useState(false);
   const [activateLoading, setActivateLoading] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
+  // loading states
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [sendOtpLoading, setSendOtpLoading] = useState(false);
+  const [verifyOtpLoading, setVerifyOtpLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
+
   const [registerInfo, setRegisterInfo] = useState({
     name: "",
     email: "",
@@ -39,6 +63,8 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
     email: "",
     password: "",
   });
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const changeRegisterHandler = (e) => {
     const { name, value } = e.target;
 
@@ -130,6 +156,7 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
   };
   //google login
   const handlesuccess = async(credential) => {
+   setGoogleLoading(true); 
    try {
    const result=await googleLogin({credential:credential.credential}).unwrap()
    if(result){
@@ -148,6 +175,8 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
   
    } catch (error) {
     toast.error("failed to authentication with google")
+   } finally {
+    setGoogleLoading(false); 
    }
   };
   const handlerError=async()=>{
@@ -165,6 +194,79 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
   window.location.href = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${encodeURIComponent(
     redirect_url
   )}&scope=user:email`;
+};
+//sent reset otp
+const handleSendOtp = async () => {
+    if (OtpEmail.trim() === "") {
+      return toast.error("Please enter a valid email");
+    }
+
+    setSendOtpLoading(true); 
+    try {
+     
+      const res = await sendResetOtp({ email: OtpEmail }).unwrap();
+     
+      toast.success("OTP sent successfully!");
+      setStep(4)
+      
+      
+    } catch (error) {
+      console.error(error);
+      toast.error(error?.data?.message || "Something went wrong");
+      SetEmailOtp("")
+      setStep(1)
+    } finally {
+      setSendOtpLoading(false); 
+    }
+  };
+  const handleVerifyOtp = async () => {
+  if (otpCode.trim().length !== 6) {
+    return toast.error("Please enter a valid 6-digit OTP");
+  }
+  
+  setVerifyOtpLoading(true); 
+  try {
+   const res=await verifyResetOtp({otp:otpCode,email:OtpEmail})
+   if(res.data.success===true){
+    toast.success("OTP verified successfully!");
+    setStep(5); 
+   }
+   
+  } catch (error) {
+    console.error(error);
+   
+    toast.error(error?.data?.message || "Invalid or expired OTP");
+    setStep(1)
+  } finally {
+    setVerifyOtpLoading(false);
+  }
+};
+const handleResetPassword = async () => {
+  if (!newPassword || !confirmPassword) {
+    return toast.error("Please fill in both password fields");
+  }
+
+  if (newPassword.length < 6) {
+    return toast.error("Password must be at least 6 characters long");
+  }
+
+  if (newPassword !== confirmPassword) {
+    return toast.error("Passwords do not match");
+  }
+
+  setResetLoading(true);
+  try {
+    const res=await resetNewPassword({email:OtpEmail,  password:confirmPassword})
+    console.log(res)
+
+    toast.success("Password reset successfully! Please login.");
+    setStep(1); // Redirect back to Login Step
+  } catch (error) {
+    console.error(error);
+    toast.error(error?.data?.message || "Failed to reset password");
+  } finally {
+    setResetLoading(false); 
+  }
 };
   return (
     <div
@@ -220,6 +322,13 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
                 </span>
               </button>
             </div>
+
+            {/* google loading indicator */}
+            {googleLoading && (
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                <Spinner /> Signing in with Google...
+              </div>
+            )}
 
             {/* Divider */}
             <div className="flex items-center my-1">
@@ -281,11 +390,13 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
               </button>
               </div>
              
+              {/*disabled + spinner use the correct loading state */}
               <button
                 type="submit"
-                disabled={registerLoading}
-                className="w-full bg-[#4266c7] hover:bg-[#3553a7] text-white py-2.5 rounded-lg text-sm font-semibold transition mt-2 shadow-md"
+                disabled={isLogin ? loginLoading : registerLoading}
+                className="w-full flex items-center justify-center gap-2 bg-[#4266c7] hover:bg-[#3553a7] disabled:opacity-60 disabled:cursor-not-allowed text-white py-2.5 rounded-lg text-sm font-semibold transition mt-2 shadow-md"
               >
+                {(isLogin ? loginLoading : registerLoading) && <Spinner />}
                 {isLogin
                   ? loginLoading
                     ? "Logining..."
@@ -339,11 +450,13 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
                 />
               </div>
 
+              {/*  spinner added */}
               <button
                 type="submit"
                 disabled={code.length !== 4 || activateLoading}
-                className="w-full bg-[#4266c7] hover:bg-[#3553a7] disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-2.5 rounded-lg text-sm font-semibold transition shadow-md"
+                className="w-full flex items-center justify-center gap-2 bg-[#4266c7] hover:bg-[#3553a7] disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-2.5 rounded-lg text-sm font-semibold transition shadow-md"
               >
+                {activateLoading && <Spinner />}
                 {activateLoading ? "Activating Account..." : "Activate Account"}
               </button>
             </form>
@@ -378,18 +491,22 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
                 <input
                   name="password"
                   type="email"
-                  value={registerInfo?.password || ""}
+                  // value={registerInfo?.password || ""}
+                  value={OtpEmail}
                   autoComplete="current-password"
-                  onChange={changeRegisterHandler}
+                  onChange={(e)=>SetEmailOtp(e.target.value)}
                   placeholder="new@gmail.com"
                   className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm"
                 />
+                {/*  loading added */}
                 <button
                 type="button"
-                className="w-full bg-[#4266c7] hover:bg-[#3553a7] text-white py-2.5 rounded-lg text-sm font-semibold transition mt-2 shadow-md"
-              
+                disabled={sendOtpLoading}
+                className="w-full flex items-center justify-center gap-2 bg-[#4266c7] hover:bg-[#3553a7] disabled:opacity-60 disabled:cursor-not-allowed text-white py-2.5 rounded-lg text-sm font-semibold transition mt-2 shadow-md"
+               onClick={handleSendOtp}
               >
-               Sent Otp
+               {sendOtpLoading && <Spinner />}
+               {sendOtpLoading ? "Sending OTP..." : "Sent Otp"}
               </button>
                  <div className="text-center text-sm text-gray-600 flex gap-2 justify-center py-2">
              <div>Already Have Password?</div>
@@ -405,6 +522,123 @@ const AuthModal = ({ setModal, state: initialState = "login" }) => {
               </div>
           </>
         )}
+        {step === 4 && (
+  <>
+    <div>
+      <div>
+        <h2 className="text-2xl font-bold text-gray-800">
+          Enter OTP Code
+        </h2>
+        <p className="text-sm text-gray-500 mt-1">
+          We have sent a verification code to <span className="font-medium text-gray-700">{OtpEmail}</span>
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-1.5 my-6">
+        <label className="text-sm font-medium text-gray-700">
+          Verification Code
+        </label>
+        <input
+          name="otp"
+          type="text"
+          maxLength={6}
+          value={otpCode}
+          onChange={(e) => setOtpCode(e.target.value)}
+          placeholder="123456"
+          className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm tracking-widest text-center font-semibold text-lg"
+        />
+        
+        {/*loading added */}
+        <button
+          type="button"
+          disabled={verifyOtpLoading}
+          className="w-full flex items-center justify-center gap-2 bg-[#4266c7] hover:bg-[#3553a7] disabled:opacity-60 disabled:cursor-not-allowed text-white py-2.5 rounded-lg text-sm font-semibold transition mt-2 shadow-md"
+          onClick={handleVerifyOtp}
+        >
+          {verifyOtpLoading && <Spinner />}
+          {verifyOtpLoading ? "Verifying..." : "Verify OTP"}
+        </button>
+
+        <div className="text-center text-sm text-gray-600 flex gap-2 justify-center py-2">
+          <div>Didn't receive code?</div>
+          {/* resend loading */}
+          <button
+            type="button"
+            disabled={sendOtpLoading}
+            onClick={handleSendOtp} 
+            className="text-[#4266c7] font-semibold hover:underline disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {sendOtpLoading ? "Sending..." : "Resend"}
+          </button>
+        </div>
+      </div>
+    </div>
+  </>
+)}{step === 5 && (
+  <>
+    <div>
+      <div>
+        <h2 className="text-2xl font-bold text-gray-800">
+          Reset Password
+        </h2>
+        <p className="text-sm text-gray-500 mt-1">
+          Create a new password for your account
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-4 my-6">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-gray-700">
+            New Password
+          </label>
+          <input
+            name="newPassword"
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            placeholder="••••••••"
+            className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm"
+          />
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-gray-700">
+            Confirm New Password
+          </label>
+          <input
+            name="confirmPassword"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="••••••••"
+            className="w-full px-3.5 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm"
+          />
+        </div>
+
+        
+        <button
+          type="button"
+          disabled={resetLoading}
+          className="w-full flex items-center justify-center gap-2 bg-[#4266c7] hover:bg-[#3553a7] disabled:opacity-60 disabled:cursor-not-allowed text-white py-2.5 rounded-lg text-sm font-semibold transition mt-2 shadow-md"
+          onClick={handleResetPassword}
+        >
+          {resetLoading && <Spinner />}
+          {resetLoading ? "Saving password..." : "Submit New Password"}
+        </button>
+
+        <div className="text-center text-sm text-gray-600 flex gap-2 justify-center py-1">
+          <button
+            type="button"
+            onClick={() => setStep(1)}
+            className="text-[#4266c7] font-semibold hover:underline"
+          >
+            Back to Login
+          </button>
+        </div>
+      </div>
+    </div>
+  </>
+)}
       </div>
     </div>
   );

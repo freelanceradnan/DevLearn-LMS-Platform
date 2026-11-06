@@ -483,6 +483,27 @@ query:()=>({
 url:'/admin-all-order',
 method:'GET'
 }),
+}),
+SendResetOtp:builder.mutation({
+  query:({email})=>({
+   url:'/SendEmailOtp',
+   method:'POST',
+   body:{email}
+  })
+}),
+VerifyResetOtp:builder.mutation({
+  query:({otp,email})=>({
+  url:'/VerifyOtp',
+  method:'POST',
+  body:{otp,email}
+  })
+}),
+ResetNewPassword:builder.mutation({
+  query:({email,  password})=>({
+    url:'/resetnewPassword',
+    method:'POST',
+    body:{email,  password}
+  })
 })
   }),
 });
@@ -546,5 +567,8 @@ export const {
   useUpdateAllAdminNotificationMutation,
   useGetAdminInfoQuery,
   useUpdateAdminInfoMutation,
-  useGetAdminAllOrderQuery
+  useGetAdminAllOrderQuery,
+  useSendResetOtpMutation,
+  useVerifyResetOtpMutation,
+  useResetNewPasswordMutation
 } = ApiSlice;

@@ -307,18 +307,19 @@ export async function getUsersAllCourses(id) {
    
    return purchaseCourses; 
 }
-export async function VerifyMyPassword(userId, password) {
-    const IsExistingUser = await User.findById(userId).select("+password");
-    
-    if (!IsExistingUser) {
-        throw new Error("User not valid!");
-    }
+export async function VerifyMyPassword(email,newPassword) {
+  const user = await User.findOne({ email: email });
+  
+  if (!user) {
+    throw new Error("User not found!");
+  }
 
-    const MatchPassword = await bcrypt.compare(password, IsExistingUser.password);
-    
-    if (!MatchPassword) {
-        throw new Error("Incorrect password"); 
-    }
 
-    return { success: true }; 
+
+  const passHash = await bcrypt.hash(newPassword, 10);
+  user.password = passHash; 
+
+
+  
+  await user.save();
 }

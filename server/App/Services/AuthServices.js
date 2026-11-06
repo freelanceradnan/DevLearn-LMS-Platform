@@ -231,9 +231,10 @@ export async function socialMyAuth(credential, res, githubDetails) {
     return res.status(500).json({ success: false, message: error.message });
   }
 }
-export async function SendMyOtp(userId){
-const user=await User.findById(userId)
-if(!User){
+export async function SendMyOtp(email){
+const user = await User.findOne({ email: email });
+
+if(!user){
   throw new Error("User not found!")
 }
 const generatedOtp = Math.floor(100000 + Math.random() * 900000);
@@ -250,16 +251,17 @@ if(SentEmail){
   return {success:true}
 }
 }
-export async function VerifyMyOtp(otp, userId) {
+export async function VerifyMyOtp(otp, email) {
   
-    const user = await User.findById(userId);
+   const user = await User.findOne({ email: email });
   
     if (!user) {
         throw new Error("User not found!");
     }
 
     const isMatchOtp = String(user.otp) === String(otp);
- 
+    console.log('users otp',user.otp)
+    console.log('input otp',otp)
     if (!isMatchOtp) {
         throw new Error("OTP is wrong!");
     }
@@ -268,6 +270,17 @@ export async function VerifyMyOtp(otp, userId) {
     await user.save();
 
     return { success: true };
+}
+export async function VerifyMyPassword(email,password){
+  const user = await User.findOne({ email: email });
+  
+    if (!user) {
+        throw new Error("User not found!");
+    }
+    const passwordHash=await bcrypt.hash(password,10)
+    user.password=passwordHash,
+    await user.save()
+
 }
 export async function ChangeMyPassword(userId, newPassword, OldPassword) {
   const userData = await User.findById(userId);

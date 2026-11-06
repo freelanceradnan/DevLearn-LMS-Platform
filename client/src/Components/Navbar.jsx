@@ -512,7 +512,7 @@ useEffect(() => {
                   <button
                     className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-purple-50 transition-colors text-left"
                     onClick={() => {
-                      navigate("/profile");
+                      navigate("/profile/info");
                       setOpenMenu(false);
                     }}
                   >
@@ -596,7 +596,7 @@ useEffect(() => {
 
               {/* Account Navigation */}
               <div className="p-4 space-y-6 flex-1 overflow-y-auto">
-                <Navigate to="/profile" />
+                <Navigate to="/profile/info" />
               </div>
             </div>
           )}

@@ -337,31 +337,47 @@ export const VerifyPassword = CatchAsyncError(async(req, res, next) => {
     });
 });
 export const SendEmailOtp=CatchAsyncError(async(req,res,next)=>{
-  const userId=req.user._id
-  if(!userId){
-  return next(new ErrorHandler("Userid not found!"))
+  const { email } = req.body;
+
+  if(!email){
+  return next(new ErrorHandler("email not found!"))
   }
-  const result=await SendMyOtp(userId)
+  const result=await SendMyOtp(email)
   res.status(200).json({
     success:true,
     message:"otp sent success"
   })
 })
 export const VerifyOtp = CatchAsyncError(async (req, res, next) => {
-    const { otp } = req.body;
-    const userId = req.user._id;
+    const { otp,email} = req.body;
     
-    if (!otp || !userId) {
+    
+    if (!otp || !email) {
         return next(new ErrorHandler("User ID and OTP are required!", 400));
     }
 
    
-    await VerifyMyOtp(otp, userId);
+    await VerifyMyOtp(otp, email);
 
     res.status(200).json({
         success: true,
         message: "OTP verified successfully!"
     });
+});
+export const VerifyNewPassword = CatchAsyncError(async (req, res, next) => {
+  const { email,  password } = req.body;
+    
+  if (!email | !password) {
+    return next(new ErrorHandler("Email, OTP, and new password are required!", 400));
+  }
+
+  
+  await VerifyMyPassword(email, password);
+
+  res.status(200).json({
+    success: true,
+    message: "Password reset successfully!"
+  });
 });
 export const DeleteUserAccount = CatchAsyncError(async (req, res, next) => {
   const userId = req.user._id;

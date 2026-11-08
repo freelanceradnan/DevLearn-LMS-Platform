@@ -152,6 +152,7 @@ useEffect(() => {
       navigate(`search?q=${searchQuery.trim()}`);
     }
   };
+  
   //checking isadmin login
   // useEffect(() => {
   //   if (user?.role === "admin") {
@@ -300,59 +301,46 @@ useEffect(() => {
                     </span>
                   )}
                 </button>
-                <div className="relative inline-block">
-                  {/* Bell Button */}
-                  <button
-                    className="p-2 rounded-full hover:bg-gray-100 transition-colors cursor-pointer relative inline-block"
-                    onClick={() => setBellOn(!bellOn)}
-                    aria-label="Notifications"
-                  >
-                    <Bell className="w-5 h-5 text-gray-600" />
-                    {hasUnread && (
-                      <span className="absolute top-2 right-2 px-1 py-0.5 min-w-[5px] h-2 rounded-full text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
-                        <div className="h-2 w-2 bg-red-500 rounded-full">
+               <div className="relative inline-block">
+  {/* Bell button */}
+  <button
+    onClick={() => setBellOn((prev) => !prev)}
+    aria-label={hasUnread ? "Notifications, you have unread" : "Notifications"}
+    aria-expanded={bellOn}
+    className="relative rounded-full p-2 transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+  >
+    <Bell className="h-5 w-5 text-gray-600" />
+    {hasUnread && (
+      <span className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white" />
+    )}
+  </button>
 
-                        </div>
-                      </span>
-                    )}
-                  </button>
+  {bellOn && (
+    <>
+      {/* Click outside to close */}
+      <div className="fixed inset-0 z-40" onClick={() => setBellOn(false)} />
 
-                  {/* Backdrop to close when clicking outside */}
-                  {bellOn && (
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => setBellOn(false)}
-                    />
-                  )}
-
-                  {/* Dropdown Menu */}
-                  {bellOn && (
-                    <div
-                      className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-y-auto h-100"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {/* Header */}
-                      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50 sticky top-0">
-                        <h2 className="font-semibold text-gray-800 text-[16px]">
-                          Notifications
-                        </h2>
-                        <button
-                          className="text-xs text-blue-600 hover:underline font-medium cursor-pointer"
-                          onClick={() => navigate("/profile/notification")}
-                        >
-                         <Settings />
-                        </button>
-                      </div>
-                   
-                      {/* Body / Content */}
-                      <div className="p-2 text-sm text-gray-500 flex flex-col gap-2">
-                        <UsersNotification state={"Navbar"} Notifications={Notifications}/>
-                     
-                      </div>
-                      
-                    </div>
-                  )}
-                </div>
+      {/* Dropdown */}
+      <div className="absolute right-0 z-50 mt-2  w-80 overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-xl sm:w-96">
+        <UsersNotification
+          state={true}
+          headerAction={
+            <button
+              onClick={() => {
+                setBellOn(false);
+                navigate("/profile/notification");
+              }}
+              aria-label="Notification settings"
+              className="rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+            >
+              <Settings size={16} />
+            </button>
+          }
+        />
+      </div>
+    </>
+  )}
+</div>
               </>
             )}
             {user ? (

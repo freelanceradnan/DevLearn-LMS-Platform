@@ -260,8 +260,8 @@ export async function VerifyMyOtp(otp, email) {
     }
 
     const isMatchOtp = String(user.otp) === String(otp);
-    console.log('users otp',user.otp)
-    console.log('input otp',otp)
+    // console.log('users otp',user.otp)
+    // console.log('input otp',otp)
     if (!isMatchOtp) {
         throw new Error("OTP is wrong!");
     }

@@ -1,17 +1,110 @@
 import React, { useEffect, useState } from "react";
-import { useGetUsersCoursesQuery } from "../Features/ApiSlice";
 import { Link } from "react-router-dom";
-import { ClearCart } from "../Features/CartSlice";
 import { useDispatch } from "react-redux";
+import { BookOpen, GraduationCap, PlayCircle, RefreshCw } from "lucide-react";
 
+import { useGetUsersCoursesQuery } from "../Features/ApiSlice";
+import { ClearCart } from "../Features/CartSlice";
+
+/* ---------- loading skeleton ---------- */
+const CourseSkeleton = () => (
+  <div className="animate-pulse overflow-hidden rounded-xl bg-white ring-1 ring-slate-200">
+    <div className="aspect-video w-full bg-slate-200" />
+    <div className="space-y-3 p-5">
+      <div className="h-4 w-3/4 rounded bg-slate-200" />
+      <div className="h-3 w-full rounded bg-slate-100" />
+      <div className="h-3 w-2/3 rounded bg-slate-100" />
+      <div className="mt-4 h-10 w-full rounded-lg bg-slate-200" />
+    </div>
+  </div>
+);
+
+/* ---------- single course card ---------- */
+const CourseCard = ({ item }) => {
+  const thumbnail = item?.thumbnail?.url;
+
+  return (
+    <article className="group flex flex-col overflow-hidden rounded-xl bg-white ring-1 ring-slate-200 transition-shadow hover:shadow-md">
+      {/* thumbnail */}
+      <Link
+        to={`/my-courses/${item._id}`}
+        className="relative block aspect-video w-full overflow-hidden bg-slate-100"
+        tabIndex={-1}
+        aria-hidden
+      >
+        {thumbnail ? (
+          <img
+            src={thumbnail}
+            alt=""
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-slate-300">
+            <BookOpen size={40} />
+          </div>
+        )}
+
+        {/* play hint on hover */}
+        <span className="absolute inset-0 flex items-center justify-center bg-slate-900/0 opacity-0 transition-all group-hover:bg-slate-900/25 group-hover:opacity-100">
+          <PlayCircle size={44} className="text-white drop-shadow" />
+        </span>
+      </Link>
+
+      {/* info */}
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="line-clamp-1 text-base font-semibold text-slate-900">
+          {item.name}
+        </h3>
+        <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-slate-600">
+          {item.description ||
+            "Continue learning and master your skills with this course."}
+        </p>
+
+        <Link
+          to={`/my-courses/${item._id}`}
+          className="mt-5 inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+        >
+          <PlayCircle size={16} />
+          Continue learning
+        </Link>
+      </div>
+    </article>
+  );
+};
+
+/* ---------- empty state ---------- */
+const EmptyState = () => (
+  <div className="flex flex-col items-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-16 text-center">
+    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
+      <GraduationCap size={28} />
+    </div>
+    <h3 className="mt-4 text-lg font-semibold text-slate-900">
+      You haven't enrolled in any course yet
+    </h3>
+    <p className="mt-1 max-w-sm text-sm text-slate-500">
+      Browse the catalog and enroll in a course. It will show up here, ready to
+      continue.
+    </p>
+    <Link
+      to="/courses"
+      className="mt-6 inline-flex rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+    >
+      Explore courses
+    </Link>
+  </div>
+);
+
+/* ---------- main ---------- */
 const MyCourses = () => {
+  const dispatch = useDispatch();
   const {
     data: allcourses,
     isLoading,
     isFetching,
     refetch,
   } = useGetUsersCoursesQuery();
-  const dispatch = useDispatch();
+
   const [coursesData, setCoursesData] = useState([]);
 
   useEffect(() => {
@@ -19,14 +112,16 @@ const MyCourses = () => {
       setCoursesData(allcourses.data);
     }
   }, [allcourses]);
+
+  // refetch once shortly after mount (e.g. right after payment)
   useEffect(() => {
     const timer = setTimeout(() => {
       refetch();
     }, 5000);
-
     return () => clearTimeout(timer);
   }, [refetch]);
-  //automatic clear cart after success payment
+
+  // clear cart automatically after successful payment
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const redirectStatus = queryParams.get("redirect_status");
@@ -35,105 +130,53 @@ const MyCourses = () => {
     if (redirectStatus === "succeeded" || paymentIntent) {
       dispatch(ClearCart());
       localStorage.removeItem("cart_items");
-
       window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, [dispatch]);
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-        <span className="ml-3 text-lg font-medium text-gray-600">
-          Loading your courses...
-        </span>
-      </div>
-    );
-  }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8 border-b pb-4">
-        <h2 className="text-2xl font-bold text-gray-800">
-          My Enrolled Courses
-        </h2>
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+      {/* header */}
+      <header className="mb-8 flex flex-wrap items-end justify-between gap-3 border-b border-slate-200 pb-5">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">My courses</h1>
+          {!isLoading && (
+            <p className="mt-1 text-sm text-slate-500">
+              {coursesData.length === 0
+                ? "Nothing enrolled yet"
+                : `${coursesData.length} ${
+                    coursesData.length === 1 ? "course" : "courses"
+                  } enrolled`}
+            </p>
+          )}
+        </div>
 
-        {isFetching && (
-          <span className="text-xs text-indigo-500 animate-pulse">
-            Syncing...
+        {isFetching && !isLoading && (
+          <span
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-600"
+            role="status"
+          >
+            <RefreshCw size={14} className="animate-spin" />
+            Syncing
           </span>
         )}
-      </div>
+      </header>
 
-      {coursesData.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* content */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <CourseSkeleton key={i} />
+          ))}
+        </div>
+      ) : coursesData.length > 0 ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {coursesData.map((item, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300 flex flex-col justify-between"
-            >
-              {/* Course Thumbnail */}
-              <div className="relative h-48 w-full bg-gray-200">
-                <img
-                  src={
-                    item.thumbnail.url || "https://via.placeholder.com/400x225"
-                  }
-                  alt={item.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Course Info */}
-              <div className="p-5 flex-grow flex flex-col justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-1">
-                    {item.name}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                    {item.description ||
-                      "Continue learning and master your skills with this course."}
-                  </p>
-                </div>
-
-                {/* Action Button */}
-                <Link
-                  to={`/my-courses/${item._id}`}
-                  className="w-full block text-center bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200"
-                >
-                  Continue Learning
-                </Link>
-              </div>
-            </div>
+            <CourseCard key={item._id || index} item={item} />
           ))}
         </div>
       ) : (
-        <div className="text-center py-16 bg-gray-50 rounded-2xl border border-dashed border-gray-300 mt-6">
-          <svg
-            className="mx-auto h-12 w-12 text-gray-400 mb-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-            />
-          </svg>
-          <h3 className="text-lg font-medium text-gray-800 mb-1">
-            No Courses Found!
-          </h3>
-          <p className="text-sm text-gray-500 mb-6">
-            You haven't enrolled in any courses yet. Explore our catalog and
-            start learning today.
-          </p>
-          <Link
-            to="/courses"
-            className="inline-block bg-indigo-600 text-white font-medium px-6 py-2.5 rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            Explore Courses
-          </Link>
-        </div>
+        <EmptyState />
       )}
     </div>
   );

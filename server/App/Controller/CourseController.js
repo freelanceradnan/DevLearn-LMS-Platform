@@ -60,6 +60,7 @@ export const GetAllCourse=CatchAsyncError(async(req,res,next)=>{
 })
 export const GetUserCourse=CatchAsyncError(async(req,res,next)=>{
   const courseList=req.user.Courses
+ 
   const courseId=req.params.id
   if(!courseId){
   return next(new ErrorHandler("Course Id not found!"))

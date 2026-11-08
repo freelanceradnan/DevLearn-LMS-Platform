@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
   });
   socket.on('join_admin_room', () => {
     socket.join('admin_room');
-    console.log("Admin successfully joined to admin_room! Socket ID:", socket.id);
+    // console.log("Admin successfully joined to admin_room! Socket ID:", socket.id);
   });
   socket.on('disconnect', () => {
     for (let [userId, socketId] of activeUsers.entries()) {
@@ -103,7 +103,7 @@ export const sendRealTimeNotification = (userId, notificationData) => {
   if (targetSocketId) {
     io.to(targetSocketId).emit('new_notification', notificationData);
   } else {
-    console.log("⚠️ Still not found! Check if register_user was called for:", cleanTargetId);
+    // console.log("⚠️ Still not found! Check if register_user was called for:", cleanTargetId);
   }
 };
 export const sendAdminNotification = (notificationData) => {

@@ -79,7 +79,7 @@ const CourseContent = () => {
   const { data } = useGetUserSingleCourseQuery(id, {
     skip: !id,
   });
-
+console.log(id)
 useEffect(() => {
   const mediaQuery = window.matchMedia("(min-width: 1024px)");
 

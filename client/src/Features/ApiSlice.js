@@ -1,5 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "./AuthSlice";
+
+const AUTH_URLS = ["/refreshtoken", "/admin/refreshtoken", "/logout", "/login"];
+
 
 const mutex = new Mutex();
 const BaseQuery = fetchBaseQuery({
@@ -7,29 +12,67 @@ const BaseQuery = fetchBaseQuery({
   credentials: "include",
 });
 
+// export const baseQueryWithReauth = async (args, api, extraOptions) => {
+//   await mutex.waitForUnlock();
+
+//   let result = await BaseQuery(args, api, extraOptions);
+
+//   if (result?.error && result.error.status === 401) {
+//     if (!mutex.isLocked()) {
+//       const release = await mutex.acquire();
+
+//       try {
+//         const refreshResult = await BaseQuery(
+//           {
+//             url: "/refreshtoken",
+//             method: "GET",
+//           },
+//           api,
+//           extraOptions,
+//         );
+
+//         if (refreshResult?.data) {
+//           result = await BaseQuery(args, api, extraOptions);
+//         } else {
+//           // handleLogout();
+//         }
+//       } finally {
+//         release();
+//       }
+//     } else {
+//       await mutex.waitForUnlock();
+//       result = await BaseQuery(args, api, extraOptions);
+//     }
+//   }
+
+//   return result;
+// };
 export const baseQueryWithReauth = async (args, api, extraOptions) => {
   await mutex.waitForUnlock();
 
   let result = await BaseQuery(args, api, extraOptions);
 
-  if (result?.error && result.error.status === 401) {
+  const url = typeof args === "string" ? args : args.url;
+  const isAuthCall = AUTH_URLS.some((u) => url?.startsWith(u));
+
+  
+  if (result?.error?.status === 401 && !isAuthCall) {
+    const role = api.getState().auth.user?.role === "admin" ? "admin" : "user";
+    const refreshUrl = role === "admin" ? "/admin/refreshtoken" : "/refreshtoken";
+
     if (!mutex.isLocked()) {
       const release = await mutex.acquire();
-
       try {
         const refreshResult = await BaseQuery(
-          {
-            url: "/refreshtoken",
-            method: "GET",
-          },
+          { url: refreshUrl, method: "GET" },
           api,
-          extraOptions,
+          extraOptions
         );
 
         if (refreshResult?.data) {
           result = await BaseQuery(args, api, extraOptions);
         } else {
-          // handleLogout();
+          api.dispatch(logoutUser()); 
         }
       } finally {
         release();
@@ -42,7 +85,6 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 
   return result;
 };
-
 export const ApiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,

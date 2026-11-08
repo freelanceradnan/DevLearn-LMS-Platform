@@ -110,10 +110,11 @@ export const GetMyUserCourse = async (courseList, courseId) => {
   const courseExists = courseList.find(
     (course) => course._id.toString() === courseId,
   );
+  
   if (!courseExists) {
     throw new Error("You are not allowed to access this course!");
   }
-  const fullcourse = await course.findById(courseId);
+  const fullcourse = await course.findById(new mongoose.Types.ObjectId(courseId));
   const coursedata = fullcourse;
 
   return { success: true, coursedata };

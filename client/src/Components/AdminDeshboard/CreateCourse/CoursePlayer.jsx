@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios'
 
 const CoursePlayer = ({videoUrl}) => {
+    console.log(videoUrl)
 const [videoData,setVideoData]=useState({
     otp:"",
     playbackInfo:""

@@ -25,7 +25,7 @@ const server = http.createServer(app);
 //websocket init
 export const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin:[ "http://localhost:5173",'https://dev-learn-lms-platform-eight.vercel.app'],
     credentials: true,
     methods: ["GET", "POST"],
   },
@@ -38,7 +38,8 @@ app.use(
       "https://dev-learn-lms-platform-xnox-dglpjr3ma.vercel.app",
       "https://dev-learn-lms-platform-git-0927e1-reactorbro722-7825s-projects.vercel.app",
       "http://localhost:5173",
-      "http://localhost:4173"
+      "http://localhost:4173",
+      "https://dev-learn-lms-platform-eight.vercel.app"
     ],
     credentials: true,
   })

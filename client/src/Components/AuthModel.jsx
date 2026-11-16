@@ -301,8 +301,8 @@ const handleResetPassword = async () => {
             </div>
 
             {/* Social Buttons */}
-            <div className="flex gap-4 w-ful flex-col md:flex-row md:gap-2">
-              <button type="button">
+            <div className="flex gap-4 w-full flex-col md:flex-row md:gap-2">
+              <button type="button" className="md:w-[50%] ">
                 <GoogleLogin onSuccess={handlesuccess} useOneTap
   type="standard" onError={handlerError}>
                   <FcGoogle size={20} />
@@ -314,7 +314,7 @@ const handleResetPassword = async () => {
               <button
                 type="button"
                 onClick={handlegithubLogin}
-                className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2.5 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition shadow-sm w-full"
+                className="md:w-[50%] flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2.5 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition shadow-sm w-full"
               >
                 <FaGithub size={20} />
                 <span>
@@ -322,7 +322,22 @@ const handleResetPassword = async () => {
                 </span>
               </button>
             </div>
+{/* <div className="flex gap-4 w-full flex-col md:flex-row md:gap-2">
+  <GoogleButton
+    onSuccess={handlesuccess}
+    onError={handlerError}
+    isLogin={isLogin}
+  />
 
+  <button
+    type="button"
+    onClick={handlegithubLogin}
+    className="flex-1 h-10 flex items-center justify-center gap-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium text-gray-700 transition shadow-sm w-full"
+  >
+    <FaGithub size={20} />
+    <span>{isLogin ? "Login with GitHub" : "Sign up with GitHub"}</span>
+  </button>
+</div> */}
             {/* google loading indicator */}
             {googleLoading && (
               <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
